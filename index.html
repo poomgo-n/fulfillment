@@ -3,983 +3,408 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>품고 N배송 설정 가이드</title>
+  <title>풀필먼트 연동하기</title>
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
   
   <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: 'Pretendard', sans-serif;
-      background: #f4f6f8;
-      color: #111827;
-    }
-
-    .page-wrap {
-      min-height: 100vh;
-      padding: 24px;
-    }
-
-    .app-shell {
-      max-width: 1380px;
-      margin: 0 auto;
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-      overflow: hidden;
-      border: 1px solid #e5e7eb;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      padding: 22px 28px;
-      border-bottom: 1px solid #eef2f7;
-      background: #fff;
-    }
-
-    .topbar-logo {
-      position: absolute;
-      left: 28px;
-      max-height: 38px;
-      object-fit: contain;
-    }
-
-    .topbar-title {
-      margin: 0;
-      font-size: 26px;
-      font-weight: 800;
-      color: #111827;
-    }
-
-    .notice-box {
-      margin: 24px 28px 0;
-      background: #fff7f7;
-      border: 1px solid #ffd6d6;
-      border-radius: 14px;
-      padding: 18px 20px;
-    }
-
-    .notice-box p {
-      margin: 0 0 10px;
-      color: #dc2626;
-      font-weight: 800;
-    }
-
-    .notice-box ul {
-      margin: 0;
-      padding-left: 20px;
-      color: #4b5563;
-      line-height: 1.7;
-    }
-
-    .main-layout {
-      display: grid;
-      grid-template-columns: 250px 1fr;
-      min-height: 820px;
-    }
-
-    .sidebar {
-      background: #111827;
-      color: #cbd5e1;
-      padding: 24px 0;
-      border-right: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .sidebar-title {
-      padding: 0 22px 18px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #94a3b8;
-      letter-spacing: .02em;
-    }
-
-    .sidebar-menu {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    .sidebar-menu li {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 22px;
-      font-size: 15px;
-      font-weight: 700;
-      color: #cbd5e1;
-      cursor: pointer;
-      border-left: 3px solid transparent;
-      transition: background .2s ease, color .2s ease, border-color .2s ease;
-    }
-
-    .sidebar-menu li:hover {
-      background: rgba(255,255,255,0.04);
-      color: #fff;
-    }
-
-    .sidebar-menu li.active {
-      background: rgba(255,255,255,0.06);
-      color: #fff;
-      border-left-color: #00c73c;
-    }
-
-    .sidebar-menu .menu-index {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      font-size: 12px;
-      font-weight: 800;
-      margin-right: 10px;
-      flex-shrink: 0;
-    }
-
-    .sidebar-menu .menu-text {
-      display: flex;
-      align-items: center;
-      min-width: 0;
-    }
-
-    .sidebar-menu .menu-arrow {
-      color: #64748b;
-      font-size: 14px;
-    }
-
-    .content {
-      padding: 28px;
-      background: #f8fafc;
-    }
-
-    .progress-wrap {
-      display: flex;
-      justify-content: center;
-      gap: 26px;
-      margin-bottom: 26px;
-      flex-wrap: wrap;
-    }
-
-    .progress-step {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #94a3b8;
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .progress-step .circle {
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
-      background: #e5e7eb;
-      color: #6b7280;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .progress-step.active {
-      color: #00a63a;
-    }
-
-    .progress-step.active .circle {
-      background: #00c73c;
-      color: #fff;
-    }
-
-    .step-card {
-      display: none;
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-radius: 18px;
-      padding: 28px;
-      animation: fadeIn .28s ease;
-    }
-
-    .step-card.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .step-title {
-      margin: 0 0 10px;
-      font-size: 28px;
-      font-weight: 800;
-      color: #111827;
-    }
-
-    .step-desc {
-      margin: 0 0 18px;
-      font-size: 16px;
-      color: #4b5563;
-      line-height: 1.8;
-    }
-
-    .path-box {
-      background: #f8fafc;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 14px;
-      color: #475569;
-      margin-bottom: 18px;
-      font-weight: 600;
-    }
-
-    .content-grid {
-      display: grid;
-      grid-template-columns: 1.05fr 1fr;
-      gap: 24px;
-      align-items: start;
-    }
-
-    .guide-box {
-      background: #fbfdff;
-      border: 1px solid #e5e7eb;
-      border-radius: 16px;
-      padding: 22px;
-    }
-
-    .guide-box h3 {
-      margin: 0 0 14px;
-      font-size: 18px;
-      color: #00a63a;
-    }
-
-    .guide-list {
-      margin: 0;
-      padding-left: 20px;
-      color: #374151;
-      line-height: 1.9;
-      font-size: 15px;
-    }
-
-    .guide-list li + li {
-      margin-top: 8px;
-    }
-
-    .tip-box {
-      margin-top: 16px;
-      background: #effcf3;
-      border: 1px solid #b7efc6;
-      border-radius: 12px;
-      padding: 14px 16px;
-      color: #166534;
-      font-size: 14px;
-      line-height: 1.8;
-      font-weight: 600;
-    }
-
-    .visual-box {
-      background: #fff;
-      border: 1px solid #dbe2ea;
-      border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .visual-head {
-      padding: 14px 18px;
-      border-bottom: 1px solid #eef2f7;
-      background: #fff;
-      font-size: 15px;
-      font-weight: 800;
-      color: #111827;
-    }
-
-    .visual-body {
-      padding: 18px;
-      background: #f8fafc;
-    }
-
-    .mock-ui {
-      min-height: 420px;
-      background: #fff;
-      border: 1px solid #dbe2ea;
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
-    }
-
-    .mock-top {
-      height: 54px;
-      background: #2f3541;
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .mock-layout {
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      min-height: 366px;
-    }
-
-    .mock-sidebar {
-      background: #3b4250;
-      color: #d1d5db;
-      padding: 14px 0;
-    }
-
-    .mock-sidebar .group {
-      padding: 0 14px 12px;
-      font-size: 12px;
-      color: #9ca3af;
-      font-weight: 700;
-    }
-
-    .mock-sidebar .item {
-      padding: 10px 16px;
-      font-size: 13px;
-      border-left: 3px solid transparent;
-    }
-
-    .mock-sidebar .item.active {
-      color: #fff;
-      background: rgba(255,255,255,0.06);
-      border-left-color: #00c73c;
-      font-weight: 700;
-    }
-
-    .mock-main {
-      padding: 18px;
-      background: #fff;
-    }
-
-    .mock-panel {
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      background: #fff;
-      overflow: hidden;
-    }
-
-    .mock-panel + .mock-panel {
-      margin-top: 14px;
-    }
-
-    .mock-panel-head {
-      padding: 12px 14px;
-      border-bottom: 1px solid #eef2f7;
-      font-weight: 700;
-      font-size: 13px;
-      color: #374151;
-      background: #fbfdff;
-    }
-
-    .mock-panel-body {
-      padding: 14px;
-      font-size: 13px;
-      color: #4b5563;
-    }
-
-    .mock-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-    }
-
-    .mock-table th,
-    .mock-table td {
-      border: 1px solid #edf2f7;
-      padding: 10px 8px;
-      text-align: center;
-    }
-
-    .mock-table th {
-      background: #f8fafc;
-      color: #475569;
-      font-weight: 700;
-    }
-
-    .mock-table td.left {
-      text-align: left;
-    }
-
-    .hl {
-      background: #ebfbee !important;
-      outline: 2px solid #00c73c;
-      font-weight: 800;
-      position: relative;
-      z-index: 1;
-    }
-
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: #00c73c;
-      color: #fff;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 999px;
-      margin-left: 8px;
-      vertical-align: middle;
-    }
-
-    .mock-btn-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-
-    .mock-btn {
-      border: 1px solid #d1d5db;
-      background: #fff;
-      color: #374151;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 7px 12px;
-      border-radius: 8px;
-    }
-
-    .mock-btn.primary {
-      background: #00c73c;
-      border-color: #00c73c;
-      color: #fff;
-    }
-
-    .mock-btn.blue {
-      background: #2563eb;
-      border-color: #2563eb;
-      color: #fff;
-    }
-
-    .modal-ui {
-      border: 1px solid #dbe2ea;
-      border-radius: 16px;
-      overflow: hidden;
-      background: #fff;
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
-    }
-
-    .modal-header {
-      background: #00c73c;
-      color: #fff;
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 16px;
-      font-weight: 800;
-    }
-
-    .modal-sub {
-      padding: 14px 20px;
-      background: #fbfdff;
-      border-bottom: 1px solid #eef2f7;
-      font-size: 13px;
-      color: #4b5563;
-    }
-
-    .modal-row {
-      display: flex;
-      border-bottom: 1px solid #eef2f7;
-    }
-
-    .modal-label {
-      width: 180px;
-      background: #fbfdff;
-      padding: 16px 18px;
-      color: #475569;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .modal-value {
-      flex: 1;
-      padding: 16px 18px;
-      font-size: 13px;
-      color: #374151;
-      line-height: 1.8;
-    }
-
-    .btn-toggle {
-      display: inline-block;
-      min-width: 84px;
-      padding: 8px 14px;
-      border: 1px solid #d1d5db;
-      background: #fff;
-      color: #475569;
-      font-size: 13px;
-      font-weight: 700;
-      text-align: center;
-    }
-
-    .btn-toggle.active {
-      background: #00c73c;
-      border-color: #00c73c;
-      color: #fff;
-    }
-
-    .step-nav {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 28px;
-      padding-top: 22px;
-      border-top: 1px solid #eef2f7;
-      flex-wrap: wrap;
-    }
-
-    .btn-nav {
-      padding: 12px 26px;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 800;
-      border: none;
-      cursor: pointer;
-      transition: .2s ease;
-      font-family: 'Pretendard', sans-serif;
-    }
-
-    .btn-nav:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
-    }
-
-    .btn-prev {
-      background: #e5e7eb;
-      color: #374151;
-    }
-
-    .btn-next {
-      background: #00c73c;
-      color: #fff;
-    }
-
-    .btn-finish {
-      background: #111827;
-      color: #fff;
-    }
-
-    @media (max-width: 1100px) {
-      .main-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .sidebar {
-        padding: 14px 0;
-      }
-
-      .sidebar-menu {
-        display: grid;
-        grid-template-columns: 1fr;
-      }
-
-      .content-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar-logo {
-        position: static;
-        margin-right: 12px;
-      }
-
-      .topbar {
-        justify-content: flex-start;
-        gap: 12px;
-      }
-
-      .topbar-title {
-        font-size: 22px;
-      }
-    }
-
-    @media (max-width: 720px) {
-      .page-wrap {
-        padding: 12px;
-      }
-
-      .topbar,
-      .content,
-      .notice-box {
-        padding-left: 16px;
-        padding-right: 16px;
-      }
-
-      .notice-box {
-        margin-left: 16px;
-        margin-right: 16px;
-      }
-
-      .step-card {
-        padding: 18px;
-      }
-
-      .step-title {
-        font-size: 22px;
-      }
-
-      .mock-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .mock-sidebar {
-        display: none;
-      }
-
-      .modal-row {
-        flex-direction: column;
-      }
-
-      .modal-label {
-        width: 100%;
-      }
-    }
+    /* 기본 레이아웃 및 폰트 */
+    body { font-family: 'Pretendard', sans-serif; background-color: #f4f5f7; color: #333; line-height: 1.6; padding: 20px; margin: 0; }
+    .container { max-width: 1200px; margin: 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); padding: 40px; position: relative; }
+    
+    /* 헤더 및 로고 */
+    .page-header { display: flex; align-items: center; justify-content: center; position: relative; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #333; }
+    .page-logo { position: absolute; left: 0; max-height: 40px; }
+    .page-title { font-size: 26px; font-weight: bold; margin: 0; }
+    
+    h2 { font-size: 20px; color: #00c73c; margin-top: 10px; margin-bottom: 10px; }
+    
+    /* 공통 텍스트 및 박스 */
+    .notice-box { background: #fdf5f5; border: 1px solid #fbdbdb; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+    .notice-box p { color: #d9534f; font-weight: bold; margin-top: 0; margin-bottom: 10px; }
+    .notice-box ul { margin: 0; padding-left: 20px; color: #555; }
+    .notice-box li { margin-bottom: 5px; }
+    .path-text { font-size: 14px; background: #f8f9fa; padding: 10px 15px; border-radius: 6px; color: #555; margin-bottom: 15px; font-weight: 500; }
+    .desc-text { font-size: 15px; margin-bottom: 20px; }
+    
+    /* 텍스트 색상 유틸리티 */
+    .text-green { color: #00c73c !important; }
+    .text-blue { color: #0066cc !important; }
+    .text-red { color: #ff3b30 !important; }
+
+    /* 박스 강조 스타일 */
+    .soft-highlight { background-color: #ebfbee !important; border: 2px solid #00c73c !important; border-radius: 4px; font-weight: bold; position: relative; z-index: 10; }
+    
+    .hl-cell { background-color: #ebfbee !important; border-top: 2px solid #00c73c !important; border-bottom: 2px solid #00c73c !important; font-weight: bold; color: #111; position: relative; z-index: 10; }
+    .hl-first { border-left: 2px solid #00c73c !important; border-top-left-radius: 4px; border-bottom-left-radius: 4px; }
+    .hl-last { border-right: 2px solid #00c73c !important; border-top-right-radius: 4px; border-bottom-right-radius: 4px; }
+    
+    .col-highlight { background-color: #ebfbee !important; font-weight: bold; border-left: 2px solid #00c73c !important; border-right: 2px solid #00c73c !important; position: relative; z-index: 10; }
+    .col-highlight.top { border-top: 2px solid #00c73c !important; border-top-left-radius: 4px; border-top-right-radius: 4px; }
+    .col-highlight.bottom { border-bottom: 2px solid #00c73c !important; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; }
+
+    .highlight-tag { position: absolute; top: -12px; right: -10px; background: #00c73c; color: white; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: bold; white-space: nowrap; z-index: 11;}
+
+    /* 단계별 화면 전환 */
+    .step-container { display: none; animation: fadeIn 0.4s ease-in-out; }
+    .step-container.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .step-nav { display: flex; justify-content: center; gap: 15px; margin-top: 40px; border-top: 1px solid #e4e8eb; padding-top: 30px; }
+    .btn-nav { padding: 12px 30px; font-size: 16px; border-radius: 8px; cursor: pointer; font-weight: bold; border: none; font-family: 'Pretendard', sans-serif; transition: all 0.2s;}
+    .btn-nav:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .btn-prev { background: #e4e8eb; color: #555; }
+    .btn-next { background: #00c73c; color: #fff; }
+
+    /* 진행률 바 */
+    .progress-bar { display: flex; justify-content: center; gap: 40px; margin-bottom: 40px; }
+    .step-dot { text-align: center; color: #ccc; font-weight: bold; position: relative; }
+    .step-dot::after { content: ''; position: absolute; top: 12px; left: 100%; width: 40px; height: 2px; background: #e4e8eb; margin-left: 5px;}
+    .step-dot:last-child::after { display: none; }
+    .step-dot .circle { width: 26px; height: 26px; border-radius: 50%; background: #e4e8eb; color: white; line-height: 26px; margin: 0 auto 5px; font-size: 14px; }
+    .step-dot.active { color: #00c73c; }
+    .step-dot.active .circle { background: #00c73c; }
+
+    /* 스마트스토어 UI 공통 구조 */
+    .mock-ui-wrapper { width: 100%; overflow-x: auto; border: 1px solid #cdd3d8; margin-bottom: 10px; border-radius: 8px; }
+    .mock-ui { min-width: 1100px; display: flex; background: #e9ecef; font-size: 12px; }
+    .sidebar { width: 180px; background: #303742; color: #a2aab5; flex-shrink: 0; }
+    .sidebar-header { background: #262b34; padding: 20px 15px; border-bottom: 1px solid #1c2128; height: 60px; }
+    .sidebar-search { padding: 10px; border-bottom: 1px solid #3c4450; }
+    .sidebar-search input { width: 100%; padding: 6px; background: #262b34; border: 1px solid #1c2128; color: white; box-sizing: border-box; font-size: 11px; }
+    .sidebar-menu { list-style: none; padding: 0; margin: 0; }
+    .sidebar-menu li { padding: 10px 15px; border-bottom: 1px solid #3c4450; display: flex; justify-content: space-between; cursor: pointer; }
+    .sidebar-menu .active-group { background: #262b34; color: white; border-left: 3px solid #00c73c; }
+    .sub-menu { list-style: none; padding: 0; margin: 0; background: #303742; }
+    .sub-menu li { padding: 8px 15px 8px 30px; font-size: 11px; color: #8e96a0; }
+    .sub-menu li.active { background: #21262d; color: #00c73c; font-weight: bold; }
+    .main-content { flex: 1; background: #e9ecef; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+    .nav-tabs { display: flex; border-bottom: 1px solid #cdd3d8; background: #fff; padding: 0 20px; }
+    .nav-tabs .tab { padding: 12px 20px; font-size: 13px; color: #666; cursor: pointer; }
+    .nav-tabs .tab.active { color: #00c73c; border-bottom: 2px solid #00c73c; font-weight: bold; }
+    
+    .search-panel, .grid-panel { background: #fff; border: 1px solid #cdd3d8; }
+    .form-table { width: 100%; border-collapse: collapse; }
+    .form-table th { width: 120px; background: #fbfbfc; text-align: left; padding: 12px 20px; font-weight: normal; color: #333; border-bottom: 1px solid #f1f1f1; }
+    .form-table td { padding: 12px 20px; color: #333; border-bottom: 1px solid #f1f1f1; }
+    .form-control { border: 1px solid #d4d8db; padding: 6px; font-size: 12px; font-family: 'Pretendard', sans-serif;}
+    .btn-wrap { text-align: center; padding: 15px; background: #fbfbfc; border-top: 1px solid #f1f1f1; }
+    .btn-search { background: #00c73c; color: #fff; border: none; padding: 8px 30px; font-weight: bold; cursor: pointer; }
+    .btn-reset { background: #fff; border: 1px solid #d4d8db; padding: 8px 30px; cursor: pointer; margin-left: 5px; }
+    
+    .grid-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f1f1; }
+    .btn-excel { background: #fff; border: 1px solid #d4d8db; padding: 5px 10px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 12px; color: #333; }
+    .data-table { width: 100%; border-collapse: collapse; text-align: center; }
+    .data-table th { background: #fbfbfc; padding: 10px; border-bottom: 1px solid #cdd3d8; border-right: 1px solid #f1f1f1; color: #666; font-weight: normal; }
+    .data-table td { padding: 10px; border-bottom: 1px solid #f1f1f1; border-right: 1px solid #f1f1f1; color: #333; vertical-align: middle; }
+    
+    .btn-sm { border: 1px solid #d4d8db; background: #fff; padding: 5px 10px; font-size: 12px; cursor: pointer; color: #333; }
+    .btn-blue { background: #0066cc; color: white; border: none; }
+    .btn-green { background: #00c73c; color: white; border: none; }
+    .btn-gray { background: #8e96a0; color: white; border: none; }
+    .radio-green { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 4px solid #00c73c; vertical-align: middle; margin-right: 5px; }
+    .radio-gray { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 1px solid #ccc; vertical-align: middle; margin-right: 5px; }
+
+    /* 3단계 팝업창 스타일 */
+    .modal-ui { border: 1px solid #cdd3d8; background: #fff; margin-bottom: 30px; font-size: 13px; }
+    .modal-header { background: #00c73c; color: white; padding: 15px 20px; font-size: 16px; font-weight: bold; display: flex; justify-content: space-between; }
+    .modal-sub { padding: 15px 20px; color: #333; border-bottom: 1px solid #e4e8eb; font-size: 12px; }
+    .modal-row { display: flex; border-bottom: 1px solid #f1f1f1; }
+    .modal-label { width: 160px; background: #fbfbfc; padding: 15px 20px; color: #555; font-size: 12px; }
+    .modal-value { flex: 1; padding: 15px 20px; }
+    .btn-toggle { border: 1px solid #cdd3d8; background: white; padding: 8px 16px; color: #ccc; text-align: center; display: inline-block; min-width: 60px;}
+    
+    .btn-toggle.active { background: #00c73c !important; color: white !important; border-color: #00c73c !important; font-weight: bold; }
+    
+    .info-text-green { color: #00c73c; font-size: 12px; margin-top: 5px; display: block; }
+    .info-text-red { color: #ff3b30; font-size: 12px; margin-top: 5px; display: block; }
   </style>
 </head>
 <body>
 
-<div class="page-wrap">
-  <div class="app-shell">
+<div class="container">
+  
+  <header class="page-header">
+    <img src="Primary Logo.png" alt="품고 로고" class="page-logo" onerror="this.style.display='none'">
+    <h1 class="page-title">풀필먼트 연동하기</h1>
+  </header>
 
-    <header class="topbar">
-      <img src="Primary Logo.png" alt="품고 로고" class="topbar-logo">
-      <h1 class="topbar-title">품고 N배송 설정 가이드</h1>
-    </header>
+  <div class="notice-box">
+    <p>[유의사항] </p>
+    <ul>
+      <li>판매처 등록이 선행되어야만 풀필먼트 연동이 가능합니다.</li>
+      <li>풀필먼트 연동된 이후 품고 안내 없이 N배송을 임의로 설정하지 않도록 유의 부탁드립니다.</li>
+    </ul>
+  </div>
 
-    <div class="notice-box">
-      <p>[유의사항] N배송 설정 전 꼭 확인해주세요.</p>
-      <ul>
-        <li>N배송 설정 완료 후 발생한 주문부터 품고에서 수집 및 출고됩니다.</li>
-        <li>설정 이전 주문은 직접 출고가 필요할 수 있습니다.</li>
-        <li>중복 수집이 발생하지 않도록 기존 플랫폼 연동 설정을 반드시 점검해주세요.</li>
-        <li><b>중복 수집으로 인한 중복 출고는 품고에서 책임지지 않습니다.</b></li>
-      </ul>
-    </div>
+  <div class="progress-bar">
+    <div class="step-dot active" id="dot1"><div class="circle">1</div>판매처 등록</div>
+    <div class="step-dot" id="dot2"><div class="circle">2</div>풀필먼트 연동</div>
+    <div class="step-dot" id="dot3"><div class="circle">3</div>N배송 프로그램 이용 동의</div>
+  </div>
 
-    <div class="main-layout">
-      <aside class="sidebar">
-        <div class="sidebar-title">가이드 단계</div>
-        <ul class="sidebar-menu">
-          <li class="active" id="menu1" onclick="changeStep(1)">
-            <span class="menu-text"><span class="menu-index">1</span>판매처 등록</span>
-            <span class="menu-arrow">›</span>
-          </li>
-          <li id="menu2" onclick="changeStep(2)">
-            <span class="menu-text"><span class="menu-index">2</span>풀필먼트 연동</span>
-            <span class="menu-arrow">›</span>
-          </li>
-          <li id="menu3" onclick="changeStep(3)">
-            <span class="menu-text"><span class="menu-index">3</span>N배송 프로그램 이용</span>
-            <span class="menu-arrow">›</span>
-          </li>
-        </ul>
-      </aside>
-
-      <main class="content">
-        <div class="progress-wrap">
-          <div class="progress-step active" id="dot1"><div class="circle">1</div>판매처 등록</div>
-          <div class="progress-step" id="dot2"><div class="circle">2</div>풀필먼트 연동</div>
-          <div class="progress-step" id="dot3"><div class="circle">3</div>N배송 프로그램 이용</div>
+  <!-- STEP 1 -->
+  <div id="step1" class="step-container active">
+    <h2>1. 판매처 등록</h2>
+    <div class="path-text">경로 ) 품고 나우 &gt; 주문 &gt; 판매처 계정 &gt; 판매처 계정 개별 등록</div>
+    <div class="desc-text">스마트스토어 판매처 계정을 등록해주세요.<br>판매처명, 브랜드명, 연동 계정을 정확하게 입력해야 이후 단계가 정상적으로 진행됩니다.</div>
+    
+    <div class="mock-ui-wrapper">
+      <div class="mock-ui">
+        <div class="sidebar">
+          <div class="sidebar-header"><div style="width: 40px; height: 40px; background: #4a5462; border-radius: 50%; margin: 0 auto;"></div></div>
+          <div class="sidebar-search"><input type="text" placeholder=""></div>
+          <ul class="sidebar-menu">
+            <li>SKU <span>></span></li>
+            <li>재고 <span>></span></li>
+            <li class="active-group">주문 <span>></span></li>
+            <li>입·출고 <span>></span></li>
+          </ul>
+          <ul class="sub-menu">
+            <li>원장 조회</li>
+            <li>주문 처리</li>
+            <li class="active">판매처 계정</li>
+            <li>캠페인</li>
+            <li>상품</li>
+          </ul>
         </div>
 
-        <!-- STEP 1 -->
-        <section id="step1" class="step-card active">
-          <h2 class="step-title">1. 판매처 등록</h2>
-          <div class="path-box">경로 ) 품고 나우 &gt; 주문 &gt; 판매처 계정 &gt; 판매처 계정 개별 등록</div>
-          <p class="step-desc">
-            스마트스토어 판매처 계정을 등록하고, 연동 계정 정보를 정확하게 입력해주세요.
-          </p>
+        <div class="main-content">
+          <div style="background: #fff; padding-top: 10px; padding-left: 20px; border-bottom: 1px solid #cdd3d8;">
+            <div style="margin-bottom: 15px; font-weight: bold; font-size: 18px;">판매처 계정 관리</div>
+          </div>
 
-          <div class="content-grid">
-            <div class="guide-box">
-              <h3>진행 방법</h3>
-              <ol class="guide-list">
-                <li><b>품고 나우 &gt; 주문 &gt; 판매처 계정 &gt; 판매처 계정 개별 등록</b>을 클릭합니다.</li>
-                <li>판매처명은 <b>스마트스토어(물류사)</b>로 설정합니다.</li>
-                <li>브랜드명은 조회되는 브랜드 중 해당 브랜드를 선택합니다.</li>
-                <li>연동 계정에는 <b>스마트스토어 API 연동용 판매자 ID</b>를 입력합니다.</li>
-              </ol>
-
-              <div class="tip-box">
-                확인 경로 : 스마트스토어 &gt; 스토어 관리 &gt; 서비스 연결 &gt; API 관리 &gt; API 연동용 판매자 ID
+          <div class="grid-panel">
+            <div class="grid-header">
+              <div><b>판매처 계정 목록</b></div>
+              <div style="display: flex; gap: 5px;">
+                <button class="btn-sm soft-highlight">판매처 계정 개별 등록 <span class="highlight-tag">클릭</span></button>
               </div>
             </div>
 
-            <div class="visual-box">
-              <div class="visual-head">화면 예시</div>
-              <div class="visual-body">
-                <div class="mock-ui">
-                  <div class="mock-top">품고 나우</div>
-                  <div class="mock-layout">
-                    <div class="mock-sidebar">
-                      <div class="group">메뉴</div>
-                      <div class="item">SKU</div>
-                      <div class="item">재고</div>
-                      <div class="item active">주문 &gt; 판매처 계정</div>
-                      <div class="item">입·출고</div>
-                    </div>
-
-                    <div class="mock-main">
-                      <div class="mock-btn-row">
-                        <button class="mock-btn">조회</button>
-                        <button class="mock-btn hl">판매처 계정 개별 등록 <span class="tag">클릭</span></button>
-                      </div>
-
-                      <div class="mock-panel">
-                        <div class="mock-panel-head">판매처 계정 개별 등록</div>
-                        <div class="mock-panel-body">
-                          <table class="mock-table">
-                            <tr>
-                              <th>판매처명</th>
-                              <td class="left hl">스마트스토어(물류사)</td>
-                            </tr>
-                            <tr>
-                              <th>브랜드명</th>
-                              <td class="left hl">브랜드명 선택</td>
-                            </tr>
-                            <tr>
-                              <th>연동 계정</th>
-                              <td class="left hl">스마트스토어 API 연동용 판매자 ID 입력</td>
-                            </tr>
-                            <tr>
-                              <th>보조 계정</th>
-                              <td class="left">-</td>
-                            </tr>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>판매처명</th>
+                  <th>브랜드명</th>
+                  <th>연동 계정</th>
+                  <th>보조 계정</th>
+                  <th>연동 키</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="hl-cell hl-first">스마트스토어(물류사)</td>
+                  <td class="hl-cell">브랜드명 선택</td>
+                  <td class="hl-cell">스마트스토어 API 연동용 판매자 ID 입력</td>
+                  <td class="hl-cell">-</td>
+                  <td class="hl-cell hl-last">-</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
-          <div class="step-nav">
-            <button class="btn-nav btn-next" onclick="changeStep(2)">다음 단계 ➜</button>
+          <div class="search-panel">
+            <table class="form-table">
+              <tr>
+                <th>입력 가이드</th>
+                <td>
+                  판매처명 : <b>스마트스토어(물류사)</b><br>
+                  브랜드명 : <b>조회되는 브랜드명 선택</b><br>
+                  연동 계정 : <b>스마트스토어 API 연동용 판매자 ID 입력</b>
+                </td>
+              </tr>
+              <tr>
+                <th>확인 경로</th>
+                <td>스마트스토어 &gt; 스토어 관리 &gt; 서비스 연결 &gt; API 관리 &gt; API 연동용 판매자 ID</td>
+              </tr>
+            </table>
           </div>
-        </section>
-
-        <!-- STEP 2 -->
-        <section id="step2" class="step-card">
-          <h2 class="step-title">2. 풀필먼트 연동</h2>
-          <div class="path-box">경로 ) 스마트스토어 &gt; 스토어 관리 &gt; 네이버 서비스 연결 &gt; 네이버 풀필먼트</div>
-          <p class="step-desc">
-            N배송 사용을 위해 풀필먼트 계약 연동을 진행합니다.
-          </p>
-
-          <div class="content-grid">
-            <div class="guide-box">
-              <h3>진행 방법</h3>
-              <ol class="guide-list">
-                <li><b>풀필먼트 계약 연동</b>을 클릭합니다.</li>
-                <li>물류사 목록에서 <b>품고</b>를 선택한 뒤 확인합니다.</li>
-                <li>정보 제공 동의 및 안내사항을 모두 확인 후 동의합니다.</li>
-              </ol>
-
-              <div class="tip-box">
-                동의 완료 후 익일 00:40 이후 자동으로 물류사 연동상태가
-                <b>확인중</b>에서 <b>연동됨</b>으로 변경됩니다.
-              </div>
-            </div>
-
-            <div class="visual-box">
-              <div class="visual-head">화면 예시</div>
-              <div class="visual-body">
-                <div class="mock-ui">
-                  <div class="mock-top">스마트스토어센터</div>
-                  <div class="mock-layout">
-                    <div class="mock-sidebar">
-                      <div class="group">스토어관리</div>
-                      <div class="item">기본정보 관리</div>
-                      <div class="item">API 관리</div>
-                      <div class="item active">네이버 서비스 연결</div>
-                    </div>
-
-                    <div class="mock-main">
-                      <div class="mock-panel">
-                        <div class="mock-panel-head">네이버 풀필먼트</div>
-                        <div class="mock-panel-body">
-                          <div class="mock-btn-row">
-                            <button class="mock-btn hl">풀필먼트 계약 연동 <span class="tag">클릭</span></button>
-                          </div>
-                          <table class="mock-table">
-                            <thead>
-                              <tr>
-                                <th>물류사</th>
-                                <th>연동상태</th>
-                                <th>N배송 프로그램</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td class="left">위킵</td>
-                                <td>-</td>
-                                <td>가능</td>
-                              </tr>
-                              <tr>
-                                <td class="left hl">품고 <span class="tag">선택</span></td>
-                                <td>-</td>
-                                <td>가능</td>
-                              </tr>
-                              <tr>
-                                <td class="left">아워박스</td>
-                                <td>-</td>
-                                <td>가능</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                          <div style="margin-top:14px;">
-                            <button class="mock-btn primary">확인</button>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="mock-panel">
-                        <div class="mock-panel-head">정보 제공 동의 및 안내사항</div>
-                        <div class="mock-panel-body">
-                          <div class="hl" style="padding:10px 12px; border-radius:8px;">
-                            필수 동의사항 전체 체크
-                            <span class="tag">체크</span>
-                          </div>
-                          <div style="margin-top:12px;">
-                            <button class="mock-btn primary">확인</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="step-nav">
-            <button class="btn-nav btn-prev" onclick="changeStep(1)">⬅ 이전 단계</button>
-            <button class="btn-nav btn-next" onclick="changeStep(3)">다음 단계 ➜</button>
-          </div>
-        </section>
-
-        <!-- STEP 3 -->
-        <section id="step3" class="step-card">
-          <h2 class="step-title">3. N배송 프로그램 이용</h2>
-          <div class="path-box">경로 ) 스마트스토어 &gt; N배송 관리 &gt; N배송 프로그램 이용</div>
-          <p class="step-desc">
-            풀필먼트 연동 완료 후 N배송 프로그램 이용 설정을 진행해주세요.
-          </p>
-
-          <div class="content-grid">
-            <div class="guide-box">
-              <h3>진행 방법</h3>
-              <ol class="guide-list">
-                <li>N배송 프로그램 이용 화면에서 신청 가능한 상태인지 확인합니다.</li>
-                <li>필요한 조건이 모두 충족되었는지 점검합니다.</li>
-                <li>품고 안내에 따라 N배송 프로그램 이용 절차를 완료합니다.</li>
-              </ol>
-
-              <div class="tip-box">
-                판매처 등록, 풀필먼트 연동, 정보 동의가 모두 완료되어야
-                원활한 N배송 세팅이 가능합니다.
-              </div>
-            </div>
-
-            <div class="visual-box">
-              <div class="visual-head">설정 예시</div>
-              <div class="visual-body">
-                <div class="modal-ui">
-                  <div class="modal-header">
-                    <div>N배송 프로그램 이용 설정</div>
-                    <div>✕</div>
-                  </div>
-                  <div class="modal-sub">
-                    설정 전 아래 항목을 순서대로 확인해주세요.
-                  </div>
-
-                  <div class="modal-row">
-                    <div class="modal-label">판매처 등록</div>
-                    <div class="modal-value">
-                      <span class="btn-toggle active">완료</span>
-                    </div>
-                  </div>
-
-                  <div class="modal-row">
-                    <div class="modal-label">풀필먼트 연동</div>
-                    <div class="modal-value">
-                      <span class="btn-toggle active">연동됨</span>
-                    </div>
-                  </div>
-
-                  <div class="modal-row">
-                    <div class="modal-label">물류사</div>
-                    <div class="modal-value">
-                      <span class="hl" style="padding:8px 12px; border-radius:8px; display:inline-block;">
-                        품고 <span class="tag">확인</span>
-                      </span>
-                    </div>
-                  </div>
-
-                  <div class="modal-row">
-                    <div class="modal-label">N배송 프로그램 이용</div>
-                    <div class="modal-value">
-                      <span class="btn-toggle active">이용</span>
-                      <span class="btn-toggle">이용안함</span>
-                    </div>
-                  </div>
-
-                  <div class="modal-row">
-                    <div class="modal-label">최종 확인</div>
-                    <div class="modal-value">
-                      <span class="hl" style="padding:8px 12px; border-radius:8px; display:inline-block;">
-                        설정값 점검 후 진행 <span class="tag">마지막 확인</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="step-nav">
-            <button class="btn-nav btn-prev" onclick="changeStep(2)">⬅ 이전 단계</button>
-            <button class="btn-nav btn-finish" onclick="alert('가이드 확인이 완료되었습니다.')">가이드 완료</button>
-          </div>
-        </section>
-      </main>
+        </div>
+      </div>
+    </div>
+    
+    <div class="step-nav">
+      <button class="btn-nav btn-next" onclick="changeStep(2)">2단계: 풀필먼트 연동 다음 ➔</button>
     </div>
   </div>
+
+  <!-- STEP 2 -->
+  <div id="step2" class="step-container">
+    <h2>2. 풀필먼트 연동</h2>
+    <div class="path-text">경로 ) 스마트스토어 &gt; 스토어 관리 &gt; 네이버 서비스 연결 &gt; 네이버 풀필먼트</div>
+    <div class="desc-text">N배송 사용을 위해 풀필먼트 계약 연동을 진행해주세요.<br>품고 선택 및 정보 제공 동의가 모두 완료되어야 합니다.</div>
+    
+    <div class="mock-ui-wrapper">
+      <div class="mock-ui">
+        <div class="sidebar">
+          <div class="sidebar-header"><div style="width: 40px; height: 40px; background: #4a5462; border-radius: 50%; margin: 0 auto;"></div></div>
+          <div class="sidebar-search"><input type="text" placeholder=""></div>
+          <ul class="sidebar-menu">
+            <li>상품관리 <span>></span></li>
+            <li>판매관리 <span>></span></li>
+            <li>문의/리뷰관리 <span>></span></li>
+            <li class="active-group">스토어관리 <span>></span></li>
+          </ul>
+          <ul class="sub-menu">
+            <li>기본정보 관리</li>
+            <li>API 관리</li>
+            <li class="active">네이버 서비스 연결</li>
+            <li>SNS 설정</li>
+          </ul>
+        </div>
+        
+        <div class="main-content">
+          <div style="background: #fff; padding-top: 10px; padding-left: 20px; border-bottom: 1px solid #cdd3d8;">
+            <div style="margin-bottom: 15px; font-weight: bold; font-size: 18px;">네이버 서비스 연결</div>
+          </div>
+          
+          <div class="grid-panel">
+            <div class="grid-header" style="font-size: 12px; color: #666;">
+              <div><b style="color: #333; font-size: 13px;">네이버 풀필먼트</b></div>
+              <div style="display: flex; gap: 5px;">
+                <button class="btn-sm soft-highlight">풀필먼트 계약 연동 <span class="highlight-tag">클릭</span></button>
+              </div>
+            </div>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>물류사</th>
+                  <th>연동상태</th>
+                  <th>N배송 프로그램</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>위킵</td>
+                  <td>-</td>
+                  <td>가능</td>
+                </tr>
+                <tr>
+                  <td class="soft-highlight">품고 <span class="highlight-tag">선택</span></td>
+                  <td>-</td>
+                  <td>가능</td>
+                </tr>
+                <tr>
+                  <td>아워박스</td>
+                  <td>-</td>
+                  <td>가능</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="modal-ui">
+            <div class="modal-header">
+              <div>풀필먼트 계약 연동을 위한 정보 제공 동의 및 안내사항</div>
+              <div style="cursor: pointer; font-weight: normal; font-size: 20px; line-height: 1;">✕</div>
+            </div>
+            <div class="modal-sub">품고 연동을 위해 아래 필수 항목을 모두 확인하고 동의해주세요.</div>
+
+            <div class="modal-row">
+              <div class="modal-label">필수 동의</div>
+              <div class="modal-value">
+                <span class="btn-toggle active soft-highlight">모두 동의 <span class="highlight-tag">체크</span></span>
+              </div>
+            </div>
+
+            <div class="modal-row">
+              <div class="modal-label">연동 안내</div>
+              <div class="modal-value">
+                동의가 완료된 시점 기준 익일 00:40 이후 자동으로 물류사 연동상태가 <b>확인중</b>에서 <b>연동됨</b>으로 변경됩니다.
+              </div>
+            </div>
+
+            <div style="text-align: center; padding: 25px; border-top: 1px solid #e4e8eb; background: #fff;">
+              <span class="btn-search" style="font-size: 16px; padding: 10px 40px; background-color: #00c73c !important; color: white !important; font-weight: bold; cursor: pointer; display: inline-block; position: relative;">
+                확인 <span class="highlight-tag" style="top:-12px; right:-10px;">마지막 클릭!</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="step-nav">
+      <button class="btn-nav btn-prev" onclick="changeStep(1)">⬅ 이전 단계</button>
+      <button class="btn-nav btn-next" onclick="changeStep(3)">3단계: N배송 프로그램 이용 다음 ➔</button>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div id="step3" class="step-container">
+    <h2>3. N배송 프로그램 이용</h2>
+    <div class="path-text">경로 ) 스마트스토어 &gt; N배송 관리 &gt; N배송 프로그램 이용</div>
+    <div class="desc-text">풀필먼트 연동이 완료되면 N배송 프로그램 이용 단계를 진행해주세요.<br>판매처 등록 및 풀필먼트 연동 완료 여부를 확인한 뒤 이용 설정을 진행합니다.</div>
+
+    <div class="modal-ui">
+      <div class="modal-header">
+        <div>N배송 프로그램 이용 설정</div>
+        <div style="cursor: pointer; font-weight: normal; font-size: 20px; line-height: 1;">✕</div>
+      </div>
+      <div class="modal-sub">설정 전 아래 항목을 순서대로 확인해주세요.</div>
+
+      <div class="modal-row">
+        <div class="modal-label">판매처 등록</div>
+        <div class="modal-value">
+          <span class="btn-toggle active">완료</span>
+        </div>
+      </div>
+
+      <div class="modal-row">
+        <div class="modal-label">풀필먼트 연동</div>
+        <div class="modal-value">
+          <span class="btn-toggle active">연동됨</span>
+        </div>
+      </div>
+
+      <div class="modal-row">
+        <div class="modal-label">물류사</div>
+        <div class="modal-value">
+          <span class="text-blue soft-highlight" style="font-weight: bold; font-size: 14px; text-decoration: underline; cursor:pointer; padding: 2px 5px;">품고<span class="highlight-tag" style="top:-15px;">확인</span></span>
+        </div>
+      </div>
+
+      <div class="modal-row">
+        <div class="modal-label">N배송 프로그램 이용</div>
+        <div class="modal-value">
+          <span class="btn-toggle active soft-highlight">이용 <span class="highlight-tag">체크</span></span>
+          <span class="btn-toggle">이용안함</span>
+        </div>
+      </div>
+
+      <div class="modal-row">
+        <div class="modal-label">최종 확인</div>
+        <div class="modal-value">
+          판매처 등록, 풀필먼트 연동 상태를 다시 한 번 확인한 후 이용 설정을 완료해주세요.
+        </div>
+      </div>
+      
+      <div style="text-align: center; padding: 25px; border-top: 1px solid #e4e8eb; background: #fff;">
+        <span class="btn-search" style="font-size: 16px; padding: 10px 40px; background-color: #00c73c !important; color: white !important; font-weight: bold; cursor: pointer; display: inline-block; position: relative;">
+          변경 <span class="highlight-tag" style="top:-12px; right:-10px;">마지막 클릭!</span>
+        </span>
+        <span class="btn-reset" style="font-size: 16px; padding: 10px 40px; margin-left: 10px; border: 1px solid #ccc; color: #555; cursor: pointer; display: inline-block;">닫기</span>
+      </div>
+    </div>
+    
+    <div class="step-nav">
+      <button class="btn-nav btn-prev" onclick="changeStep(2)">⬅ 이전 단계</button>
+      <button class="btn-nav btn-next" style="background: #333;" onclick="alert('수고하셨습니다! N배송 설정 가이드 확인이 완료되었습니다.')">✅ 가이드 완료</button>
+    </div>
+  </div>
+
 </div>
 
 <script>
   function changeStep(stepNumber) {
-    document.querySelectorAll('.step-card').forEach(function(el) {
-      el.classList.remove('active');
-    });
-
+    document.querySelectorAll('.step-container').forEach(function(el) { el.classList.remove('active'); });
     document.getElementById('step' + stepNumber).classList.add('active');
 
-    document.querySelectorAll('.progress-step').forEach(function(el, index) {
-      if (index < stepNumber) {
-        el.classList.add('active');
-      } else {
-        el.classList.remove('active');
-      }
+    document.querySelectorAll('.step-dot').forEach(function(el, index) {
+      if(index < stepNumber) { el.classList.add('active'); } 
+      else { el.classList.remove('active'); }
     });
-
-    document.querySelectorAll('.sidebar-menu li').forEach(function(el) {
-      el.classList.remove('active');
-    });
-
-    var targetMenu = document.getElementById('menu' + stepNumber);
-    if (targetMenu) targetMenu.classList.add('active');
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
