@@ -1,0 +1,97 @@
+<section style="padding: 24px; background-color: #ffffff; border: 1px solid #e9ecef; border-radius: 8px; margin-bottom: 40px; font-family: 'Pretendard', sans-serif;">
+    <h2 style="font-size: 20px; font-weight: bold; color: #0040d1; margin-bottom: 12px;">판매처 등록</h2>
+    <p style="font-size: 15px; color: #333; margin-bottom: 20px; line-height: 1.6;">
+        풀필먼트 연동을 위해 품고 나우에 판매처 등록을 진행합니다.
+    </p>
+    <div style="background-color: #f8f9fa; padding: 20px; border-radius: 6px; border-left: 5px solid #0040d1;">
+        <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 10px;">진행 방법</h3>
+        <p style="font-size: 14px; line-height: 1.8; color: #495057;">
+            ① <strong>품고 나우 > 주문 > 판매처 계정 > 판매처 계정 개별 등록</strong>을 클릭해주세요.<br>
+            ② 다음과 같이 설정 후 등록합니다.<br>
+            - <span style="color: #0040d1; font-weight: bold;">판매처명</span> : 스마트스토어(물류사)<br>
+            - <span style="color: #0040d1; font-weight: bold;">브랜드명</span> : 조회되는 브랜드명 선택<br>
+            - <span style="color: #0040d1; font-weight: bold;">연동 계정</span> : 스마트스토어 API 연동용 판매자 ID 입력<br>
+            <span style="display: block; margin-top: 10px; font-size: 13px; color: #868e96;">
+                ※ 확인 경로 : 스마트스토어 > 스토어 관리 > 서비스 연결 > API 관리 > API 연동용 판매자 ID
+            </span>
+        </p>
+    </div>
+</section>
+
+<div style="margin-bottom: 60px; border: 1px solid #dee2e6; padding: 20px; border-radius: 12px; background: #fff;">
+    <h3 style="margin-bottom: 20px; font-size: 16px; color: #868e96;"># 1. 판매처 계정 관리 메인 화면</h3>
+    <div class="page-header" style="display: flex; align-items: center; margin-bottom: 24px;">
+        <div class="page-title" style="font-size: 24px; font-weight: bold; margin-right: 12px;">판매처 계정 관리</div>
+        <div style="font-size: 13px; color: #6c757d; border: 1px solid #ced4da; padding: 4px 8px; border-radius: 4px; cursor: pointer;">📄 설명서</div>
+    </div>
+    <div class="filter-section" style="display: flex; gap: 15px; margin-bottom: 24px; align-items: center;">
+        <div class="filter-group" style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 14px; font-weight: bold;">판매처</label>
+            <select style="padding: 10px 14px; border: 1px solid #ced4da; border-radius: 4px; font-size: 15px; height: 42px; width: 160px;"><option>선택</option></select>
+        </div>
+        <div class="filter-group" style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 14px; font-weight: bold;">브랜드명</label>
+            <select style="padding: 10px 14px; border: 1px solid #ced4da; border-radius: 4px; font-size: 15px; height: 42px; width: 160px;"><option>선택</option></select>
+        </div>
+        <button class="btn-search" style="background-color: #0040d1; color: white; border: none; padding: 0 24px; border-radius: 4px; cursor: pointer; height: 42px; font-weight: bold; margin-top: 24px;">조회</button>
+    </div>
+    <div style="text-align: right; margin-bottom: 15px;">
+        <button class="btn-outline-primary" style="display: inline-flex; align-items: center; border: 1px solid #0040d1; background-color: white; color: #0040d1; padding: 10px 20px; border-radius: 4px; font-size: 15px; font-weight: bold; cursor: pointer;">
+            판매처 계정 개별 등록 
+            <span class="click-target" style="display: inline-flex; align-items: center; gap: 2px; margin-left: 10px; animation: bouncePulse 1.2s infinite ease-in-out;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="#0040d1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14v-4h-2v4H9l3 3 3-3h-2z"/></svg>
+                <span style="background-color: #0040d1; color: #ffffff; font-size: 12px; padding: 3px 8px; border-radius: 6px;">클릭</span>
+            </span>
+        </button>
+    </div>
+    <div class="table-container" style="border-top: 2px solid #333; position: relative; min-height: 200px; margin-bottom: 20px;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr><th style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6; padding: 14px 12px; font-size: 14px; font-weight: bold; color: #495057;">판매처명</th><th style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6; padding: 14px 12px; font-size: 14px; font-weight: bold; color: #495057;">브랜드명</th><th style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6; padding: 14px 12px; font-size: 14px; font-weight: bold; color: #495057;">연동 계정</th></tr>
+            </thead>
+        </table>
+        <div style="text-align: center; padding: 40px; color: #adb5bd;">출력할 데이터가 없습니다.</div>
+    </div>
+</div>
+
+<div style="border: 1px solid #dee2e6; padding: 20px; border-radius: 12px; background: #fff; position: relative;">
+    <h3 style="margin-bottom: 20px; font-size: 16px; color: #868e96;"># 2. 판매처 계정 개별 등록 팝업 화면</h3>
+    <div class="modal-mockup" style="width: 100%; max-width: 520px; margin: 0 auto; border: 1px solid #dee2e6; border-radius: 6px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
+        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid #dee2e6;">
+            <h2 style="font-size: 16px; font-weight: bold; color: #333;">판매처 계정 개별 등록</h2>
+            <span style="cursor: pointer;">&times;</span>
+        </div>
+        <div class="modal-body" style="padding: 24px; display: flex; flex-direction: column; gap: 20px;">
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                <label style="font-size: 13px; font-weight: bold; color: #495057;">판매처명<span style="color: #fa5252; margin-left: 4px;">*</span></label>
+                <select style="padding: 10px 12px; border: 1px solid #748ffc; background-color: #f8fbff; border-radius: 4px; font-size: 14px; width: 100%;"><option>스마트스토어(물류사)</option></select>
+            </div>
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                <label style="font-size: 13px; font-weight: bold; color: #495057;">브랜드명<span style="color: #fa5252; margin-left: 4px;">*</span></label>
+                <select style="padding: 10px 12px; border: 1px solid #748ffc; background-color: #f8fbff; border-radius: 4px; font-size: 14px; width: 100%;"><option>브랜드명 선택</option></select>
+            </div>
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                <label style="font-size: 13px; font-weight: bold; color: #495057;">연동 계정<span style="color: #fa5252; margin-left: 4px;">*</span></label>
+                <input type="text" style="padding: 10px 12px; border: 1px solid #748ffc; background-color: #f8fbff; border-radius: 4px; font-size: 14px; width: 100%;" placeholder="스마트스토어 API 연동용 판매자 ID 입력">
+            </div>
+        </div>
+        <div class="modal-footer" style="padding: 16px 24px; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; gap: 10px; background-color: #f8f9fa;">
+            <button style="padding: 10px 20px; border: 1px solid #ced4da; background-color: #ffffff; color: #495057; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer;">취소</button>
+            <button class="btn-submit" style="padding: 10px 20px; border: none; background-color: #0040d1; color: #ffffff; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center;">
+                등록
+                <span class="click-target" style="display: inline-flex; align-items: center; gap: 2px; margin-left: 10px; animation: bouncePulse 1.2s infinite ease-in-out;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#ffffff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14v-4h-2v4H9l3 3 3-3h-2z"/></svg>
+                    <span style="background-color: #ffffff; color: #0040d1; font-size: 12px; padding: 3px 8px; border-radius: 6px; font-weight: bold;">클릭</span>
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes bouncePulse {
+        0% { transform: translateY(0); box-shadow: 0 0 0 0 rgba(0, 64, 209, 0.4); }
+        50% { transform: translateY(-4px); box-shadow: 0 4px 8px rgba(0, 64, 209, 0.3); }
+        100% { transform: translateY(0); box-shadow: 0 0 0 0 rgba(0, 64, 209, 0); }
+    }
+</style>
