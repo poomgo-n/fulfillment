@@ -11,7 +11,7 @@ const GUIDE_STEPS = [
         "./steps/step1-right-2.html",
        "./steps/step1-right-3.html"
       ],
-      helpFile: "./help/step1-login-help.html"
+      helpFile: "./help/step1-help.html"
     },
     {
       title: "구성원 추가",
