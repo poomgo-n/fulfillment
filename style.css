@@ -69,35 +69,124 @@ button {
   color: #667085;
 }
 
-.step-nav {
-  display: flex;
-  gap: 10px;
-  padding: 18px 32px 0;
-  flex-wrap: wrap;
+/* 진행률 */
+.progress-section {
+  padding: 24px 32px 8px;
+  border-bottom: 1px solid #edf0f4;
   background: #ffffff;
 }
 
-.step-chip {
-  border: 1px solid #d9e0ea;
-  background: #ffffff;
-  color: #667085;
-  border-radius: 999px;
-  padding: 10px 16px;
+.progress-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.progress-label {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #0040d1;
+}
+
+.progress-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.progress-meta {
   font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
+  font-weight: 800;
+  color: #0040d1;
+}
+
+.progress-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+}
+
+.progress-step {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.progress-node-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.progress-node {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 2px solid #d6dbe5;
+  background: #ffffff;
+  color: #98a2b3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
   transition: all 0.2s ease;
 }
 
-.step-chip.active {
-  background: #00c73c;
-  border-color: #00c73c;
+.progress-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: #98a2b3;
+  text-align: center;
+  word-break: keep-all;
+}
+
+.progress-line {
+  flex: 1;
+  height: 4px;
+  margin: 0 12px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  position: relative;
+  top: -11px;
+}
+
+.progress-step.done .progress-node {
+  background: #0040d1;
+  border-color: #0040d1;
   color: #ffffff;
+}
+
+.progress-step.done .progress-text {
+  color: #0040d1;
+}
+
+.progress-step.current .progress-node {
+  background: #eef3ff;
+  border-color: #0040d1;
+  color: #0040d1;
+  box-shadow: 0 0 0 6px rgba(0, 64, 209, 0.08);
+}
+
+.progress-step.current .progress-text {
+  color: #111827;
+}
+
+.progress-step.done .progress-line {
+  background: #0040d1;
 }
 
 .guide-layout {
   display: flex;
-  min-height: calc(100vh - 190px);
+  min-height: calc(100vh - 250px);
   background: #ffffff;
 }
 
@@ -125,8 +214,8 @@ button {
 .panel-kicker {
   font-size: 12px;
   font-weight: 800;
-  color: #00a63a;
-  background: #ebfff1;
+  color: #0040d1;
+  background: #eef3ff;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -203,7 +292,7 @@ button {
 
 .slide-dot.active {
   width: 28px;
-  background: #00c73c;
+  background: #0040d1;
 }
 
 .panel-footer {
@@ -238,7 +327,7 @@ button {
 }
 
 .btn-primary {
-  background: #00c73c;
+  background: #0040d1;
   color: #ffffff;
 }
 
@@ -249,8 +338,8 @@ button {
 
 .btn-outline {
   background: #ffffff;
-  color: #111827;
-  border: 1px solid #d9e0ea;
+  color: #0040d1;
+  border: 1px solid #cfd8ff;
 }
 
 .btn-complete {
@@ -326,7 +415,7 @@ button {
 .drawer-kicker {
   font-size: 12px;
   font-weight: 800;
-  color: #00a63a;
+  color: #0040d1;
   margin-bottom: 8px;
 }
 
@@ -354,7 +443,7 @@ button {
 .help-card {
   border: 1px solid #e6ebf2;
   border-radius: 16px;
-  background: #fafcff;
+  background: #f8faff;
   padding: 16px;
 }
 
@@ -406,7 +495,7 @@ button {
   }
 
   .app-header,
-  .step-nav {
+  .progress-section {
     padding-left: 18px;
     padding-right: 18px;
   }
@@ -422,8 +511,21 @@ button {
     font-size: 22px;
   }
 
-  .panel-title {
+  .panel-title,
+  .progress-title {
     font-size: 22px;
+  }
+
+  .progress-track {
+    gap: 8px;
+  }
+
+  .progress-line {
+    margin: 0 6px;
+  }
+
+  .progress-text {
+    font-size: 11px;
   }
 
   .panel-footer {
