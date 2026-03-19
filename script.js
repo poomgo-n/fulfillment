@@ -1,16 +1,27 @@
 const GUIDE_STEPS = [
-  {
-    id: 1,
-    name: "STEP 1",
-    title: "품고 나우 로그인",
-    leftFile: "./steps/step1-left.html",
-    rightFiles: [
-      "./steps/step1-right-1.html",
-      "./steps/step1-right-2.html",
-      "./steps/step1-right-3.html"
-    ],
-    helpFile: "./help/step1-help.html"
-  },
+{
+  id: 1,
+  title: "STEP1",
+  subSteps: [
+    {
+      title: "품고 나우 로그인",
+      leftFile: "./steps/step1-login-left.html",
+      rightFiles: [
+        "./steps/step1-login-right-1.html",
+        "./steps/step1-login-right-2.html"
+      ],
+      helpFile: "./help/step1-login-help.html"
+    },
+    {
+      title: "구성원 추가",
+      leftFile: "./steps/step1-member-left.html",
+      rightFiles: [
+        "./steps/step1-member-right-1.html"
+      ],
+      helpFile: "./help/step1-member-help.html"
+    }
+  ]
+},
   {
     id: 2,
     name: "STEP 2",
