@@ -5,11 +5,11 @@ const GUIDE_STEPS = [
   subSteps: [
     {
       title: "품고 나우 로그인",
-      leftFile: "./steps/step1-left.html",
+      leftFile: "./steps/step1-login-left.html",
       rightFiles: [
-        "./steps/step1-right-1.html",
-        "./steps/step1-right-2.html",
-       "./steps/step1-right-3.html"
+        "./steps/step1-login-right-1.html",
+        "./steps/step1-login-right-2.html",
+       "./steps/step1-login-right-3.html"
       ],
       helpFile: "./help/step1-help.html"
     },
