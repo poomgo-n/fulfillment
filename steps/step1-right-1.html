@@ -5,37 +5,29 @@
     style="position:relative; width:100%; height:620px; background:#f1f5f9; border-radius:16px; overflow:hidden; border:1px solid #d1d5db;"
   >
 
-    <!-- ❌ 좌우 버튼 제거 완료 -->
+    <div
+      class="manual-step-view"
+      data-step-view="1"
+      style="position:absolute; inset:0; background:#fff; display:flex; justify-content:center; align-items:center;"
+    >
+      <div style="width:400px; max-width:100%; text-align:center;">
 
-<div
-  class="manual-step-view"
-  data-step-view="1"
-  style="
-    position:absolute;
-    inset:0;
-    background:#fff;
-    display:flex;
-    align-items:center; /* ✅ 여기 수정 */
-    justify-content:center;
-    overflow:hidden; /* 스크롤도 같이 제거 추천 */
-    padding:24px;
-  "
->
+        <!-- 로고 -->
+        <img
+          src="./Primary Logo.png"
+          alt="logo"
+          style="height:26px; margin-bottom:40px;"
+          onerror="this.style.display='none'"
+        >
 
-        <!-- ✅ 로고 정상 수정 -->
-<img
-  src="./Primary Logo.png"
-  alt="logo"
-  style="height:26px; width:auto; margin-bottom:46px; object-fit:contain;"
-  onerror="this.style.display='none'"
->
-
+        <!-- 이메일 -->
         <div
           style="height:54px; border:1px solid #ced4da; border-radius:6px; margin-bottom:14px; background:#f9fafb; display:flex; align-items:center; padding:0 16px; color:#9ca3af; font-size:15px; text-align:left;"
         >
           이메일
         </div>
 
+        <!-- 비밀번호 -->
         <div
           style="height:54px; border:1px solid #ced4da; border-radius:6px; margin-bottom:16px; background:#f9fafb; display:flex; align-items:center; justify-content:space-between; padding:0 16px; color:#9ca3af; font-size:15px;"
         >
@@ -43,6 +35,7 @@
           <span style="letter-spacing:2px;"></span>
         </div>
 
+        <!-- 체크 -->
         <div
           style="display:flex; align-items:center; gap:8px; font-size:14px; color:#111827; font-weight:700; margin-bottom:20px; text-align:left;"
         >
@@ -52,14 +45,18 @@
           <span>이메일 저장</span>
         </div>
 
+        <!-- 로그인 버튼 -->
         <div
           style="height:56px; background:#0040d1; border-radius:4px; margin-bottom:34px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; font-weight:700; box-shadow:0 10px 22px rgba(0,64,209,.22);"
         >
           로그인
         </div>
 
+        <!-- 비밀번호 찾기 -->
         <div style="position:relative; display:inline-block;">
-          <span style="color:#111827; font-size:15px; font-weight:700;">비밀번호 찾기</span>
+          <span style="color:#111827; font-size:15px; font-weight:700;">
+            비밀번호 찾기
+          </span>
           <div class="manual-click-pulse"></div>
         </div>
 
