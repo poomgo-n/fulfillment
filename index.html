@@ -1,360 +1,881 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>N배송 설정 가이드</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>N배송 가이드</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <style>
+    * { box-sizing: border-box; }
 
-<style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Pretendard;
-  background:#f6f8fb;
-}
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      font-family: Pretendard, sans-serif;
+      background: #f6f8fb;
+      color: #111827;
+      overflow: hidden;
+    }
 
-.app{
-  display:flex;
-  height:100vh;
-}
+    body.help-open {
+      overflow: hidden;
+    }
 
-/* ================= LEFT ================= */
-.sidebar{
-  width:300px;
-  background:#fff;
-  border-right:1px solid #eee;
-  padding:20px;
-  overflow:auto;
-}
+    button {
+      font-family: Pretendard, sans-serif;
+    }
 
-.step{
-  margin-bottom:24px;
-}
+    .app {
+      display: flex;
+      height: 100vh;
+    }
 
-.step-title{
-  font-weight:800;
-  font-size:15px;
-  margin-bottom:10px;
-  display:flex;
-  justify-content:space-between;
-}
+    /* ================= LEFT SIDEBAR ================= */
+    .sidebar {
+      width: 320px;
+      background: #fff;
+      border-right: 1px solid #eee;
+      padding: 20px;
+      overflow: auto;
+      scrollbar-width: none;
+      flex-shrink: 0;
+    }
 
-.badge{
-  font-size:11px;
-  padding:3px 8px;
-  border-radius:999px;
-}
+    .sidebar::-webkit-scrollbar {
+      display: none;
+    }
 
-.badge.done{background:#111;color:#fff}
-.badge.ing{background:#0040d1;color:#fff}
-.badge.wait{background:#e5e7eb;color:#555}
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+      border-bottom: 1px solid #f1f3f5;
+    }
 
-.sub{
-  padding-left:10px;
-}
+    .sidebar-brand img {
+      height: 30px;
+      width: auto;
+      display: block;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
 
-.sub-item{
-  padding:8px 10px;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:14px;
-  display:flex;
-  justify-content:space-between;
-}
+    .sidebar-brand-text {
+      min-width: 0;
+    }
 
-.sub-item:hover{background:#f3f4f6}
-.sub-item.active{background:#eef3ff;color:#0040d1;font-weight:700}
+    .sidebar-brand-title {
+      margin: 0;
+      font-size: 19px;
+      font-weight: 800;
+      color: #111827;
+      line-height: 1.2;
+    }
 
-.optional{
-  font-size:11px;
-  color:#999;
-  margin-left:6px;
-}
+    .sidebar-brand-desc {
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: #6b7280;
+      line-height: 1.4;
+    }
 
-/* ================= RIGHT ================= */
-.main{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-}
+    .step {
+      margin-bottom: 24px;
+    }
 
-/* top */
-.top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:20px 30px;
-  border-bottom:1px solid #eee;
-  background:#fff;
-}
+    .step-title {
+      font-weight: 800;
+      font-size: 15px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      line-height: 1.4;
+    }
 
-.title{
-  font-size:22px;
-  font-weight:800;
-}
+    .badge {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+      height: fit-content;
+    }
 
-.progress{
-  font-size:14px;
-  font-weight:700;
-  color:#0040d1;
-}
+    .badge.done {
+      background: #111827;
+      color: #fff;
+    }
 
-/* content */
-.content{
-  flex:1;
-  display:flex;
-}
+    .badge.ing {
+      background: #0040d1;
+      color: #fff;
+    }
 
-.left{
-  width:50%;
-  padding:30px;
-  overflow:auto;
-  border-right:1px solid #eee;
-}
+    .badge.wait {
+      background: #e5e7eb;
+      color: #555;
+    }
 
-.right{
-  width:50%;
-  padding:20px;
-  display:flex;
-  flex-direction:column;
-}
+    .sub {
+      padding-left: 8px;
+    }
 
-.viewer{
-  flex:1;
-  background:#fff;
-  border-radius:16px;
-  border:1px solid #e5e7eb;
-  overflow:hidden;
-}
+    .sub-item {
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      color: #374151;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
 
-/* nav */
-.nav{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  margin-top:10px;
-}
+    .sub-item:hover {
+      background: #f3f4f6;
+    }
 
-.btn{
-  padding:10px 14px;
-  border-radius:10px;
-  border:none;
-  cursor:pointer;
-}
+    .sub-item.active {
+      background: #eef3ff;
+      color: #0040d1;
+      font-weight: 700;
+    }
 
-.btn-primary{
-  background:#0040d1;
-  color:#fff;
-}
-</style>
+    .optional {
+      font-size: 11px;
+      color: #9ca3af;
+      white-space: nowrap;
+      margin-left: 6px;
+    }
+
+    /* ================= MAIN ================= */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 30px;
+      border-bottom: 1px solid #eee;
+      background: #fff;
+      flex-shrink: 0;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.3;
+      min-width: 0;
+    }
+
+    .progress {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0040d1;
+      flex-shrink: 0;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+
+    .left {
+      width: 50%;
+      min-width: 0;
+      padding: 30px;
+      overflow: hidden;
+      border-right: 1px solid #eee;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .left-body {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      scrollbar-width: none;
+      padding-right: 4px;
+    }
+
+    .left-body::-webkit-scrollbar {
+      display: none;
+    }
+
+    .left-actions {
+      display: flex;
+      gap: 10px;
+      padding-top: 18px;
+      margin-top: 18px;
+      border-top: 1px solid #edf0f4;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+
+    .right {
+      width: 50%;
+      min-width: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      background: #fafbfc;
+    }
+
+    .viewer {
+      flex: 1;
+      min-height: 0;
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
+    }
+
+    .viewer-frame {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: #0040d1;
+      color: #fff;
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: #0040d1;
+      border: 1px solid #cfd8ff;
+    }
+
+    .btn-complete {
+      background: #111827;
+      color: #fff;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: 1px solid #d9e0ea;
+      background: #fff;
+      color: #111827;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+    }
+
+    .icon-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .loading-box {
+      width: 100%;
+      height: 100%;
+      min-height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #667085;
+      font-size: 14px;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    .viewer-frame > * {
+      width: 100%;
+      height: 100%;
+    }
+
+    .manual-step-view,
+    .manual-viewer {
+      width: 100% !important;
+      height: 100% !important;
+      max-height: 100% !important;
+    }
+
+    .manual-step-view,
+    .viewer,
+    .viewer-frame {
+      scrollbar-width: none;
+    }
+
+    .manual-step-view::-webkit-scrollbar,
+    .viewer::-webkit-scrollbar,
+    .viewer-frame::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* ================= HELP DRAWER ================= */
+    .help-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.25);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      z-index: 40;
+    }
+
+    .help-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .help-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(460px, 100%);
+      height: 100vh;
+      background: #fff;
+      box-shadow: -12px 0 28px rgba(15, 23, 42, 0.14);
+      transform: translateX(100%);
+      transition: transform 0.28s ease;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .help-drawer.open {
+      transform: translateX(0);
+    }
+
+    .help-drawer-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 24px;
+      border-bottom: 1px solid #edf0f4;
+      flex-shrink: 0;
+    }
+
+    .drawer-kicker {
+      font-size: 12px;
+      font-weight: 800;
+      color: #0040d1;
+      margin-bottom: 8px;
+    }
+
+    .drawer-title {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 800;
+      color: #111827;
+      line-height: 1.3;
+    }
+
+    .help-drawer-body {
+      flex: 1;
+      overflow: auto;
+      padding: 20px;
+      scrollbar-width: none;
+    }
+
+    .help-drawer-body::-webkit-scrollbar {
+      display: none;
+    }
+
+    .faq-item {
+      border: 1px solid #e6ebf2;
+      border-radius: 14px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .faq-item + .faq-item {
+      margin-top: 10px;
+    }
+
+    .faq-question {
+      width: 100%;
+      border: none;
+      background: #fff;
+      padding: 16px 18px;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .faq-question:hover {
+      background: #f8faff;
+    }
+
+    .faq-icon {
+      color: #0040d1;
+      font-size: 18px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 0 18px 18px;
+      font-size: 14px;
+      color: #4b5563;
+      line-height: 1.8;
+      background: #fff;
+    }
+
+    .faq-item.open .faq-answer {
+      display: block;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    @media (max-width: 1200px) {
+      html, body {
+        overflow: auto;
+      }
+
+      .app {
+        height: auto;
+        min-height: 100vh;
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #eee;
+      }
+
+      .content {
+        flex-direction: column;
+      }
+
+      .left, .right {
+        width: 100%;
+      }
+
+      .left {
+        border-right: none;
+        border-bottom: 1px solid #eee;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .top {
+        padding: 16px 18px;
+      }
+
+      .left, .right {
+        padding: 18px;
+      }
+
+      .left-actions .btn {
+        flex: 1;
+      }
+
+      .title {
+        font-size: 20px;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
 <div class="app">
 
   <!-- ================= SIDEBAR ================= -->
-  <div class="sidebar" id="sidebar"></div>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="./Primary Logo.png" alt="품고 로고" onerror="this.style.display='none'">
+      <div class="sidebar-brand-text">
+        <h1 class="sidebar-brand-title">N배송 가이드</h1>
+        <p class="sidebar-brand-desc">단계별로 설정을 진행해주세요.</p>
+      </div>
+    </div>
+
+    <div id="sidebar"></div>
+  </aside>
 
   <!-- ================= MAIN ================= -->
-  <div class="main">
-
+  <section class="main">
     <div class="top">
       <div class="title" id="title">-</div>
-      <div class="progress" id="progress">0%</div>
+      <div class="progress" id="progress">진행률 0%</div>
     </div>
 
     <div class="content">
-      <div class="left" id="left"></div>
+      <section class="left">
+        <div class="left-body" id="left"></div>
 
-      <div class="right">
+        <div class="left-actions">
+          <button class="btn btn-outline" id="helpBtn">도움말</button>
+          <button class="btn btn-primary" id="nextBtn">다음 단계</button>
+        </div>
+      </section>
+
+      <section class="right">
         <div class="viewer" id="right"></div>
 
         <div class="nav">
-          <button class="btn" onclick="prev()">‹</button>
-          <button class="btn" onclick="next()">›</button>
+          <button class="icon-btn" id="prevSlideBtn" aria-label="이전 화면">‹</button>
+          <button class="icon-btn" id="nextSlideBtn" aria-label="다음 화면">›</button>
         </div>
-      </div>
+      </section>
     </div>
-
-  </div>
+  </section>
 </div>
 
+<!-- ================= HELP ================= -->
+<div class="help-overlay" id="helpOverlay"></div>
+
+<aside class="help-drawer" id="helpDrawer" aria-hidden="true">
+  <div class="help-drawer-header">
+    <div>
+      <div class="drawer-kicker">도움말</div>
+      <h3 class="drawer-title" id="helpTitle">도움말</h3>
+    </div>
+    <button class="icon-btn" id="closeHelpBtn" aria-label="닫기">×</button>
+  </div>
+
+  <div class="help-drawer-body" id="helpContent">
+    <div class="loading-box">도움말을 불러오는 중입니다...</div>
+  </div>
+</aside>
+
 <script>
+  const STEPS = [
+    {
+      title: "STEP1. 품고 나우 설정",
+      items: [
+        {
+          title: "품고 나우 로그인",
+          required: true,
+          left: "./steps/step1-login-left.html",
+          right: [
+            "./steps/step1-login-right-1.html",
+            "./steps/step1-login-right-2.html",
+            "./steps/step1-login-right-3.html"
+          ],
+          help: "./help/step1-help.html"
+        },
+        {
+          title: "구성원 추가",
+          required: false,
+          left: "./steps/step1-member-left.html",
+          right: [
+            "./steps/step1-member-right-1.html"
+          ],
+          help: "./help/step1-member-help.html"
+        }
+      ]
+    },
+    {
+      title: "STEP2. 풀필먼트 연동",
+      items: [
+        { title: "판매처 계정 등록", required: true, left: "./steps/step2-account-left.html", right: ["./steps/step2-account-right-1.html"], help: "./help/step2-account-help.html" },
+        { title: "풀필먼트 연동", required: true, left: "./steps/step2-fulfillment-left.html", right: ["./steps/step2-fulfillment-right-1.html"], help: "./help/step2-fulfillment-help.html" },
+        { title: "N배송 프로그램 약관 동의", required: true, left: "./steps/step2-terms-left.html", right: ["./steps/step2-terms-right-1.html"], help: "./help/step2-terms-help.html" }
+      ]
+    },
+    {
+      title: "STEP3. SKU 등록",
+      items: [
+        { title: "SKU 등록", required: true, left: "./steps/step3-sku-left.html", right: ["./steps/step3-sku-right-1.html"], help: "./help/step3-sku-help.html" },
+        { title: "상품 매핑", required: true, left: "./steps/step3-mapping-left.html", right: ["./steps/step3-mapping-right-1.html"], help: "./help/step3-mapping-help.html" }
+      ]
+    },
+    {
+      title: "STEP4. 초도 입고",
+      items: [
+        { title: "입고 가이드", required: true, left: "./steps/step4-inbound-left.html", right: ["./steps/step4-inbound-right-1.html"], help: "./help/step4-inbound-help.html" },
+        { title: "초도 입고 패킹리스트 제출하기", required: true, left: "./steps/step4-packing-left.html", right: ["./steps/step4-packing-right-1.html"], help: "./help/step4-packing-help.html" }
+      ]
+    },
+    {
+      title: "STEP5. N배송 설정하기",
+      items: [
+        { title: "N배송 설정하기", required: true, left: "./steps/step5-left.html", right: ["./steps/step5-right-1.html"], help: "./help/step5-help.html" }
+      ]
+    }
+  ];
 
-/* ================= DATA ================= */
-const STEPS = [
-  {
-    title:"STEP1. 품고 나우 설정",
-    items:[
-      {title:"품고 나우 로그인", required:true, left:"./steps/step1-login-left.html", right:["./steps/step1-login-right-1.html","./steps/step1-login-right-2.html","./steps/step1-login-right-3.html"]},
-      {title:"구성원 추가", required:false, left:"./steps/step1-member-left.html", right:["./steps/step1-member-right-1.html"]}
-    ]
-  },
-  {
-    title:"STEP2. 풀필먼트 연동",
-    items:[
-      {title:"판매처 계정 등록", required:true},
-      {title:"풀필먼트 연동", required:true},
-      {title:"N배송 프로그램 약관 동의", required:true}
-    ]
-  },
-  {
-    title:"STEP3. SKU 등록",
-    items:[
-      {title:"SKU 등록", required:true},
-      {title:"상품 매핑", required:true}
-    ]
-  },
-  {
-    title:"STEP4. 초도 입고",
-    items:[
-      {title:"입고 가이드", required:true},
-      {title:"패킹리스트 제출", required:true}
-    ]
-  },
-  {
-    title:"STEP5. N배송 설정하기",
-    items:[
-      {title:"설정 완료", required:true}
-    ]
+  let currentStep = 0;
+  let currentItem = 0;
+  let currentSlide = 0;
+
+  const done = {};
+
+  const sidebarEl = document.getElementById("sidebar");
+  const titleEl = document.getElementById("title");
+  const progressEl = document.getElementById("progress");
+  const leftEl = document.getElementById("left");
+  const rightEl = document.getElementById("right");
+  const helpBtn = document.getElementById("helpBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const prevSlideBtn = document.getElementById("prevSlideBtn");
+  const nextSlideBtn = document.getElementById("nextSlideBtn");
+
+  const helpOverlay = document.getElementById("helpOverlay");
+  const helpDrawer = document.getElementById("helpDrawer");
+  const helpTitle = document.getElementById("helpTitle");
+  const helpContent = document.getElementById("helpContent");
+  const closeHelpBtn = document.getElementById("closeHelpBtn");
+
+  function currentItemData() {
+    return STEPS[currentStep].items[currentItem];
   }
-];
 
-let currentStep=0;
-let currentItem=0;
-let currentSlide=0;
+  function requiredItemsFlat() {
+    return STEPS.flatMap((step, sIdx) =>
+      step.items
+        .map((item, iIdx) => ({ ...item, key: `${sIdx}-${iIdx}` }))
+        .filter(item => item.required)
+    );
+  }
 
-let done={};
+  function renderSidebar() {
+    sidebarEl.innerHTML = "";
 
-/* ================= RENDER ================= */
+    STEPS.forEach((step, sIdx) => {
+      const required = step.items.filter(i => i.required);
+      const requiredIndices = step.items
+        .map((item, iIdx) => ({ item, iIdx }))
+        .filter(x => x.item.required);
 
-function renderSidebar(){
-  const el=document.getElementById("sidebar");
-  el.innerHTML="";
+      const doneCount = requiredIndices.filter(x => done[`${sIdx}-${x.iIdx}`]).length;
 
-  STEPS.forEach((step,sIdx)=>{
-    const stepEl=document.createElement("div");
-    stepEl.className="step";
+      let status = "wait";
+      if (required.length > 0 && doneCount === required.length) status = "done";
+      else if (sIdx === currentStep) status = "ing";
 
-    // 상태 계산
-    const required=step.items.filter(i=>i.required);
-    const doneCount=required.filter((_,i)=>done[`${sIdx}-${i}`]).length;
+      const stepEl = document.createElement("div");
+      stepEl.className = "step";
 
-    let status="wait";
-    if(doneCount===required.length) status="done";
-    else if(sIdx===currentStep) status="ing";
-
-    stepEl.innerHTML=`
-      <div class="step-title">
-        ${step.title}
-        <span class="badge ${status}">
-          ${status==="done"?"완료":status==="ing"?"진행중":"대기중"}
-        </span>
-      </div>
-    `;
-
-    const sub=document.createElement("div");
-    sub.className="sub";
-
-    step.items.forEach((item,iIdx)=>{
-      const itemEl=document.createElement("div");
-      itemEl.className="sub-item "+(sIdx===currentStep&&iIdx===currentItem?"active":"");
-
-      itemEl.innerHTML=`
-        <span>
-          ${item.title}
-          ${!item.required?'<span class="optional">선택</span>':''}
-        </span>
+      stepEl.innerHTML = `
+        <div class="step-title">
+          <span>${step.title}</span>
+          <span class="badge ${status}">
+            ${status === "done" ? "완료" : status === "ing" ? "진행중" : "대기중"}
+          </span>
+        </div>
       `;
 
-      itemEl.onclick=()=>{
-        currentStep=sIdx;
-        currentItem=iIdx;
-        currentSlide=0;
-        render();
-      };
+      const sub = document.createElement("div");
+      sub.className = "sub";
 
-      sub.appendChild(itemEl);
+      step.items.forEach((item, iIdx) => {
+        const itemEl = document.createElement("div");
+        itemEl.className = "sub-item" + (sIdx === currentStep && iIdx === currentItem ? " active" : "");
+        itemEl.innerHTML = `
+          <span>
+            ${item.title}
+            ${!item.required ? '<span class="optional">선택</span>' : ''}
+          </span>
+        `;
+        itemEl.addEventListener("click", () => {
+          currentStep = sIdx;
+          currentItem = iIdx;
+          currentSlide = 0;
+          render();
+        });
+        sub.appendChild(itemEl);
+      });
+
+      stepEl.appendChild(sub);
+      sidebarEl.appendChild(stepEl);
     });
-
-    stepEl.appendChild(sub);
-    el.appendChild(stepEl);
-  });
-}
-
-async function loadHTML(path){
-  if(!path) return "";
-  const res=await fetch(path+"?v="+Date.now());
-  return await res.text();
-}
-
-async function render(){
-  renderSidebar();
-
-  const step=STEPS[currentStep];
-  const item=step.items[currentItem];
-
-  document.getElementById("title").innerText=item.title;
-
-  // 진행률 계산 (필수만)
-  const total=STEPS.flatMap(s=>s.items).filter(i=>i.required).length;
-  const doneCount=Object.keys(done).length;
-  document.getElementById("progress").innerText=Math.floor(doneCount/total*100)+"%";
-
-  // left
-  if(item.left){
-    document.getElementById("left").innerHTML=await loadHTML(item.left);
-  }else{
-    document.getElementById("left").innerHTML="";
   }
 
-  // right
-  if(item.right){
-    document.getElementById("right").innerHTML=await loadHTML(item.right[currentSlide]);
-  }
-}
-
-/* ================= NAV ================= */
-
-function next(){
-  const item=STEPS[currentStep].items[currentItem];
-
-  // 완료 처리 (필수만)
-  if(item.required){
-    done[`${currentStep}-${currentItem}`]=true;
+  async function loadHTML(path) {
+    if (!path) return "";
+    const res = await fetch(path + "?v=" + Date.now(), { cache: "no-store" });
+    if (!res.ok) throw new Error(`파일을 불러오지 못했습니다: ${path}`);
+    return await res.text();
   }
 
-  if(item.right && currentSlide < item.right.length-1){
-    currentSlide++;
-  }else{
-    currentSlide=0;
-    currentItem++;
+  async function renderHelp() {
+    const item = currentItemData();
+    helpTitle.textContent = item.title;
 
-    if(currentItem>=STEPS[currentStep].items.length){
-      currentItem=0;
-      currentStep++;
+    try {
+      const html = await loadHTML(item.help);
+      helpContent.innerHTML = html;
+      bindFaqToggle();
+    } catch (e) {
+      helpContent.innerHTML = `<div class="loading-box">${e.message}</div>`;
     }
   }
 
-  render();
-}
-
-function prev(){
-  if(currentSlide>0){
-    currentSlide--;
-  }else if(currentItem>0){
-    currentItem--;
-  }else if(currentStep>0){
-    currentStep--;
+  function bindFaqToggle() {
+    const buttons = helpContent.querySelectorAll("[data-faq-question]");
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const item = btn.closest(".faq-item");
+        if (item) item.classList.toggle("open");
+      });
+    });
   }
+
+  function renderProgress() {
+    const total = requiredItemsFlat().length;
+    const doneCount = requiredItemsFlat().filter(item => done[item.key]).length;
+    const percent = total === 0 ? 0 : Math.floor((doneCount / total) * 100);
+    progressEl.textContent = `진행률 ${percent}%`;
+  }
+
+  async function render() {
+    renderSidebar();
+    renderProgress();
+
+    const item = currentItemData();
+    titleEl.textContent = item.title;
+
+    try {
+      leftEl.innerHTML = await loadHTML(item.left);
+    } catch (e) {
+      leftEl.innerHTML = `<div class="loading-box">${e.message}</div>`;
+    }
+
+    try {
+      rightEl.innerHTML = `<div class="viewer-frame">${await loadHTML(item.right[currentSlide])}</div>`;
+    } catch (e) {
+      rightEl.innerHTML = `<div class="loading-box">${e.message}</div>`;
+    }
+
+    prevSlideBtn.disabled = !item.right || item.right.length <= 1;
+    nextSlideBtn.disabled = !item.right || item.right.length <= 1;
+
+    await renderHelp();
+
+    if (currentStep === STEPS.length - 1 && currentItem === STEPS[currentStep].items.length - 1) {
+      nextBtn.textContent = "가이드 완료";
+      nextBtn.classList.add("btn-complete");
+      nextBtn.classList.remove("btn-primary");
+    } else {
+      nextBtn.textContent = "다음 단계";
+      nextBtn.classList.add("btn-primary");
+      nextBtn.classList.remove("btn-complete");
+    }
+  }
+
+  function goNextContent() {
+    const item = currentItemData();
+
+    if (item.required) {
+      done[`${currentStep}-${currentItem}`] = true;
+    }
+
+    if (item.right && currentSlide < item.right.length - 1) {
+      currentSlide++;
+      render();
+      return;
+    }
+
+    currentSlide = 0;
+
+    if (currentItem < STEPS[currentStep].items.length - 1) {
+      currentItem++;
+      render();
+      return;
+    }
+
+    if (currentStep < STEPS.length - 1) {
+      currentStep++;
+      currentItem = 0;
+      render();
+      return;
+    }
+
+    alert("수고하셨습니다! 가이드 확인이 완료되었습니다.");
+  }
+
+  function goPrevSlide() {
+    const item = currentItemData();
+    if (!item.right || item.right.length <= 1) return;
+
+    currentSlide = (currentSlide - 1 + item.right.length) % item.right.length;
+    render();
+  }
+
+  function goNextSlide() {
+    const item = currentItemData();
+    if (!item.right || item.right.length <= 1) return;
+
+    currentSlide = (currentSlide + 1) % item.right.length;
+    render();
+  }
+
+  function openHelp() {
+    helpOverlay.classList.add("open");
+    helpDrawer.classList.add("open");
+    document.body.classList.add("help-open");
+  }
+
+  function closeHelp() {
+    helpOverlay.classList.remove("open");
+    helpDrawer.classList.remove("open");
+    document.body.classList.remove("help-open");
+  }
+
+  nextBtn.addEventListener("click", goNextContent);
+  prevSlideBtn.addEventListener("click", goPrevSlide);
+  nextSlideBtn.addEventListener("click", goNextSlide);
+
+  helpBtn.addEventListener("click", openHelp);
+  closeHelpBtn.addEventListener("click", closeHelp);
+  helpOverlay.addEventListener("click", closeHelp);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeHelp();
+  });
+
   render();
-}
-
-render();
-
 </script>
 
 </body>
