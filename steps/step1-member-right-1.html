@@ -1,0 +1,165 @@
+<div class="guide-wrapper" style="position: relative; width: 100%; height: 100%; border: 1px solid #e9ecef; border-radius: 16px; overflow: hidden; font-family: 'Pretendard', sans-serif; background: #fff;">
+
+  <div style="display: flex; height: 100%;">
+    
+    <!-- 좌측 메뉴 -->
+    <aside style="width: 220px; border-right: 1px solid #f1f3f5; background: #fff; display: flex; flex-direction: column;">
+      <div style="height: 60px;"></div>
+
+      <div style="padding: 10px 20px; font-size: 14px; color: #adb5bd;">메뉴</div>
+
+      <div style="padding: 12px 20px; font-size: 15px; color: #495057;">
+        ▼ <strong>등록</strong>
+      </div>
+
+      <div style="padding: 10px 20px 10px 45px; font-size: 14px;">브랜드</div>
+      <div style="padding: 10px 20px 10px 45px; font-size: 14px;">담당자 연락처</div>
+
+      <!-- 클릭 강조 -->
+      <div style="padding: 10px 20px 10px 45px; font-size: 14px; color: #0040d1; font-weight: bold; background: #f0f4ff; position: relative;">
+        구성원
+        <span class="click-hand">클릭</span>
+      </div>
+
+      <div style="padding: 10px 20px 10px 45px; font-size: 14px;">주소록</div>
+    </aside>
+
+    <!-- 메인 -->
+    <main style="flex: 1; padding: 40px; background: #fff;">
+      <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 40px;">구성원</h2>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f1f3f5; padding-bottom: 20px;">
+        <div style="font-size: 16px; font-weight: bold;">
+          구성원 <span style="color: #adb5bd; font-weight: normal;">0명의 구성원</span>
+        </div>
+
+        <!-- 버튼 -->
+        <button id="btnAdd" style="border: 1px solid #e9ecef; background: #f8faff; color: #0040d1; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; position: relative;">
+          + 구성원 추가
+          <span class="click-hand">클릭</span>
+        </button>
+      </div>
+
+      <div style="text-align: center; padding: 60px; color: #adb5bd;">
+        등록된 구성원이 없습니다.
+      </div>
+    </main>
+  </div>
+
+  <!-- 오버레이 -->
+  <div id="addMemberOverlay" style="position: absolute; inset: 0; background: #fff; transform: translateY(100%); transition: transform 0.4s ease; z-index: 10;">
+
+    <!-- 상단 -->
+    <div style="display: flex; align-items: center; padding: 15px 25px; border-bottom: 1px solid #f1f3f5; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <span id="btnBack" style="cursor: pointer; font-size: 20px;">←</span>
+        <strong>구성원 추가</strong>
+      </div>
+
+      <button style="background: #0040d1; color: #fff; border: none; padding: 8px 20px; border-radius: 6px; font-weight: bold; position: relative;">
+        구성원 추가
+        <span class="click-hand">클릭</span>
+      </button>
+    </div>
+
+    <!-- 내용 -->
+    <div style="padding: 40px; display: flex; flex-direction: column; align-items: center;">
+
+      <div style="width: 100px; height: 100px; background: #e9ecef; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #adb5bd; margin-bottom: 40px;">
+        품고
+      </div>
+
+      <div style="width: 100%; max-width: 600px; border: 1px solid #e9ecef; border-radius: 12px; padding: 30px;">
+        <p style="font-weight: bold; margin-bottom: 25px;">기본</p>
+
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+
+          <div style="display: flex; align-items: center;">
+            <label style="width: 100px;">이름 *</label>
+            <input id="inputName" readonly style="flex:1; padding:10px; border:1px solid #e9ecef; border-radius:4px;">
+          </div>
+
+          <div style="display: flex; align-items: center;">
+            <label style="width: 100px;">이메일 *</label>
+            <div style="flex:1; display:flex; gap:10px;">
+              <input id="inputEmail" readonly style="flex:1; padding:10px; border:1px solid #e9ecef; border-radius:4px;">
+              <button id="btnCheck" style="padding:0 15px; background:#f8f9fa; border:1px solid #e9ecef; border-radius:4px; color:#adb5bd;">
+                중복 확인
+              </button>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center;">
+            <label style="width: 100px;">전화번호</label>
+            <input id="inputPhone" readonly style="flex:1; padding:10px; border:1px solid #e9ecef; border-radius:4px;">
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .click-hand {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #0040d1;
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    animation: bounce 1.2s infinite;
+  }
+
+  @keyframes bounce {
+    0%,100% { transform: translateY(-50%) scale(1); }
+    50% { transform: translateY(-70%) scale(1.1); }
+  }
+</style>
+
+<script>
+  const overlay = document.getElementById('addMemberOverlay');
+  const btnAdd = document.getElementById('btnAdd');
+  const btnBack = document.getElementById('btnBack');
+
+  btnAdd.addEventListener('click', () => {
+    overlay.style.transform = 'translateY(0)';
+    startTyping();
+  });
+
+  btnBack.addEventListener('click', () => {
+    overlay.style.transform = 'translateY(100%)';
+  });
+
+  function startTyping() {
+    type('inputName', '품고', 400);
+    setTimeout(() => type('inputEmail', 'poomgo@dohands.com', 400, true), 800);
+    setTimeout(() => type('inputPhone', '010-1234-1234', 400), 1800);
+  }
+
+  function type(id, text, speed, email = false) {
+    const el = document.getElementById(id);
+    el.value = '';
+    let i = 0;
+
+    const interval = setInterval(() => {
+      el.value += text[i];
+      i++;
+      if (i >= text.length) {
+        clearInterval(interval);
+        if (email) activateEmailBtn();
+      }
+    }, speed / text.length);
+  }
+
+  function activateEmailBtn() {
+    const btn = document.getElementById('btnCheck');
+    btn.style.color = '#111';
+    setTimeout(() => {
+      btn.innerText = '확인됨';
+    }, 600);
+  }
+</script>
