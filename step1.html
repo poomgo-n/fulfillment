@@ -1,194 +1,125 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>판매처 계정 관리</title>
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-    <style>
-        /* --- 기본 초기화 --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Pretendard', sans-serif; }
-        body { display: flex; height: 100vh; background-color: #f8f9fa; color: #333; overflow: hidden; }
-        :root { --brand-color: #0040d1; --brand-light: #e6ebf9; --required-color: #fa5252; }
-
-        /* --- 사이드바 (1번 이미지 전체 복원) --- */
-        .sidebar { width: 280px; background-color: #ffffff; border-right: 1px solid #e9ecef; display: flex; flex-direction: column; overflow-y: auto; }
-        .sidebar-header { height: 70px; border-bottom: 1px solid #f1f3f5; }
-        .sidebar-menu { list-style: none; padding: 10px 0; }
-        .menu-title { font-size: 14px; color: #868e96; padding: 10px 20px; margin-top: 10px; }
-        .menu-item { display: flex; align-items: center; padding: 12px 20px; cursor: pointer; color: #495057; font-size: 15px; transition: all 0.2s; }
-        .menu-item:hover { background-color: #f8f9fa; }
-        .menu-icon { margin-right: 10px; display: flex; align-items: center; justify-content: center; width: 20px; }
-        .arrow-icon { font-size: 11px; color: #adb5bd; margin-right: 8px; width: 12px; text-align: center; font-style: normal; }
-        .sub-menu { list-style: none; background-color: #fafafa; }
-        .sub-menu-item { display: flex; align-items: center; padding: 10px 20px 10px 52px; font-size: 15px; color: #495057; cursor: pointer; }
-        .sub-menu-item.active { color: #333; font-weight: bold; }
-
-        /* --- 메인 콘텐츠 --- */
-        .main-content { flex: 1; padding: 40px; background-color: #ffffff; overflow-y: auto; }
-        .page-header { display: flex; align-items: center; margin-bottom: 24px; }
-        .page-title { font-size: 24px; font-weight: bold; margin-right: 12px; }
-
-        /* 필터 섹션 */
-        .filter-section { display: flex; gap: 15px; margin-bottom: 24px; align-items: center; }
-        .filter-group { display: flex; flex-direction: column; gap: 6px; }
-        .filter-group label { font-size: 14px; font-weight: bold; }
-        .filter-section select, .input-with-icon input { padding: 10px 14px; border: 1px solid #ced4da; border-radius: 4px; font-size: 15px; height: 42px; }
-        .input-with-icon { position: relative; display: flex; align-items: center; }
-        .input-with-icon svg { position: absolute; left: 12px; }
-        .btn-search { background-color: var(--brand-color); color: white; border: none; padding: 0 24px; border-radius: 4px; cursor: pointer; height: 42px; margin-top: 24px; font-weight: bold; }
-
-        /* 액션바 및 버튼 */
-        .action-bar { display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; }
-        .btn-outline-primary { display: inline-flex; align-items: center; border: 1px solid var(--brand-color); background: white; color: var(--brand-color); padding: 10px 20px; border-radius: 4px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn-outline-primary:hover { background-color: var(--brand-light); }
-
-        /* 테이블 */
-        .table-container { border-top: 2px solid #333; position: relative; min-height: 400px; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        th { background-color: #f8f9fa; border-bottom: 1px solid #dee2e6; padding: 14px 12px; font-size: 14px; font-weight: bold; color: #495057; text-align: center; border-right: 1px solid #dee2e6; }
-        .empty-state { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; font-weight: bold; font-size: 20px; color: #adb5bd; }
-
-        /* --- 💡 애니메이션 요소 --- */
-        @keyframes bouncePulse {
-            0% { transform: translateY(0); box-shadow: 0 0 0 0 rgba(0, 64, 209, 0.4); }
-            50% { transform: translateY(-4px); box-shadow: 0 4px 8px rgba(0, 64, 209, 0.3); }
-            100% { transform: translateY(0); box-shadow: 0 0 0 0 rgba(0, 64, 209, 0); }
-        }
-        .click-target { display: inline-flex; align-items: center; gap: 2px; margin-left: 10px; animation: bouncePulse 1.2s infinite ease-in-out; vertical-align: middle; }
-        .click-badge { background-color: var(--brand-color); color: #fff; font-size: 12px; padding: 3px 8px; border-radius: 6px; font-weight: bold; }
-
-        /* --- 💡 모달 애니메이션 스타일 --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: rgba(0, 0, 0, 0.5); z-index: 9999;
-            display: none; justify-content: center; align-items: center;
-            opacity: 0; transition: opacity 0.3s ease;
-        }
-        .modal-overlay.active { display: flex; opacity: 1; }
-        
-        .modal-container {
-            width: 520px; background: #fff; border-radius: 8px; overflow: hidden;
-            transform: translateY(30px); transition: transform 0.3s ease;
-        }
-        .modal-overlay.active .modal-container { transform: translateY(0); }
-
-        /* 모달 세부 */
-        .modal-header { display: flex; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid #dee2e6; }
-        .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 15px; }
-        .form-group { display: flex; flex-direction: column; gap: 8px; }
-        .form-label { font-size: 13px; font-weight: bold; color: #495057; }
-        .required-mark { color: var(--required-color); margin-left: 4px; }
-        .form-control { padding: 10px 12px; border: 1px solid #748ffc; background-color: #f8fbff; border-radius: 4px; font-size: 14px; width: 100%; outline: none; }
-        .modal-footer { padding: 16px 24px; background: #f8f9fa; display: flex; justify-content: flex-end; gap: 10px; }
-        .btn-cancel { padding: 10px 20px; border: 1px solid #ced4da; background: #fff; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        .btn-submit { padding: 10px 20px; border: none; background: var(--brand-color); color: #fff; border-radius: 4px; cursor: pointer; font-weight: bold; display: flex; align-items: center; }
-    </style>
-</head>
-<body>
-
-    <aside class="sidebar">
-        <div class="sidebar-header"></div>
-        <ul class="sidebar-menu">
-            <li class="menu-item"><span class="menu-icon">🔔</span> 알림 <span style="margin-left:auto; background:#f1f3f5; border-radius:12px; padding:2px 10px; font-size:12px;">0</span></li>
-            <li class="menu-item"><span class="menu-icon">📊</span> 대시보드</li>
-            <div class="menu-title">메뉴</div>
-            <li class="menu-item"><i class="arrow-icon">▶</i><span class="menu-icon">📦</span> SKU</li>
-            <li class="menu-item"><i class="arrow-icon">▼</i><span class="menu-icon">🛒</span> <strong>주문</strong></li>
-            <ul class="sub-menu">
-                <li class="sub-menu-item">원장 조회</li>
-                <li class="sub-menu-item active">판매처 계정 
-                    <span class="click-target"><span class="click-badge">클릭</span></span>
-                </li>
-            </ul>
-        </ul>
-    </aside>
-
-    <main class="main-content">
-        <div class="page-header">
-            <div class="page-title">판매처 계정 관리</div>
-            <div style="font-size: 13px; color: #6c757d; border: 1px solid #ced4da; padding: 4px 8px; border-radius: 4px;">📄 설명서</div>
-        </div>
-
-        <div style="background: #f8f9fa; padding: 20px; border-left: 5px solid var(--brand-color); border-radius: 8px; margin-bottom: 25px;">
-            <h3 style="font-size: 16px; margin-bottom: 10px;">✅ 판매처 등록 방법</h3>
-            <p style="font-size: 14px; line-height: 1.6; color: #495057;">
-                ① <strong>판매처 계정 개별 등록</strong>을 클릭합니다.<br>
-                ② <b>판매처명</b>: 스마트스토어(물류사) / <b>연동 계정</b>: API 판매자 ID 입력
+<section class="guide-intro-section" style="margin-bottom: 40px; font-family: 'Pretendard', sans-serif;">
+    <div style="background: #ffffff; border: 1px solid #e9ecef; border-radius: 12px; padding: 24px;">
+        <h2 style="font-size: 20px; font-weight: 700; color: #0040d1; margin-bottom: 12px;">판매처 등록</h2>
+        <p style="font-size: 15px; color: #333; margin-bottom: 20px; line-height: 1.6;">
+            풀필먼트 연동을 위해 품고 나우에 판매처 등록을 진행합니다.
+        </p>
+        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 5px solid #0040d1;">
+            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 10px; color: #111;">진행 방법</h3>
+            <p style="font-size: 14px; line-height: 1.8; color: #495057;">
+                ① <strong>품고 나우 > 주문 > 판매처 계정 > 판매처 계정 개별 등록</strong>을 클릭해주세요.<br>
+                ② 다음과 같이 설정 후 등록합니다.<br>
+                - <span style="color: #0040d1; font-weight: 700;">판매처명</span> : 스마트스토어(물류사)<br>
+                - <span style="color: #0040d1; font-weight: 700;">브랜드명</span> : 조회되는 브랜드명 선택<br>
+                - <span style="color: #0040d1; font-weight: 700;">연동 계정</span> : 스마트스토어 API 연동용 판매자 ID 입력<br>
+                <span style="display: block; margin-top: 10px; font-size: 13px; color: #868e96;">
+                    ※ 확인 경로 : 스마트스토어 > 스토어 관리 > 서비스 연결 > API 관리 > API 연동용 판매자 ID
+                </span>
             </p>
         </div>
+    </div>
+</section>
 
-        <div class="filter-section">
-            <div class="filter-group"><label>판매처</label><select><option>선택</option></select></div>
-            <div class="filter-group"><label>브랜드명</label><select><option>선택</option></select></div>
-            <button class="btn-search">조회</button>
+<section class="main-layout-fragment" style="display: flex; height: 600px; border: 1px solid #dee2e6; border-radius: 12px; overflow: hidden; background: #f8f9fa; position: relative;">
+    
+    <aside style="width: 240px; background: #fff; border-right: 1px solid #e9ecef; display: flex; flex-direction: column;">
+        <div style="height: 50px; border-bottom: 1px solid #f1f3f5;"></div>
+        <div style="padding: 15px; font-size: 13px; color: #868e96;">메뉴</div>
+        <div style="padding: 10px 20px; display: flex; align-items: center; gap: 10px; color: #495057; font-size: 14px; background: #fafafa;">
+            <span>▼</span> <strong>주문</strong>
         </div>
+        <div style="padding: 8px 20px 8px 45px; font-size: 14px; color: #0040d1; font-weight: bold; background: #e6ebf9;">
+            판매처 계정 <span class="mini-click-badge">클릭</span>
+        </div>
+    </aside>
 
-        <div style="text-align: right; margin-bottom: 15px;">
-            <button class="btn-outline-primary" onclick="openModal()">
-                판매처 계정 개별 등록 
-                <span class="click-target">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--brand-color)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14v-4h-2v4H9l3 3 3-3h-2z"/></svg>
-                    <span class="click-badge">클릭</span>
+    <div style="flex: 1; padding: 30px; background: #fff; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="font-size: 20px; font-weight: bold;">판매처 계정 관리</h2>
+            <button onclick="openNowModal()" class="btn-primary-custom">
+                판매처 계정 개별 등록
+                <span class="click-wrap">
+                    <span class="click-badge-main">클릭</span>
                 </span>
             </button>
         </div>
-
-        <div class="table-container">
-            <table>
+        
+        <div style="border-top: 2px solid #333;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
                 <thead>
-                    <tr><th style="width: 50px;"><input type="checkbox"></th><th>판매처명</th><th>브랜드명</th><th>상세</th><th>연동 계정</th><th>직접연동</th></tr>
+                    <tr style="background: #f8f9fa;">
+                        <th style="padding: 12px; border-bottom: 1px solid #dee2e6;">판매처명</th>
+                        <th style="padding: 12px; border-bottom: 1px solid #dee2e6;">브랜드명</th>
+                        <th style="padding: 12px; border-bottom: 1px solid #dee2e6;">연동 계정</th>
+                    </tr>
                 </thead>
             </table>
-            <div class="empty-state">출력할 데이터가 없습니다.</div>
+            <div style="text-align: center; padding: 50px; color: #adb5bd;">출력할 데이터가 없습니다.</div>
         </div>
-    </main>
+    </div>
 
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h2>판매처 계정 개별 등록</h2>
-                <button class="btn-close" onclick="closeModal()" style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+    <div id="pumgoModal" class="modal-fragment-overlay">
+        <div class="modal-fragment-container">
+            <div style="display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid #dee2e6;">
+                <strong style="font-size: 15px;">판매처 계정 개별 등록</strong>
+                <span onclick="closeNowModal()" style="cursor: pointer; font-size: 20px;">&times;</span>
             </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">판매처명<span class="required-mark">*</span></label>
-                    <select class="form-control"><option>스마트스토어(물류사)</option></select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">브랜드명<span class="required-mark">*</span></label>
-                    <select class="form-control"><option>조회되는 브랜드명 선택</option></select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">연동 계정<span class="required-mark">*</span></label>
-                    <input type="text" class="form-control" placeholder="스마트스토어 API 연동용 판매자 ID 입력">
-                </div>
-                <p style="font-size: 12px; color: #868e96; background: #f1f3f5; padding: 10px; border-radius: 4px;">
-                    ※ 경로: 스토어 관리 > 서비스 연결 > API 관리 > ID 확인
-                </p>
+            <div style="padding: 20px; display: flex; flex-direction: column; gap: 15px;">
+                <div class="f-group"><label>판매처명<span style="color:red">*</span></label><select><option>스마트스토어(물류사)</option></select></div>
+                <div class="f-group"><label>브랜드명<span style="color:red">*</span></label><select><option>브랜드명 선택</option></select></div>
+                <div class="f-group"><label>연동 계정<span style="color:red">*</span></label><input type="text" placeholder="판매자 ID 입력"></div>
             </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeModal()">취소</button>
-                <button class="btn-submit">
-                    등록
-                    <span class="click-target" style="margin-left:8px;"><span class="click-badge" style="background:#fff; color:var(--brand-color);">클릭</span></span>
+            <div style="padding: 12px 20px; background: #f8f9fa; text-align: right; border-top: 1px solid #dee2e6;">
+                <button onclick="closeNowModal()" style="padding: 7px 15px; border: 1px solid #ccc; background: #fff; border-radius: 4px; cursor: pointer;">취소</button>
+                <button style="padding: 7px 20px; background: #0040d1; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                    등록 <span class="mini-click-badge" style="background: #fff; color: #0040d1;">클릭</span>
                 </button>
             </div>
         </div>
     </div>
+</section>
 
-    <script>
-        function openModal() {
-            const overlay = document.getElementById('modalOverlay');
-            overlay.style.display = 'flex';
-            setTimeout(() => overlay.classList.add('active'), 10);
-        }
-        function closeModal() {
-            const overlay = document.getElementById('modalOverlay');
-            overlay.classList.remove('active');
-            setTimeout(() => overlay.style.display = 'none', 300);
-        }
-    </script>
+<style>
+    .btn-primary-custom {
+        display: inline-flex; align-items: center; border: 1px solid #0040d1; background: #fff; 
+        color: #0040d1; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer;
+    }
+    .click-wrap { margin-left: 8px; animation: fragmentBounce 1.2s infinite ease-in-out; }
+    .click-badge-main { background: #0040d1; color: #fff; font-size: 11px; padding: 2px 6px; border-radius: 4px; }
+    .mini-click-badge { background: #0040d1; color: #fff; font-size: 10px; padding: 1px 5px; border-radius: 4px; animation: fragmentBounce 1.2s infinite ease-in-out; margin-left: 5px; }
 
-</body>
-</html>
+    /* 모달 오버레이 (영역 내부로 제한) */
+    .modal-fragment-overlay {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 100;
+        opacity: 0; transition: opacity 0.3s ease;
+    }
+    .modal-fragment-overlay.active { display: flex; opacity: 1; }
+    .modal-fragment-container { 
+        width: 400px; background: #fff; border-radius: 8px; 
+        transform: translateY(20px); transition: transform 0.3s ease; 
+    }
+    .modal-fragment-overlay.active .modal-fragment-container { transform: translateY(0); }
+
+    .f-group { display: flex; flex-direction: column; gap: 5px; }
+    .f-group label { font-size: 12px; font-weight: bold; color: #555; }
+    .f-group input, .f-group select { padding: 8px; border: 1px solid #748ffc; background: #f8fbff; border-radius: 4px; font-size: 13px; }
+
+    @keyframes fragmentBounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-4px); }
+    }
+</style>
+
+<script>
+    function openNowModal() {
+        const m = document.getElementById('pumgoModal');
+        m.style.display = 'flex';
+        setTimeout(() => m.classList.add('active'), 10);
+    }
+    function closeNowModal() {
+        const m = document.getElementById('pumgoModal');
+        m.classList.remove('active');
+        setTimeout(() => m.style.display = 'none', 300);
+    }
+</script>
