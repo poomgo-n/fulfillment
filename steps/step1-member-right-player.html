@@ -38,6 +38,11 @@
       height: 100%;
       overflow: hidden;
       background: #f1f3f5;
+      cursor: default;
+    }
+
+    .guide-container.is-panning {
+      cursor: grabbing;
     }
 
     .guide-canvas {
@@ -52,6 +57,34 @@
       left: 0;
       transform-origin: top left;
       overflow: hidden;
+      user-select: none;
+    }
+
+    .zoom-controls {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 3000;
+      display: flex;
+      gap: 8px;
+    }
+
+    .zoom-controls button {
+      height: 36px;
+      min-width: 36px;
+      padding: 0 14px;
+      border: 1px solid #dbe3ef;
+      background: rgba(255, 255, 255, 0.96);
+      color: #111827;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+    }
+
+    .zoom-controls button:hover {
+      background: #f8fbff;
     }
 
     #click-hint {
@@ -356,6 +389,12 @@
 <body>
   <div class="player-stage" id="playerStage">
     <div class="guide-container" id="guideContainer">
+      <div class="zoom-controls">
+        <button type="button" id="zoomOutBtn">－</button>
+        <button type="button" id="zoomResetBtn">초기화</button>
+        <button type="button" id="zoomInBtn">＋</button>
+      </div>
+
       <div class="guide-canvas" id="guideCanvas">
         <div id="click-hint">클릭</div>
 
@@ -473,35 +512,101 @@
     const BASE_WIDTH = 1200;
     const BASE_HEIGHT = 850;
 
+    let fitScale = 1;
     let currentScale = 1;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    let isPanning = false;
+    let panStartX = 0;
+    let panStartY = 0;
+    let panOriginX = 0;
+    let panOriginY = 0;
 
     const hint = document.getElementById('click-hint');
     const overlay = document.getElementById('addOverlay');
     const playOverlay = document.getElementById('playOverlay');
     const startBtn = document.getElementById('startBtn');
+
     const guideCanvas = document.getElementById('guideCanvas');
     const playerStage = document.getElementById('playerStage');
+    const guideContainer = document.getElementById('guideContainer');
+
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    const zoomResetBtn = document.getElementById('zoomResetBtn');
 
     function sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    function fitGuideToFrame() {
-      if (!playerStage || !guideCanvas) return;
-
+    function clampOffsets() {
       const stageWidth = playerStage.clientWidth;
       const stageHeight = playerStage.clientHeight;
 
-      const scale = Math.min(stageWidth / BASE_WIDTH, stageHeight / BASE_HEIGHT);
-      currentScale = scale;
+      const scaledWidth = BASE_WIDTH * currentScale;
+      const scaledHeight = BASE_HEIGHT * currentScale;
 
-      const scaledWidth = BASE_WIDTH * scale;
-      const scaledHeight = BASE_HEIGHT * scale;
+      if (scaledWidth <= stageWidth) {
+        offsetX = (stageWidth - scaledWidth) / 2;
+      } else {
+        const minX = stageWidth - scaledWidth;
+        const maxX = 0;
+        offsetX = Math.min(maxX, Math.max(minX, offsetX));
+      }
 
-      const left = (stageWidth - scaledWidth) / 2;
-      const top = (stageHeight - scaledHeight) / 2;
+      if (scaledHeight <= stageHeight) {
+        offsetY = (stageHeight - scaledHeight) / 2;
+      } else {
+        const minY = stageHeight - scaledHeight;
+        const maxY = 0;
+        offsetY = Math.min(maxY, Math.max(minY, offsetY));
+      }
+    }
 
-      guideCanvas.style.transform = `translate(${left}px, ${top}px) scale(${scale})`;
+    function applyCanvasTransform() {
+      clampOffsets();
+      guideCanvas.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${currentScale})`;
+    }
+
+    function fitGuideToFrame() {
+      const stageWidth = playerStage.clientWidth;
+      const stageHeight = playerStage.clientHeight;
+
+      fitScale = Math.min(stageWidth / BASE_WIDTH, stageHeight / BASE_HEIGHT);
+      currentScale = fitScale;
+
+      const scaledWidth = BASE_WIDTH * currentScale;
+      const scaledHeight = BASE_HEIGHT * currentScale;
+
+      offsetX = (stageWidth - scaledWidth) / 2;
+      offsetY = (stageHeight - scaledHeight) / 2;
+
+      applyCanvasTransform();
+    }
+
+    function zoomTo(nextScale, centerX = null, centerY = null) {
+      const prevScale = currentScale;
+      const clampedScale = Math.max(fitScale, Math.min(3, nextScale));
+
+      if (clampedScale === currentScale) return;
+
+      const rect = playerStage.getBoundingClientRect();
+      const cx = centerX ?? (rect.width / 2);
+      const cy = centerY ?? (rect.height / 2);
+
+      const worldX = (cx - offsetX) / prevScale;
+      const worldY = (cy - offsetY) / prevScale;
+
+      currentScale = clampedScale;
+      offsetX = cx - (worldX * currentScale);
+      offsetY = cy - (worldY * currentScale);
+
+      applyCanvasTransform();
+    }
+
+    function resetZoom() {
+      fitGuideToFrame();
     }
 
     async function showClickAction(targetId, waitTime = 3000) {
@@ -562,6 +667,7 @@
     }
 
     async function runFullProcess() {
+      resetZoom();
       playOverlay.classList.add('hidden');
       resetForm();
 
@@ -597,6 +703,63 @@
       await sleep(5000);
       playOverlay.classList.remove('hidden');
     }
+
+    function onPointerDown(e) {
+      if (currentScale <= fitScale) return;
+      if (e.target.closest('.zoom-controls')) return;
+      if (e.target.closest('.btn-start')) return;
+
+      isPanning = true;
+      panStartX = e.clientX;
+      panStartY = e.clientY;
+      panOriginX = offsetX;
+      panOriginY = offsetY;
+      guideContainer.classList.add('is-panning');
+    }
+
+    function onPointerMove(e) {
+      if (!isPanning) return;
+
+      const dx = e.clientX - panStartX;
+      const dy = e.clientY - panStartY;
+
+      offsetX = panOriginX + dx;
+      offsetY = panOriginY + dy;
+      applyCanvasTransform();
+    }
+
+    function onPointerUp() {
+      isPanning = false;
+      guideContainer.classList.remove('is-panning');
+    }
+
+    zoomInBtn.addEventListener('click', () => {
+      const rect = playerStage.getBoundingClientRect();
+      zoomTo(currentScale + 0.15, rect.width / 2, rect.height / 2);
+    });
+
+    zoomOutBtn.addEventListener('click', () => {
+      const rect = playerStage.getBoundingClientRect();
+      zoomTo(currentScale - 0.15, rect.width / 2, rect.height / 2);
+    });
+
+    zoomResetBtn.addEventListener('click', resetZoom);
+
+    guideContainer.addEventListener('wheel', (e) => {
+      e.preventDefault();
+
+      const rect = playerStage.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const delta = e.deltaY < 0 ? 0.12 : -0.12;
+      zoomTo(currentScale + delta, x, y);
+    }, { passive: false });
+
+    guideContainer.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerUp);
 
     startBtn.addEventListener('click', runFullProcess);
     window.addEventListener('load', fitGuideToFrame);
