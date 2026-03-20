@@ -13,18 +13,16 @@
 :root{
   --bg: #f6f8fc;
   --surface: #ffffff;
-  --surface-soft: #f8faff;
   --line: #e6ebf5;
   --text: #1f2937;
   --muted: #667085;
 
   --brand: #0040d1;
   --brand-soft: #edf3ff;
-  --brand-soft-2: #f7faff;
+  --brand-soft-2: #f8fbff;
   --brand-border: #cfe0ff;
 
   --lavender-soft: #f6f4ff;
-  --lavender-border: #e5e0ff;
 
   --shadow: 0 18px 40px rgba(0, 64, 209, 0.08);
 }
@@ -52,8 +50,8 @@ body.video-modal-open {
   width:340px;
   background: linear-gradient(180deg, #fbfcff 0%, #f6f8fd 100%);
   border-right:1px solid var(--line);
-  padding:22px 18px;
-  overflow:hidden;
+  padding:20px 18px 12px;
+  overflow:auto;
   flex-shrink:0;
 }
 
@@ -61,8 +59,8 @@ body.video-modal-open {
   display:flex;
   align-items:center;
   gap:12px;
-  margin-bottom:24px;
-  padding:10px 10px 18px;
+  margin-bottom:18px;
+  padding:8px 10px 14px;
 }
 
 .sidebar-brand img {
@@ -80,15 +78,15 @@ body.video-modal-open {
 .sidebar-steps {
   display:flex;
   flex-direction:column;
-  gap:14px;
-  overflow:hidden;
+  gap:12px;
+  padding-bottom:14px;
 }
 
 .step-card {
   background: rgba(255,255,255,0.96);
   border:1px solid var(--line);
   border-radius:20px;
-  padding:16px;
+  padding:14px;
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
 }
 
@@ -108,7 +106,7 @@ body.video-modal-open {
   align-items:flex-start;
   justify-content:space-between;
   gap:10px;
-  margin-bottom:12px;
+  margin-bottom:10px;
 }
 
 .step-card-title {
@@ -145,11 +143,11 @@ body.video-modal-open {
 .step-items {
   display:flex;
   flex-direction:column;
-  gap:8px;
+  gap:6px;
 }
 
 .sub-item {
-  padding:11px 12px;
+  padding:10px 12px;
   border-radius:14px;
   cursor:pointer;
   font-size:14px;
@@ -207,7 +205,7 @@ body.video-modal-open {
 /* ===== HEADER ===== */
 .content-header {
   display:grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   align-items:center;
   gap:14px;
   padding:24px 28px;
@@ -216,12 +214,18 @@ body.video-modal-open {
   flex-shrink:0;
 }
 
+.content-header-main {
+  width:100%;
+  max-width:820px;
+  justify-self:center;
+}
+
 .content-title {
   font-size:28px;
   font-weight:900;
   color: var(--text);
   line-height:1.3;
-  text-align:center;
+  text-align:left;
 }
 
 .content-progress {
@@ -299,11 +303,13 @@ body.video-modal-open {
 }
 
 .step-desc {
-  text-align:center;
+  width:100%;
+  max-width:820px;
+  margin:0 auto 20px;
+  text-align:left;
   font-size:16px;
   line-height:1.9;
   color: var(--muted);
-  margin-bottom:20px;
   flex-shrink:0;
 }
 
@@ -356,69 +362,47 @@ body.video-modal-open {
   text-align:left;
 }
 
-/* 내부 블록 간격 조금 줄임 */
 .step-content .step-left-content > section + section {
   margin-top:16px !important;
 }
 
-/* ===== PLAY BUTTON AREA ===== */
+/* ===== VIDEO CTA ===== */
 .video-cta {
   margin-top:18px;
   display:flex;
   justify-content:center;
+  align-items:center;
+  gap:10px;
   flex-shrink:0;
 }
 
-.play-launch-btn {
-  position:relative;
-  width:150px;
-  height:150px;
-  border:none;
-  background:transparent;
-  cursor:pointer;
-  transition:transform 0.18s ease;
-}
-
-.play-launch-btn:hover {
-  transform:translateY(-2px) scale(1.01);
-}
-
-.play-launch-btn:active {
-  transform:translateY(0) scale(0.99);
-}
-
-.play-launch-surface {
-  width:100%;
-  height:100%;
-  border-radius:40px;
-  background:
-    radial-gradient(circle at 75% 25%, rgba(255,255,255,0.76) 0%, rgba(255,255,255,0.18) 18%, transparent 34%),
-    linear-gradient(180deg, #8fb0ff 0%, #4d7ef6 36%, #0040d1 100%);
-  box-shadow:
-    inset 0 6px 20px rgba(255,255,255,0.28),
-    inset 0 -12px 18px rgba(0, 43, 150, 0.22),
-    0 18px 34px rgba(0, 64, 209, 0.26);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.play-launch-triangle {
-  width:0;
-  height:0;
-  border-top:24px solid transparent;
-  border-bottom:24px solid transparent;
-  border-left:40px solid #ffe6a8;
-  margin-left:8px;
-  filter: drop-shadow(0 8px 10px rgba(226, 180, 84, 0.22));
-}
-
-.play-launch-label {
-  margin-top:14px;
-  text-align:center;
-  font-size:15px;
+.video-cta-text {
+  font-size:18px;
   font-weight:800;
   color: var(--brand);
+  letter-spacing:-0.01em;
+}
+
+.video-cta-arrow {
+  width:42px;
+  height:42px;
+  border:none;
+  border-radius:999px;
+  background: var(--brand);
+  color:#fff;
+  font-size:20px;
+  line-height:1;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow: 0 10px 20px rgba(0, 64, 209, 0.18);
+  transition:0.18s ease;
+}
+
+.video-cta-arrow:hover {
+  transform:translateX(1px) translateY(-1px);
+  filter:brightness(0.98);
 }
 
 /* ===== HELP ===== */
@@ -556,16 +540,17 @@ body.video-modal-open {
     align-items:flex-start;
   }
 
+  .content-header-main {
+    max-width:none;
+    justify-self:stretch;
+  }
+
   .content-header-actions {
     width:100%;
   }
 
   .content-header-actions .btn {
     flex:1;
-  }
-
-  .content-title {
-    text-align:left;
   }
 }
 
@@ -605,9 +590,8 @@ body.video-modal-open {
     border-radius:16px;
   }
 
-  .play-launch-btn {
-    width:128px;
-    height:128px;
+  .video-cta-text {
+    font-size:16px;
   }
 }
 </style>
@@ -617,7 +601,6 @@ body.video-modal-open {
 
 <div class="app">
 
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-brand">
       <img src="./Primary Logo.png" alt="Primary Logo" onerror="this.style.display='none'">
@@ -627,13 +610,14 @@ body.video-modal-open {
     <div id="sidebar" class="sidebar-steps"></div>
   </aside>
 
-  <!-- MAIN -->
   <section class="main">
     <div class="main-shell">
       <div class="content-card">
 
         <div class="content-header">
-          <div class="content-title" id="title"></div>
+          <div class="content-header-main">
+            <div class="content-title" id="title"></div>
+          </div>
 
           <div class="content-progress" id="progress"></div>
 
@@ -652,14 +636,8 @@ body.video-modal-open {
             <div class="step-content" id="left"></div>
 
             <div class="video-cta">
-              <div>
-                <button type="button" class="play-launch-btn" id="openVideoBtn" aria-label="진행 과정 보기">
-                  <div class="play-launch-surface">
-                    <div class="play-launch-triangle"></div>
-                  </div>
-                </button>
-                <div class="play-launch-label">진행 과정 보기</div>
-              </div>
+              <div class="video-cta-text">진행 과정 보러가기</div>
+              <button type="button" class="video-cta-arrow" id="openVideoBtn" aria-label="진행 과정 보러가기">→</button>
             </div>
           </div>
         </div>
@@ -669,10 +647,8 @@ body.video-modal-open {
   </section>
 </div>
 
-<!-- HELP -->
 <div class="help" id="helpBox"></div>
 
-<!-- VIDEO MODAL -->
 <div class="video-modal" id="videoModal">
   <div class="video-modal-dim" id="videoModalDim"></div>
 
@@ -826,9 +802,7 @@ const videoModalFrame = document.getElementById("videoModalFrame");
 
 function getRequiredItems() {
   return STEPS.flatMap((s, si) =>
-    s.items
-      .map((it, ii) => ({ ...it, key: `${si}-${ii}` }))
-      .filter(it => it.required)
+    s.items.map((it, ii) => ({ ...it, key: `${si}-${ii}` })).filter(it => it.required)
   );
 }
 
@@ -885,9 +859,7 @@ function renderSidebar() {
 
 async function load(path) {
   const res = await fetch(path + "?v=" + Date.now(), { cache: "no-store" });
-  if (!res.ok) {
-    throw new Error(`파일을 불러오지 못했습니다: ${path}`);
-  }
+  if (!res.ok) throw new Error(`파일을 불러오지 못했습니다: ${path}`);
   return await res.text();
 }
 
