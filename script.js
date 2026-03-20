@@ -1,61 +1,61 @@
 const GUIDE_STEPS = [
-{
-  id: 1,
-  shortLabel: "STEP1",
-  hasSubSteps: true,
-  subSteps: [
-{
-  title: "품고 나우 로그인",
-  leftFile: "./steps/step1-login-left.html",
-  rightFile: "./steps/step1-login-right-player.html",
-  helpFile: "./help/step1-login-help.html"
-},
-{
-  title: "구성원 추가",
-  leftFile: "./steps/step1-member-left.html",
-  rightFile: "./steps/step1-member-right-player.html",
-  helpFile: "./help/step1-member-help.html"
-}
   {
- id: 2, 
-  shortLabel: "STEP2",
-  hasSubSteps: true,
-  subSteps: [
- {
-    title: "판매처 등록",
+    id: 1,
+    shortLabel: "STEP1",
+    hasSubSteps: true,
     subSteps: [
-    leftFile: "./steps/step2-new-left.html",
-    rightFiles: "./steps/step2-new-right-player.html",
-    helpFile: "./help/step2-new-help.html"
+      {
+        title: "품고 나우 로그인",
+        leftFile: "./steps/step1-login-left.html",
+        rightFile: "./steps/step1-login-right-player.html",
+        helpFile: "./help/step1-login-help.html"
+      },
+      {
+        title: "구성원 추가",
+        leftFile: "./steps/step1-member-left.html",
+        rightFile: "./steps/step1-member-right-player.html",
+        helpFile: "./help/step1-member-help.html"
+      }
+    ]
   },
- {
-    title: "풀필먼트 연동",
+  {
+    id: 2,
+    shortLabel: "STEP2",
+    hasSubSteps: true,
     subSteps: [
-    leftFile: "./steps/step2-api-left.html",
-    rightFiles: "./steps/step2-api-right-player.html",
-    helpFile: "./help/step2-api-help.html"
-  },    
- {
-    title: "N배송 프로그램 이용 동의",
-    subSteps: [
-    leftFile: "./steps/step2-npro-left.html",
-    rightFiles: "./steps/step2-npro-right-player.html",
-    helpFile: "./help/step2-npro-help.html"
-  }    
+      {
+        title: "판매처 등록",
+        leftFile: "./steps/step2-new-left.html",
+        rightFile: "./steps/step2-new-right-player.html",
+        helpFile: "./help/step2-new-help.html"
+      },
+      {
+        title: "풀필먼트 연동",
+        leftFile: "./steps/step2-api-left.html",
+        rightFile: "./steps/step2-api-right-player.html",
+        helpFile: "./help/step2-api-help.html"
+      },
+      {
+        title: "N배송 프로그램 이용 동의",
+        leftFile: "./steps/step2-npro-left.html",
+        rightFile: "./steps/step2-npro-right-player.html",
+        helpFile: "./help/step2-npro-help.html"
+      }
+    ]
+  },
   {
     id: 3,
-    name: "STEP 3",
+    shortLabel: "STEP3",
+    hasSubSteps: false,
     title: "풀필먼트 연동",
     leftFile: "./steps/step3-left.html",
-    rightFiles: [
-      "./steps/step3-right-1.html"
-    ],
+    rightFile: "./steps/step3-right-player.html",
     helpFile: "./help/step3-help.html"
   }
 ];
 
 let currentStepIndex = 0;
-let currentSlideIndex = 0;
+let currentSubStepIndex = 0;
 
 const progressTitle = document.getElementById("progressTitle");
 const progressMeta = document.getElementById("progressMeta");
@@ -91,6 +91,20 @@ async function fetchHtml(url) {
     throw new Error(`파일을 불러오지 못했습니다: ${url}`);
   }
   return await response.text();
+}
+
+function getCurrentView() {
+  const step = GUIDE_STEPS[currentStepIndex];
+  if (step.hasSubSteps) {
+    return {
+      step,
+      view: step.subSteps[currentSubStepIndex]
+    };
+  }
+  return {
+    step,
+    view: step
+  };
 }
 
 function renderProgress() {
@@ -135,28 +149,22 @@ function renderProgress() {
 }
 
 function renderSlideDots() {
-  const step = GUIDE_STEPS[currentStepIndex];
   slideDots.innerHTML = "";
-
-  step.rightFiles.forEach((_, index) => {
-    const dot = document.createElement("button");
-    dot.className = `slide-dot ${index === currentSlideIndex ? "active" : ""}`;
-    dot.addEventListener("click", async () => {
-      currentSlideIndex = index;
-      await renderRightPanel();
-    });
-    slideDots.appendChild(dot);
-  });
+  if (slideTitle) slideTitle.textContent = "";
+  if (slideCount) slideCount.textContent = "";
+  if (prevSlideBtn) prevSlideBtn.style.display = "none";
+  if (nextSlideBtn) nextSlideBtn.style.display = "none";
 }
 
 async function renderLeftPanel() {
-  const step = GUIDE_STEPS[currentStepIndex];
+  const { step, view } = getCurrentView();
+
   stepKicker.textContent = `STEP ${step.id}`;
-  stepTitle.textContent = step.title;
+  stepTitle.textContent = view.title;
   leftContent.innerHTML = `<div class="loading-box">설명 화면을 불러오는 중입니다...</div>`;
 
   try {
-    const html = await fetchHtml(step.leftFile);
+    const html = await fetchHtml(view.leftFile);
     leftContent.innerHTML = html;
   } catch (error) {
     leftContent.innerHTML = `<div class="loading-box">${error.message}</div>`;
@@ -165,37 +173,39 @@ async function renderLeftPanel() {
 }
 
 async function renderRightPanel() {
-  const step = GUIDE_STEPS[currentStepIndex];
-  const totalSlides = step.rightFiles.length;
-
-  if (currentSlideIndex >= totalSlides) {
-    currentSlideIndex = 0;
-  }
+  const { view } = getCurrentView();
 
   rightContent.innerHTML = `<div class="loading-box">화면 예시를 불러오는 중입니다...</div>`;
-  slideTitle.textContent = `화면 ${currentSlideIndex + 1}`;
-  slideCount.textContent = `${currentSlideIndex + 1} / ${totalSlides}`;
 
   try {
-    const html = await fetchHtml(step.rightFiles[currentSlideIndex]);
-    rightContent.innerHTML = `<div class="slide-frame">${html}</div>`;
+    rightContent.innerHTML = `
+      <div class="slide-frame" style="padding:0; overflow:hidden;">
+        <iframe
+          src="${cacheBust(view.rightFile)}"
+          title="${view.title}"
+          style="width:100%; height:100%; border:0; display:block; background:#fff;"
+          loading="eager"
+          referrerpolicy="no-referrer"
+          allow="autoplay"
+        ></iframe>
+      </div>
+    `;
   } catch (error) {
     rightContent.innerHTML = `<div class="loading-box">${error.message}</div>`;
     console.error(error);
   }
 
-  prevSlideBtn.disabled = totalSlides <= 1;
-  nextSlideBtn.disabled = totalSlides <= 1;
   renderSlideDots();
 }
 
 async function renderHelpPanel() {
-  const step = GUIDE_STEPS[currentStepIndex];
-  drawerTitle.textContent = `${step.title} 도움말`;
+  const { view } = getCurrentView();
+
+  drawerTitle.textContent = `${view.title} 도움말`;
   helpContent.innerHTML = `<div class="loading-box">도움말을 불러오는 중입니다...</div>`;
 
   try {
-    const html = await fetchHtml(step.helpFile);
+    const html = await fetchHtml(view.helpFile);
     helpContent.innerHTML = html;
   } catch (error) {
     helpContent.innerHTML = `<div class="loading-box">${error.message}</div>`;
@@ -229,35 +239,27 @@ async function renderCurrentStep() {
 async function goPrevStep() {
   if (currentStepIndex > 0) {
     currentStepIndex -= 1;
-    currentSlideIndex = 0;
+    currentSubStepIndex = 0;
     await renderCurrentStep();
   }
 }
 
 async function goNextStep() {
+  const step = GUIDE_STEPS[currentStepIndex];
+
+  if (step.hasSubSteps && currentSubStepIndex < step.subSteps.length - 1) {
+    currentSubStepIndex += 1;
+    await renderCurrentStep();
+    return;
+  }
+
   if (currentStepIndex < GUIDE_STEPS.length - 1) {
     currentStepIndex += 1;
-    currentSlideIndex = 0;
+    currentSubStepIndex = 0;
     await renderCurrentStep();
   } else {
     alert("수고하셨습니다! 가이드 확인이 완료되었습니다.");
   }
-}
-
-async function goPrevSlide() {
-  const step = GUIDE_STEPS[currentStepIndex];
-  if (step.rightFiles.length <= 1) return;
-
-  currentSlideIndex = (currentSlideIndex - 1 + step.rightFiles.length) % step.rightFiles.length;
-  await renderRightPanel();
-}
-
-async function goNextSlide() {
-  const step = GUIDE_STEPS[currentStepIndex];
-  if (step.rightFiles.length <= 1) return;
-
-  currentSlideIndex = (currentSlideIndex + 1) % step.rightFiles.length;
-  await renderRightPanel();
 }
 
 function openHelpDrawer() {
@@ -276,8 +278,9 @@ function closeHelpDrawer() {
 
 prevStepBtn.addEventListener("click", goPrevStep);
 nextStepBtn.addEventListener("click", goNextStep);
-prevSlideBtn.addEventListener("click", goPrevSlide);
-nextSlideBtn.addEventListener("click", goNextSlide);
+
+if (prevSlideBtn) prevSlideBtn.style.display = "none";
+if (nextSlideBtn) nextSlideBtn.style.display = "none";
 
 helpBtn.addEventListener("click", openHelpDrawer);
 closeHelpBtn.addEventListener("click", closeHelpDrawer);
@@ -285,8 +288,6 @@ drawerOverlay.addEventListener("click", closeHelpDrawer);
 
 document.addEventListener("keydown", async (event) => {
   if (event.key === "Escape") closeHelpDrawer();
-  if (event.key === "ArrowLeft") await goPrevSlide();
-  if (event.key === "ArrowRight") await goNextSlide();
 });
 
 renderCurrentStep();
