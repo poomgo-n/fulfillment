@@ -17,6 +17,7 @@ const GUIDE_STEPS = [
   helpFile: "./help/step1-member-help.html"
 }
   {
+ id: 2, 
   shortLabel: "STEP2",
   hasSubSteps: true,
   subSteps: [
