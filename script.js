@@ -291,3 +291,23 @@ document.addEventListener("keydown", async (event) => {
 });
 
 renderCurrentStep();
+
+function fitGuideToFrame() {
+    const stage = document.getElementById('playerStage');
+    const scaleWrap = document.getElementById('playerScale');
+    const guide = document.getElementById('guideContainer');
+
+    if (!stage || !scaleWrap || !guide) return;
+
+    const stageWidth = stage.clientWidth;
+    const stageHeight = stage.clientHeight;
+    const guideWidth = guide.offsetWidth;
+    const guideHeight = guide.offsetHeight;
+
+    const scale = Math.min(stageWidth / guideWidth, stageHeight / guideHeight);
+
+    scaleWrap.style.transform = `scale(${scale})`;
+}
+
+window.addEventListener('load', fitGuideToFrame);
+window.addEventListener('resize', fitGuideToFrame);
