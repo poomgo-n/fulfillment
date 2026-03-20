@@ -1,284 +1,981 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>네이버 스마트스토어센터 - 풀필먼트/N배송 통합 가이드 (이미지 100% 복제)</title>
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Pretendard', sans-serif; }
-        body { background-color: #ffffff; color: #333; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>N배송 가이드</title>
 
-        /* 💡 파란색 테두리 및 클릭 배지 애니메이션 */
-        .blue-highlight { outline: 3px solid #1a6dff !important; outline-offset: 1px; position: relative; z-index: 10000; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-        .click-badge { position: absolute; background: #1a6dff; color: #fff; font-size: 12px; font-weight: bold; padding: 4px 10px; border-radius: 4px; animation: bounce 1s infinite; white-space: nowrap; z-index: 10001; display: none; }
-        .active-badge { display: block !important; }
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
 
-        /* 상단 바 */
-        .navbar { height: 56px; background: #2b303b; display: flex; align-items: center; padding: 0 24px; justify-content: space-between; flex-shrink: 0; }
-        .logo { color: #fff; font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
-        .logo span { color: #00c73c; font-weight: 900; font-size: 20px; }
-        .nav-links { display: flex; gap: 20px; font-size: 13px; color: #a4a9b0; }
-        .navbar-right { display: flex; align-items: center; gap: 15px; color: #fff; font-size: 12px; }
-        .btn-info { border: 1px solid #666; padding: 2px 10px; border-radius: 12px; color: #ccc; font-size: 11px; }
+<style>
+* { box-sizing: border-box; margin:0; padding:0; font-family:Pretendard, sans-serif; }
 
-        /* 메인 컨테이너 */
-        .main-wrapper { display: flex; flex: 1; overflow: hidden; }
+:root{
+  --bg: #f8f6fb;
+  --surface: #ffffff;
+  --surface-soft: #fcfbff;
+  --line: #ece7f5;
+  --text: #2d2a32;
+  --muted: #7c7487;
 
-        /* 사이드바 (이미지 항목 100% 복원) */
-        .sidebar { width: 210px; background: #353b45; color: #d1d4d9; flex-shrink: 0; display: flex; flex-direction: column; }
-        .sidebar-header { padding: 15px 20px; font-size: 14px; font-weight: bold; border-bottom: 1px solid #414753; color: #fff; }
-        .sidebar-menu-wrap { background: #3f4551; flex: 1; }
-        .sidebar-cat { padding: 18px 20px 5px; font-size: 11px; color: #8f96a1; }
-        .sidebar-item { padding: 8px 30px; font-size: 13px; cursor: pointer; color: #d1d4d9; position: relative; }
-        .sidebar-item.active { color: #f7d47e; }
-        .sidebar-item span { font-size: 10px; margin-left: 5px; color: #8f96a1; }
-        .sidebar-footer { padding: 15px; border-top: 1px solid #414753; }
-        .btn-service { background: #272c36; color: #00c73c; font-weight: bold; padding: 12px; border-radius: 4px; font-size: 13px; text-align: center; cursor: pointer; position: relative; }
+  --pink-1: #ffd8ee;
+  --pink-2: #f7b9df;
+  --pink-3: #ee8fc9;
 
-        /* 메인 콘텐츠 */
-        .content { flex: 1; overflow-y: auto; padding: 0; }
-        .section { padding: 35px 45px; border-bottom: 1px solid #f1f3f5; }
-        .row-title { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-weight: bold; font-size: 16px; }
-        .row-desc { font-size: 13px; color: #666; margin-bottom: 18px; line-height: 1.6; }
-        .row-desc em { color: #00c73c; font-style: normal; text-decoration: underline; cursor: pointer; }
-        
-        .gray-inner { background: #f8f9fa; border: 1px solid #f1f3f5; padding: 22px 28px; display: flex; justify-content: space-between; align-items: center; }
-        .status-msg { font-size: 13px; color: #1a6dff; line-height: 1.6; }
-        .status-msg.black { color: #333; }
-        .btn-rect { padding: 10px 18px; border: 1px solid #ced4da; background: #fff; font-size: 13px; font-weight: bold; cursor: pointer; position: relative; }
-        
-        .toggle-box { display: flex; align-items: center; gap: 10px; }
-        .toggle-text { font-size: 12px; color: #999; font-weight: bold; width: 55px; text-align: right; }
-        .toggle-ui { width: 44px; height: 22px; background: #e9ecef; border-radius: 12px; position: relative; cursor: pointer; transition: 0.2s; }
-        .toggle-ui::after { content: ''; position: absolute; width: 18px; height: 18px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .toggle-ui.on { background: #00c73c; }
-        .toggle-ui.on::after { left: 24px; }
+  --purple-1: #f2edff;
+  --purple-2: #ddd2ff;
+  --purple-3: #b6a2ff;
 
-        /* 모달 오버레이 */
-        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100000; display: none; justify-content: center; align-items: center; }
-        .modal-bg.active { display: flex; }
-        .modal-win { background: #fff; width: 720px; box-shadow: 0 10px 50px rgba(0,0,0,0.4); border-radius: 2px; overflow: hidden; }
-        .modal-header { background: #00c73c; color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; font-size: 16px; align-items: center; }
-        .modal-body { padding: 25px; font-size: 13px; color: #444; }
-        .modal-body p { margin-bottom: 5px; }
-        .modal-table { width: 100%; border-top: 2px solid #333; border-collapse: collapse; margin-top: 15px; }
-        .modal-table th { background: #f8f9fa; padding: 12px; border-bottom: 1px solid #dee2e6; text-align: left; font-size: 12px; color: #666; }
-        .modal-table td { padding: 15px 12px; border-bottom: 1px solid #f1f3f5; font-size: 13px; }
-        .modal-table tr.selected-row { background: #f8fbff; outline: 2px solid #1a6dff; outline-offset: -2px; position: relative; z-index: 1; }
-        .modal-footer { padding: 15px; background: #fafafa; border-top: 1px solid #dee2e6; display: flex; justify-content: center; gap: 8px; }
-        .btn-green { background: #00c73c; color: #fff; border: none; padding: 10px 45px; font-weight: bold; cursor: pointer; position: relative; font-size: 14px; }
-        .btn-white { background: #fff; border: 1px solid #ced4da; padding: 10px 45px; cursor: pointer; font-size: 14px; }
+  --yellow-1: #ffe9b8;
+  --yellow-2: #ffd983;
 
-        /* 시작 가이드 화면 */
-        .start-gate { position: fixed; inset: 0; background: rgba(255,255,255,0.98); z-index: 1000000; display: flex; justify-content: center; align-items: center; }
-        .btn-run { background: #1a6dff; color: #fff; border: none; padding: 25px 80px; border-radius: 60px; font-size: 24px; font-weight: bold; cursor: pointer; box-shadow: 0 10px 30px rgba(26,109,255,0.3); }
+  --accent: #b66ad8;
+  --accent-strong: #9a4fc8;
+  --accent-soft: #f7effc;
 
-        /* 최종 하이라이트 박스 (Step 5) */
-        #final-frame { position: absolute; right: 20px; top: 180px; width: 140px; height: 380px; border: 4px solid #1a6dff; border-radius: 15px; display: none; pointer-events: none; z-index: 9999; }
-    </style>
+  --shadow: 0 18px 40px rgba(166, 124, 199, 0.12);
+}
+
+html, body {
+  width:100%;
+  height:100%;
+  background: linear-gradient(180deg, #fbf9fd 0%, #f6f4fb 100%);
+  overflow:hidden;
+  color: var(--text);
+}
+
+body.video-modal-open {
+  overflow:hidden;
+}
+
+.app {
+  display:flex;
+  height:100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width:340px;
+  background: linear-gradient(180deg, #fcfbff 0%, #f8f5fd 100%);
+  border-right:1px solid var(--line);
+  padding:22px 18px;
+  overflow:auto;
+  flex-shrink:0;
+}
+
+.sidebar-brand {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:24px;
+  padding:10px 10px 18px;
+}
+
+.sidebar-brand img {
+  height:28px;
+  width:auto;
+  object-fit:contain;
+}
+
+.sidebar-title {
+  font-size:19px;
+  font-weight:800;
+  color: var(--text);
+}
+
+.sidebar-steps {
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.step-card {
+  background: rgba(255,255,255,0.86);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:16px;
+  box-shadow: 0 8px 24px rgba(191, 170, 214, 0.08);
+}
+
+.step-card.current {
+  border-color: #e4c9f0;
+  background: linear-gradient(180deg, #fff8fd 0%, #fcf6ff 100%);
+  box-shadow: 0 12px 26px rgba(214, 153, 207, 0.16);
+}
+
+.step-card.done {
+  border-color: #e8dff5;
+  background: linear-gradient(180deg, #fdfcff 0%, #faf7ff 100%);
+}
+
+.step-card-header {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.step-card-title {
+  font-size:15px;
+  font-weight:800;
+  line-height:1.45;
+  color: var(--text);
+}
+
+.badge {
+  font-size:11px;
+  padding:5px 9px;
+  border-radius:999px;
+  white-space:nowrap;
+  flex-shrink:0;
+  font-weight:800;
+}
+
+.badge.done {
+  background: #f4e8ff;
+  color: #8f4cc0;
+}
+
+.badge.ing {
+  background: linear-gradient(135deg, #f6c7e7 0%, #e5d3ff 100%);
+  color: #7b3da8;
+}
+
+.badge.wait {
+  background: #f1edf6;
+  color: #8b8396;
+}
+
+.step-items {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.sub-item {
+  padding:11px 12px;
+  border-radius:14px;
+  cursor:pointer;
+  font-size:14px;
+  line-height:1.45;
+  color:#5c5565;
+  transition:0.2s ease;
+}
+
+.sub-item:hover {
+  background:#f8f1fb;
+}
+
+.sub-item.active {
+  background: linear-gradient(135deg, #ffddef 0%, #f3e7ff 100%);
+  color:#6d329b;
+  font-weight:800;
+  box-shadow: inset 0 0 0 1px rgba(176, 112, 208, 0.14);
+}
+
+.optional {
+  font-size:11px;
+  color:#aa9ab6;
+  margin-left:6px;
+}
+
+/* ===== MAIN ===== */
+.main {
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  background: transparent;
+}
+
+.main-shell {
+  flex:1;
+  min-height:0;
+  padding:24px;
+}
+
+.content-card {
+  width:100%;
+  height:100%;
+  background: var(--surface);
+  border:1px solid var(--line);
+  border-radius:28px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  box-shadow: var(--shadow);
+}
+
+/* ===== HEADER ===== */
+.content-header {
+  display:grid;
+  grid-template-columns: 1fr auto auto;
+  align-items:center;
+  gap:14px;
+  padding:24px 28px;
+  border-bottom:1px solid #f1ebf7;
+  background: linear-gradient(180deg, #fffdfd 0%, #fffafe 100%);
+  flex-shrink:0;
+}
+
+.content-title {
+  font-size:28px;
+  font-weight:900;
+  color: var(--text);
+  line-height:1.3;
+}
+
+.content-progress {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:120px;
+  padding:10px 16px;
+  border-radius:999px;
+  background: linear-gradient(135deg, #ffe0f1 0%, #efe3ff 100%);
+  color:#7b3da8;
+  font-size:14px;
+  font-weight:900;
+  border:1px solid #efd8fb;
+}
+
+.content-header-actions {
+  display:flex;
+  gap:10px;
+  flex-shrink:0;
+}
+
+.btn {
+  padding:12px 18px;
+  border-radius:14px;
+  font-weight:800;
+  cursor:pointer;
+  border:none;
+  font-size:14px;
+  transition:0.18s ease;
+}
+
+.btn-help {
+  border:1px solid #eadcf5;
+  color:#7d4da6;
+  background:#fff;
+}
+
+.btn-help:hover {
+  background:#fcf7ff;
+}
+
+.btn-next {
+  background: linear-gradient(135deg, #f4b6dc 0%, #d7c6ff 100%);
+  color:#5f257d;
+  box-shadow: 0 10px 24px rgba(187, 133, 214, 0.20);
+}
+
+.btn-next:hover {
+  filter:brightness(0.98);
+}
+
+.btn-complete {
+  background: linear-gradient(135deg, #ffd9ea 0%, #ffe7b7 100%);
+  color:#8a4a17;
+}
+
+/* ===== BODY ===== */
+.content-body {
+  flex:1;
+  min-height:0;
+  overflow:auto;
+  padding:34px 28px 40px;
+  background: linear-gradient(180deg, #fff 0%, #fffdff 100%);
+}
+
+.step-content-shell {
+  max-width:920px;
+  margin:0 auto;
+}
+
+.step-desc {
+  text-align:center;
+  font-size:16px;
+  line-height:1.9;
+  color: var(--muted);
+  margin-bottom:22px;
+}
+
+.body-divider {
+  width:100%;
+  max-width:820px;
+  height:1px;
+  background: linear-gradient(90deg, transparent 0%, #eadcf5 18%, #eadcf5 82%, transparent 100%);
+  margin:0 auto 28px;
+}
+
+.step-section-title {
+  text-align:center;
+  font-size:22px;
+  font-weight:900;
+  color: var(--text);
+  margin-bottom:22px;
+}
+
+.step-content {
+  max-width:820px;
+  margin:0 auto;
+}
+
+/* 주입된 html 내부 공통 정리 */
+.step-content .step-left-content {
+  width:100%;
+}
+
+.step-content .step-left-content > section {
+  width:100%;
+  max-width:820px;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+.step-content .step-left-content h4 {
+  text-align:center;
+}
+
+.step-content .step-left-content ol,
+.step-content .step-left-content ul,
+.step-content .step-left-content p,
+.step-content .step-left-content li {
+  text-align:left;
+}
+
+/* ===== PLAY BUTTON AREA ===== */
+.video-cta {
+  margin-top:28px;
+  display:flex;
+  justify-content:center;
+}
+
+.play-launch-btn {
+  position:relative;
+  width:160px;
+  height:160px;
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  transition:transform 0.18s ease;
+}
+
+.play-launch-btn:hover {
+  transform:translateY(-2px) scale(1.01);
+}
+
+.play-launch-btn:active {
+  transform:translateY(0) scale(0.99);
+}
+
+.play-launch-surface {
+  width:100%;
+  height:100%;
+  border-radius:42px;
+  background: radial-gradient(circle at 75% 25%, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.18) 18%, transparent 34%),
+              linear-gradient(180deg, #efb4dd 0%, #f5b7e1 42%, #ee96cb 100%);
+  box-shadow:
+    inset 0 6px 20px rgba(255,255,255,0.34),
+    inset 0 -12px 18px rgba(224, 106, 176, 0.18),
+    0 18px 34px rgba(229, 145, 200, 0.30);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.play-launch-triangle {
+  width:0;
+  height:0;
+  border-top:26px solid transparent;
+  border-bottom:26px solid transparent;
+  border-left:44px solid #ffe6a8;
+  margin-left:8px;
+  filter: drop-shadow(0 8px 10px rgba(226, 180, 84, 0.22));
+}
+
+.play-launch-label {
+  margin-top:14px;
+  text-align:center;
+  font-size:15px;
+  font-weight:800;
+  color:#7b3d86;
+}
+
+/* ===== HELP ===== */
+.help {
+  position:fixed;
+  right:0;
+  top:0;
+  width:420px;
+  height:100%;
+  background:#fff;
+  box-shadow:-10px 0 30px rgba(0,0,0,0.1);
+  transform:translateX(100%);
+  transition:0.3s;
+  padding:20px;
+  overflow:auto;
+  z-index:100;
+}
+
+.help.open {
+  transform:translateX(0);
+}
+
+.faq-item {
+  margin-bottom:10px;
+  border:1px solid #eee;
+  border-radius:12px;
+  overflow:hidden;
+}
+
+.faq-q {
+  padding:12px;
+  font-weight:700;
+  cursor:pointer;
+  background:#fff;
+}
+
+.faq-q:hover {
+  background:#fdf7ff;
+}
+
+.faq-a {
+  display:none;
+  padding:12px;
+  font-size:14px;
+  line-height:1.8;
+  color:#4b5563;
+}
+
+.faq-item.open .faq-a {
+  display:block;
+}
+
+/* ===== VIDEO MODAL ===== */
+.video-modal {
+  position:fixed;
+  inset:0;
+  display:none;
+  z-index:2000;
+}
+
+.video-modal.open {
+  display:block;
+}
+
+.video-modal-dim {
+  position:absolute;
+  inset:0;
+  background:rgba(32, 22, 45, 0.62);
+}
+
+.video-modal-dialog {
+  position:relative;
+  z-index:2;
+  width:min(1400px, calc(100vw - 60px));
+  height:min(900px, calc(100vh - 60px));
+  margin:30px auto;
+  background:#fff;
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:0 24px 60px rgba(0, 0, 0, 0.28);
+  display:flex;
+  flex-direction:column;
+}
+
+.video-modal-header {
+  height:64px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px 0 24px;
+  border-bottom:1px solid #f0e8f6;
+  background:#fff;
+}
+
+.video-modal-title {
+  font-size:18px;
+  font-weight:900;
+  color:#111827;
+}
+
+.video-modal-close {
+  width:40px;
+  height:40px;
+  border:none;
+  border-radius:999px;
+  background:#f7f2fb;
+  color:#7d4da6;
+  font-size:24px;
+  line-height:1;
+  cursor:pointer;
+}
+
+.video-modal-body {
+  flex:1;
+  min-height:0;
+  background:#f8fafc;
+}
+
+.video-modal-body iframe {
+  width:100%;
+  height:100%;
+  border:0;
+  display:block;
+  background:#f8fafc;
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    width:290px;
+  }
+
+  .content-header {
+    grid-template-columns: 1fr;
+    align-items:flex-start;
+  }
+
+  .content-header-actions {
+    width:100%;
+  }
+
+  .content-header-actions .btn {
+    flex:1;
+  }
+}
+
+@media (max-width: 768px) {
+  .app {
+    flex-direction:column;
+  }
+
+  .sidebar {
+    width:100%;
+    height:auto;
+    border-right:none;
+    border-bottom:1px solid var(--line);
+  }
+
+  .main-shell {
+    padding:12px;
+  }
+
+  .content-header,
+  .content-body {
+    padding:20px;
+  }
+
+  .content-title {
+    font-size:22px;
+  }
+
+  .help {
+    width:100%;
+  }
+
+  .video-modal-dialog {
+    width:calc(100vw - 20px);
+    height:calc(100vh - 20px);
+    margin:10px auto;
+    border-radius:16px;
+  }
+
+  .play-launch-btn {
+    width:132px;
+    height:132px;
+  }
+}
+</style>
 </head>
+
 <body>
 
-    <div class="start-gate" id="gate"><button class="btn-run" onclick="startSim()">가이드 영상 시작 ▶</button></div>
+<div class="app">
 
-    <header class="navbar">
-        <div class="navbar-left">
-            <div class="logo"><span>N</span> 스마트스토어센터</div>
-            <div class="nav-links"><span>쇼핑파트너센터</span><span>커머스솔루션마켓</span><span>통합광고주센터</span></div>
-        </div>
-        <div class="navbar-right">
-            <span class="btn-info">내정보</span> <span style="font-size:12px; cursor:pointer;">스토어 이동 V</span>
-        </div>
-    </header>
-
-    <div class="main-wrapper">
-        <aside class="sidebar">
-            <div class="sidebar-header">스토어관리</div>
-            <div class="sidebar-menu-wrap">
-                <div class="sidebar-cat">스토어 전시관리</div>
-                <div class="sidebar-item active">스마트스토어 <span>↗</span></div>
-                <div class="sidebar-item">카테고리 관리</div>
-                <div class="sidebar-item">쇼핑 스토리 관리</div>
-                <div class="sidebar-item">쇼핑라이브 숏클립 등록</div>
-                <div class="sidebar-cat">스토어 설정</div>
-                <div class="sidebar-item">기본정보 관리</div>
-                <div class="sidebar-item">API 관리</div>
-                <div class="sidebar-item">SNS 설정</div>
-                <div class="sidebar-cat">서비스 연결</div>
-                <div class="sidebar-footer">
-                    <div class="btn-service" id="target1">
-                        네이버 서비스 연결
-                        <div class="click-badge" id="badge1" style="top:-38px; left:0;">클릭</div>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <main class="content">
-            <div class="section">
-                <div class="row-title">
-                    <div style="width:24px; height:24px; background:#00c73c; color:#fff; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:12px;">🏠</div>
-                    네이버 풀필먼트 >
-                </div>
-                <div class="row-desc">네이버 풀필먼트를 통해 상품 보관, 포장, 운송, 반품처리 등 통합 물류 관리 서비스를 받을 수 있습니다.<br>내 스토어에 맞는 풀필먼트 서비스를 찾아보세요. <em>자세히 알아보기 ></em></div>
-                <div class="gray-inner">
-                    <div class="status-msg" id="ff-msg">
-                        풀필먼트 서비스를 이용하지 않는 판매자라면, 먼저 서비스 신청 및 계약을 진행해주세요. <em style="color:#1a6dff; text-decoration:underline;">풀필먼트 서비스 신청하러 가기 ></em><br>
-                        풀필먼트 서비스를 이미 이용중인 판매자라면, 풀필먼트 계약 연동 버튼을 클릭하세요.
-                    </div>
-                    <div id="ff-btn-area">
-                        <button class="btn-rect" id="target2">풀필먼트 계약 연동 <div class="click-badge" id="badge2" style="top:-42px; right:0;">클릭</div></button>
-                    </div>
-                    <div class="toggle-box">
-                        <span class="toggle-text" id="ff-toggle-txt">설정불가</span>
-                        <div class="toggle-ui" id="ff-toggle"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section" style="border:none;">
-                <div class="row-title">
-                    <div style="width:24px; height:24px; border:1px solid #ddd; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:900;">N</div>
-                    N배송 프로그램 이용 >
-                </div>
-                <div class="row-desc">네이버의 솔루션을 활용해 빠른 배송·도착 보장 경험을 고객에게 제공해보세요.<br>N배송 프로그램을 통해 네이버가 판매자의 성장을 돕겠습니다. <em>자세히 알아보기 ></em></div>
-                <div class="gray-inner">
-                    <div class="status-msg black" id="nb-msg">
-                        N배송 프로그램을 이용 가능합니다.<br>
-                        <span style="color:#888; font-size:12px;">* 2025년 6월 2일부터 N배송관 유입수수료는 부과되지 않습니다. (N배송 솔루션 사용료 별도)</span>
-                    </div>
-                    <div id="nb-btn-area" style="display:none;">
-                        <button class="btn-rect" id="target3" style="color:#1a6dff; border-color:#1a6dff;">프로그램 약관 동의 <div class="click-badge" id="badge3" style="top:-42px; right:0;">클릭</div></button>
-                    </div>
-                    <div class="toggle-box">
-                        <span class="toggle-text" id="nb-toggle-txt">이용가능</span>
-                        <div class="toggle-ui" id="nb-toggle"></div>
-                    </div>
-                </div>
-            </div>
-        </main>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="./Primary Logo.png" alt="Primary Logo" onerror="this.style.display='none'">
+      <div class="sidebar-title">N배송 가이드</div>
     </div>
 
-    <div class="modal-bg" id="modal1">
-        <div class="modal-win">
-            <div class="modal-header">풀필먼트 계약 연동 <span style="cursor:pointer; font-size:20px;">✕</span></div>
-            <div class="modal-body">
-                <p>· 풀필먼트 연동을 위해 이용 중인 물류사를 선택해주세요.</p>
-                <p>· 계약 연동 결과 확인까지 영업일 기준 최대 3일까지 소요될 수 있습니다.</p>
-                <p>· N배송 프로그램 이용 가능 물류사와 연동시, 연동 이후 추가적인 동의 및 안내절차를 거친 후 프로그램 이용이 가능합니다. <em style="color:#00c73c;">N배송 프로그램 자세히 보기 ></em></p>
-                <table class="modal-table">
-                    <thead><tr><th style="width:40px;"></th><th>물류사</th><th>연동상태</th><th>N배송 프로그램</th></tr></thead>
-                    <tbody>
-                        <tr class="selected-row">
-                            <td><input type="checkbox" checked style="accent-color: #00c73c;"></td>
-                            <td><strong>품고</strong></td>
-                            <td style="color:#00c73c;">연동중</td>
-                            <td style="color:#1a6dff;">가능</td>
-                        </tr>
-                        <tr><td><input type="checkbox" disabled></td><td>위킵</td><td>-</td><td>가능</td></tr>
-                        <tr><td><input type="checkbox" disabled></td><td>아워박스</td><td>-</td><td>가능</td></tr>
-                        <tr><td><input type="checkbox" disabled></td><td>파스토(FASSTO)</td><td>-</td><td>가능</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-white">취소</button>
-                <button class="btn-green" id="targetModal1">확인 <div class="click-badge" id="badgeModal1" style="top:-42px; right:10px;">클릭</div></button>
-            </div>
+    <div id="sidebar" class="sidebar-steps"></div>
+  </aside>
+
+  <!-- MAIN -->
+  <section class="main">
+    <div class="main-shell">
+      <div class="content-card">
+
+        <div class="content-header">
+          <div class="content-title" id="title"></div>
+
+          <div class="content-progress" id="progress"></div>
+
+          <div class="content-header-actions">
+            <button class="btn btn-help" id="helpBtn" type="button">도움말</button>
+            <button class="btn btn-next" id="nextBtn" type="button">다음 단계</button>
+          </div>
         </div>
+
+        <div class="content-body">
+          <div class="step-content-shell">
+            <p class="step-desc" id="stepDesc"></p>
+            <div class="body-divider"></div>
+            <h3 class="step-section-title">진행 방법</h3>
+
+            <div class="step-content" id="left"></div>
+
+            <div class="video-cta">
+              <div>
+                <button type="button" class="play-launch-btn" id="openVideoBtn" aria-label="진행 과정 보기">
+                  <div class="play-launch-surface">
+                    <div class="play-launch-triangle"></div>
+                  </div>
+                </button>
+                <div class="play-launch-label">진행 과정 보기</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- HELP -->
+<div class="help" id="helpBox"></div>
+
+<!-- VIDEO MODAL -->
+<div class="video-modal" id="videoModal">
+  <div class="video-modal-dim" id="videoModalDim"></div>
+
+  <div class="video-modal-dialog">
+    <div class="video-modal-header">
+      <div class="video-modal-title" id="videoModalTitle">과정 영상</div>
+      <button type="button" class="video-modal-close" id="videoModalClose">×</button>
     </div>
 
-    <div class="modal-bg" id="modal2">
-        <div class="modal-win" style="width:620px;">
-            <div class="modal-header">N배송 프로그램 약관 동의 및 안내사항 <span style="font-size:20px;">✕</span></div>
-            <div class="modal-body">
-                <div style="padding:28px; border:1px solid #eee; background:#fafafa; margin-bottom:15px;">
-                    <p style="font-weight:bold; margin-bottom:12px; font-size:14px;">약관동의 | <span style="font-weight:normal; color:#888;">N배송 프로그램 이용을 하시려면, 이용약관 동의가 필요합니다.</span></p>
-                    <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:#fa5252;">
-                        <input type="checkbox" checked style="width:18px; height:18px; accent-color: #00c73c;"> <strong>N배송 프로그램 이용약관 동의 (필수)</strong>
-                        <span style="color:#aaa; margin-left:auto; font-size:12px; cursor:pointer;">보기 ></span>
-                    </div>
-                </div>
-                <p style="font-size:12px; color:#666;">네이버배송 운영정책을 확인해주세요. <em style="color:#1a6dff;">자세히보기 ></em></p>
-                <p style="font-size:11px; color:#999; margin-top:6px;">※ 운영기준에 따라 서비스 이용이 제한될 수 있습니다.</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-white">닫기</button>
-                <button class="btn-green" id="targetModal2">확인 <div class="click-badge" id="badgeModal2" style="top:-42px; right:10px;">클릭</div></button>
-            </div>
-        </div>
+    <div class="video-modal-body">
+      <iframe
+        id="videoModalFrame"
+        src=""
+        title="과정 영상"
+        loading="eager"
+        referrerpolicy="no-referrer"
+        allow="autoplay"
+      ></iframe>
     </div>
+  </div>
+</div>
 
-    <div id="final-frame"></div>
+<script>
+const STEPS = [
+  {
+    title: "STEP1. 품고 나우 설정",
+    items: [
+      {
+        title: "품고 나우 로그인",
+        required: true,
+        left: "./steps/step1-login-left.html",
+        right: "./steps/step1-login-right-player.html",
+        help: "./help/step1-help.html",
+        desc: "품고 나우 접속 및 기본 환경 설정을 진행합니다."
+      },
+      {
+        title: "구성원 추가",
+        required: false,
+        left: "./steps/step1-member-left.html",
+        right: "./steps/step1-member-right-player.html",
+        help: "./help/step1-member-help.html",
+        desc: "운영에 필요한 구성원을 추가하고 권한을 확인합니다."
+      }
+    ]
+  },
+  {
+    title: "STEP2. 풀필먼트 연동",
+    items: [
+      {
+        title: "판매처 계정 등록",
+        required: true,
+        left: "./steps/step2-new-left.html",
+        right: "./steps/step2-new-right-player.html",
+        help: "./help/step2-new-help.html",
+        desc: "판매처 계정을 등록하여 연동 준비를 진행합니다."
+      },
+      {
+        title: "풀필먼트 연동",
+        required: true,
+        left: "./steps/step2-api-left.html",
+        right: "./steps/step2-api-right-player.html",
+        help: "./help/step2-api-help.html",
+        desc: "네이버 풀필먼트 계약 연동을 연결합니다."
+      },
+      {
+        title: "N배송 프로그램 약관 동의",
+        required: true,
+        left: "./steps/step2-npro-left.html",
+        right: "./steps/step2-npro-right-player.html",
+        help: "./help/step2-npro-help.html",
+        desc: "N배송 프로그램 이용을 위해 약관 동의를 완료합니다."
+      }
+    ]
+  },
+  {
+    title: "STEP3. SKU 등록",
+    items: [
+      {
+        title: "SKU 등록",
+        required: true,
+        left: "./steps/step3-sku-left.html",
+        right: "./steps/step3-sku-right-player.html",
+        help: "./help/step3-sku-help.html",
+        desc: "운영 SKU 등록 기준 및 유의사항을 확인합니다."
+      },
+      {
+        title: "상품 매핑",
+        required: true,
+        left: "./steps/step3-mapping-left.html",
+        right: "./steps/step3-mapping-right-player.html",
+        help: "./help/step3-mapping-help.html",
+        desc: "등록된 SKU와 실제 판매 상품 정보를 매핑합니다."
+      }
+    ]
+  },
+  {
+    title: "STEP4. 초도 입고",
+    items: [
+      {
+        title: "입고 가이드",
+        required: true,
+        left: "./steps/step4-inbound-left.html",
+        right: "./steps/step4-inbound-right-player.html",
+        help: "./help/step4-inbound-help.html",
+        desc: "초도 입고 전 준비사항과 진행 기준을 확인합니다."
+      },
+      {
+        title: "초도 입고 패킹리스트 제출하기",
+        required: true,
+        left: "./steps/step4-packing-left.html",
+        right: "./steps/step4-packing-right-player.html",
+        help: "./help/step4-packing-help.html",
+        desc: "초도 입고를 위한 패킹리스트를 작성하고 제출합니다."
+      }
+    ]
+  },
+  {
+    title: "STEP5. N배송 설정하기",
+    items: [
+      {
+        title: "N배송 설정하기",
+        required: true,
+        left: "./steps/step5-left.html",
+        right: "./steps/step5-right-player.html",
+        help: "./help/step5-help.html",
+        desc: "최종적으로 N배송 설정을 완료합니다."
+      }
+    ]
+  }
+];
 
-    <script>
-        const wait = (ms) => new Promise(r => setTimeout(r, ms));
-        
-        async function startSim() {
-            document.getElementById('gate').style.display = 'none';
+let step = 0;
+let item = 0;
+const done = {};
 
-            // 1. 서비스 연결 강조
-            await wait(700);
-            document.getElementById('target1').classList.add('blue-highlight');
-            document.getElementById('badge1').classList.add('active-badge');
-            await wait(1500);
-            document.getElementById('target1').classList.remove('blue-highlight');
-            document.getElementById('badge1').classList.remove('active-badge');
+const sidebar = document.getElementById("sidebar");
+const left = document.getElementById("left");
+const title = document.getElementById("title");
+const progress = document.getElementById("progress");
+const helpBox = document.getElementById("helpBox");
+const nextBtn = document.getElementById("nextBtn");
+const helpBtn = document.getElementById("helpBtn");
+const openVideoBtn = document.getElementById("openVideoBtn");
+const stepDesc = document.getElementById("stepDesc");
 
-            // 2. 연동 버튼 강조
-            document.getElementById('target2').classList.add('blue-highlight');
-            document.getElementById('badge2').classList.add('active-badge');
-            await wait(1500);
-            document.getElementById('target2').classList.remove('blue-highlight');
-            document.getElementById('badge2').classList.remove('active-badge');
+const videoModal = document.getElementById("videoModal");
+const videoModalDim = document.getElementById("videoModalDim");
+const videoModalClose = document.getElementById("videoModalClose");
+const videoModalTitle = document.getElementById("videoModalTitle");
+const videoModalFrame = document.getElementById("videoModalFrame");
 
-            // 3. 모달 1 오픈 및 확인
-            document.getElementById('modal1').classList.add('active');
-            await wait(800);
-            document.getElementById('targetModal1').classList.add('blue-highlight');
-            document.getElementById('badgeModal1').classList.add('active-badge');
-            await wait(1500);
-            document.getElementById('modal1').classList.remove('active');
+function getRequiredItems() {
+  return STEPS.flatMap((s, si) =>
+    s.items
+      .map((it, ii) => ({ ...it, key: `${si}-${ii}` }))
+      .filter(it => it.required)
+  );
+}
 
-            // 4. 연동 완료 UI 업데이트
-            document.getElementById('ff-msg').innerHTML = "연결된 물류사: <strong>품고</strong><br><span style='color:#777;'>풀필먼트 계약을 한 다른 물류사가 있다면, 풀필먼트 계약 연동을 통해 추가하실 수 있습니다.</span>";
-            document.getElementById('ff-btn-area').innerHTML = "<button class='btn-rect'>풀필먼트 계약 연동</button>";
-            document.getElementById('ff-toggle').classList.add('on');
-            document.getElementById('ff-toggle-txt').innerText = "설정함";
-            document.getElementById('ff-toggle-txt').style.color = "#00c73c";
+function getStepStatus(si) {
+  const requiredItems = STEPS[si].items
+    .map((it, ii) => ({ ...it, idx: ii }))
+    .filter(it => it.required);
 
-            // 5. N배송 버튼 활성화 및 클릭 강조
-            document.getElementById('nb-btn-area').style.display = 'block';
-            document.getElementById('nb-msg').style.display = 'none';
-            await wait(1000);
-            document.getElementById('target3').classList.add('blue-highlight');
-            document.getElementById('badge3').classList.add('active-badge');
-            await wait(1500);
-            document.getElementById('target3').classList.remove('blue-highlight');
-            document.getElementById('badge3').classList.remove('active-badge');
+  if (requiredItems.length === 0) return "wait";
 
-            // 6. 모달 2 오픈 및 확인
-            document.getElementById('modal2').classList.add('active');
-            await wait(800);
-            document.getElementById('targetModal2').classList.add('blue-highlight');
-            document.getElementById('badgeModal2').classList.add('active-badge');
-            await wait(1500);
-            document.getElementById('modal2').classList.remove('active');
+  const doneCount = requiredItems.filter(it => done[`${si}-${it.idx}`]).length;
 
-            // 7. 최종 가이드 종료 UI
-            document.getElementById('nb-msg').style.display = 'block';
-            document.getElementById('nb-msg').innerHTML = "N배송 프로그램은 스토어에 등록된 모든 상품이 아닌, 배송속성이 'N배송'으로 설정된 상품만 적용됩니다.<br><span style='color:#777;'>프로그램 적용을 원하는 상품의 배송속성을 'N배송'으로 설정해주세요.</span>";
-            document.getElementById('nb-btn-area').innerHTML = "<button class='btn-rect'>프로그램 설정 가이드</button> <button class='btn-rect' style='margin-left:5px;'>상품조회/수정</button>";
-            document.getElementById('nb-toggle').classList.add('on');
-            document.getElementById('nb-toggle-txt').innerText = "이용중";
-            document.getElementById('nb-toggle-txt').style.color = "#00c73c";
+  if (doneCount === requiredItems.length) return "done";
+  if (si === step) return "ing";
+  return "wait";
+}
 
-            document.getElementById('final-frame').style.display = 'block';
-            await wait(4500);
-            location.reload();
-        }
-    </script>
+function renderSidebar() {
+  sidebar.innerHTML = "";
+
+  STEPS.forEach((s, si) => {
+    const status = getStepStatus(si);
+
+    const el = document.createElement("div");
+    el.className = `step-card ${status === "ing" ? "current" : status === "done" ? "done" : ""}`;
+
+    el.innerHTML = `
+      <div class="step-card-header">
+        <div class="step-card-title">${s.title}</div>
+        <span class="badge ${status}">
+          ${status === "done" ? "완료" : status === "ing" ? "진행중" : "대기중"}
+        </span>
+      </div>
+      <div class="step-items"></div>
+    `;
+
+    const itemsWrap = el.querySelector(".step-items");
+
+    s.items.forEach((it, ii) => {
+      const sub = document.createElement("div");
+      sub.className = "sub-item" + (si === step && ii === item ? " active" : "");
+      sub.innerHTML = `${it.title}${!it.required ? '<span class="optional">선택</span>' : ""}`;
+      sub.onclick = () => {
+        step = si;
+        item = ii;
+        render();
+      };
+      itemsWrap.appendChild(sub);
+    });
+
+    sidebar.appendChild(el);
+  });
+}
+
+async function load(path) {
+  const res = await fetch(path + "?v=" + Date.now(), { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error(`파일을 불러오지 못했습니다: ${path}`);
+  }
+  return await res.text();
+}
+
+function bindFAQ() {
+  document.querySelectorAll(".faq-q").forEach(q => {
+    q.onclick = () => q.parentElement.classList.toggle("open");
+  });
+}
+
+function openVideoModal(titleText, src) {
+  videoModalTitle.textContent = `${titleText} 과정 영상`;
+  videoModalFrame.src = `${src}?v=${Date.now()}`;
+  videoModal.classList.add("open");
+  document.body.classList.add("video-modal-open");
+}
+
+function closeVideoModal() {
+  videoModal.classList.remove("open");
+  videoModalFrame.src = "";
+  document.body.classList.remove("video-modal-open");
+}
+
+function renderProgress() {
+  const required = getRequiredItems();
+  const total = required.length;
+  const completed = required.filter(it => done[it.key]).length;
+  const percent = total === 0 ? 0 : Math.floor((completed / total) * 100);
+  progress.innerText = `진행률 ${percent}%`;
+}
+
+async function render() {
+  closeVideoModal();
+  renderSidebar();
+  renderProgress();
+
+  const data = STEPS[step].items[item];
+  title.innerText = data.title;
+  stepDesc.innerText = data.desc || "";
+
+  try {
+    left.innerHTML = await load(data.left);
+  } catch (e) {
+    left.innerHTML = `<div style="color:#ef4444;font-size:14px;">${e.message}</div>`;
+  }
+
+  openVideoBtn.onclick = () => openVideoModal(data.title, data.right);
+
+  try {
+    helpBox.innerHTML = await load(data.help);
+    bindFAQ();
+  } catch (e) {
+    helpBox.innerHTML = `<div style="color:#ef4444;font-size:14px;">${e.message}</div>`;
+  }
+
+  const isLastStep = step === STEPS.length - 1;
+  const isLastItem = item === STEPS[step].items.length - 1;
+
+  if (isLastStep && isLastItem) {
+    nextBtn.textContent = "가이드 완료";
+    nextBtn.classList.add("btn-complete");
+    nextBtn.classList.remove("btn-next");
+  } else {
+    nextBtn.textContent = "다음 단계";
+    nextBtn.classList.add("btn-next");
+    nextBtn.classList.remove("btn-complete");
+  }
+}
+
+helpBtn.onclick = () => {
+  helpBox.classList.toggle("open");
+};
+
+nextBtn.onclick = () => {
+  const current = STEPS[step].items[item];
+
+  if (current.required) {
+    done[`${step}-${item}`] = true;
+  }
+
+  if (item < STEPS[step].items.length - 1) {
+    item++;
+    render();
+    return;
+  }
+
+  if (step < STEPS.length - 1) {
+    step++;
+    item = 0;
+    render();
+    return;
+  }
+
+  render();
+  alert("수고하셨습니다! 가이드 확인이 완료되었습니다.");
+};
+
+videoModalClose.addEventListener("click", closeVideoModal);
+videoModalDim.addEventListener("click", closeVideoModal);
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    helpBox.classList.remove("open");
+    closeVideoModal();
+  }
+});
+
+render();
+</script>
+
 </body>
 </html>
