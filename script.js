@@ -13,7 +13,7 @@ const GUIDE_STEPS = [
 {
   title: "구성원 추가",
   leftFile: "./steps/step1-member-left.html",
-  rightFile: "./steps/step1-member--player.html",
+  rightFile: "./steps/step1-member-right-player.html",
   helpFile: "./help/step1-member-help.html"
 }
   {
