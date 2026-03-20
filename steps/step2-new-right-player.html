@@ -1,1 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>판매처 계정 관리 최종 무삭제판</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+        /* 가이드 시스템 스타일 - 원본 스타일 훼손 절대 없음 */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Pretendard', sans-serif; }
+        body { background-color: #f1f3f5; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .guide-container { width: 1400px; height: 900px; background: #fff; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); position: relative; overflow: hidden; border: 1px solid #e9ecef; }
+        
+        /* 💡 선명한 파란색 테두리 강조 (버튼 배경과 겹치지 않게 offset 2px) */
+        .target-focus-ani { 
+            outline: 3px solid #0040D1 !important; 
+            outline-offset: 2px !important; 
+            z-index: 9999999 !important; 
+            position: relative; 
+            background-color: rgba(0, 64, 209, 0.05) !important; 
+            border-radius: 4px;
+        }
 
+        #click-hint-badge { position: absolute; background: #0040D1; color: #fff; font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 4px; z-index: 10000000; display: none; animation: hintJump 1s infinite; }
+        @keyframes hintJump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+        .play-overlay-full { position: absolute; inset: 0; background: rgba(255, 255, 255, 0.9); z-index: 100000000; display: flex; justify-content: center; align-items: center; transition: 0.5s; }
+        .play-overlay-full.hidden { opacity: 0; pointer-events: none; }
+        .btn-start-action { background: #0040D1; color: #fff; border: none; padding: 25px 60px; border-radius: 60px; font-size: 22px; font-weight: 700; cursor: pointer; }
+
+        .step-view-wrap { display: none; width: 100%; height: 100%; }
+        .step-view-wrap.active { display: block; }
+        .typing-active-box { border-color: #0040D1 !important; background-color: #f8faff !important; }
+
+        /* 등록 완료 행 */
+        #added-row { display: none; }
+        #added-row.visible { display: table-row; }
+    </style>
+</head>
+<body>
+
+<div class="guide-container">
+    <div id="click-hint-badge">클릭</div>
+    <div class="play-overlay-full" id="finalOverlay"><button class="btn-start-action" onclick="runCompleteManual()">과정 영상 보기 ▶</button></div>
+
+    <div id="view-main" class="step-view-wrap active">
+        <div style="display: flex; height: 100vh; background-color: #f8f9fa; color: #333;">
+            <aside class="sidebar" style="width: 280px; background-color: #ffffff; border-right: 1px solid #e9ecef; display: flex; flex-direction: column; overflow-y: auto;">
+                <div class="sidebar-header" style="height: 70px; border-bottom: 1px solid #f1f3f5;"></div>
+                <ul class="sidebar-menu" style="list-style: none; padding: 10px 0;">
+                    <li style="display: flex; align-items: center; padding: 12px 20px; cursor: pointer; color: #495057; font-size: 15px;">
+                        <span class="menu-icon" style="margin-right: 10px; display: flex; align-items: center; justify-content: center; width: 20px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#868e96" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span>
+                        알림 <span style="margin-left:auto; background:#f1f3f5; color:#495057; border-radius:12px; padding:2px 10px; font-size:12px;">0</span>
+                    </li>
+                    <li style="display: flex; align-items: center; padding: 12px 20px; cursor: pointer; color: #495057; font-size: 15px;">
+                        <span class="menu-icon" style="margin-right: 10px; display: flex; align-items: center; justify-content: center; width: 20px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#868e96" stroke-width="2"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg></span>
+                        대시보드
+                    </li>
+                    <div style="font-size: 14px; color: #868e96; padding: 10px 20px; margin-top: 10px;">메뉴</div>
+                    <li style="display: flex; align-items: center; padding: 12px 20px; cursor: pointer; color: #495057; font-size: 15px;"><i style="font-size: 11px; color: #adb5bd; margin-right: 8px; font-style: normal; width: 12px; text-align: center;">▶</i><span class="menu-icon" style="margin-right: 10px; display: flex; align-items: center; justify-content: center; width: 20px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#868e96" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></span>SKU</li>
+                    <li style="display: flex; align-items: center; padding: 12px 20px; cursor: pointer; color: #495057; font-size: 15px;"><i style="font-size: 11px; color: #adb5bd; margin-right: 8px; font-style: normal; width: 12px; text-align: center;">▶</i><span class="menu-icon" style="margin-right: 10px; display: flex; align-items: center; justify-content: center; width: 20px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#868e96" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline></svg></span>재고</li>
+                    <li style="display: flex; align-items: center; padding: 12px 20px; cursor: pointer; color: #495057; font-size: 15px;"><i style="font-size: 11px; color: #adb5bd; margin-right: 8px; font-style: normal; width: 12px; text-align: center;">▶</i><span class="menu-icon" style="margin-right: 10px; display: flex; align-items: center; justify-content: center; width: 20px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#868e96" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg></span>입·출고</li>
+                    <li style="display: flex; align-items: center; padding: 12px 20px; cursor: pointer; color: #495057; font-size: 15px;"><i style="font-size: 11px; color: #adb5bd; margin-right: 8px; font-style: normal; width: 12px; text-align: center;">▶</i><span class="menu-icon" style="margin-right: 10px; display: flex; align-items: center; justify-content: center; width: 20px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#868e96" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></span>OMS</li>
+                    <li id="trigger-order" style="display: flex; align-items: center; padding: 12px 20px; cursor: pointer; color: #495057; font-size: 15px;">
+                        <i style="font-size: 11px; color: #adb5bd; margin-right: 8px; font-style: normal; width: 12px; text-align: center;">▼</i>
+                        <span class="menu-icon" style="margin-right: 10px; display: flex; align-items: center; justify-content: center; width: 20px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#868e96" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg></span>
+                        <strong>주문</strong> 
+                    </li>
+                    <ul class="sub-menu" style="list-style: none; background-color: #fafafa;">
+                        <li id="trigger-account" class="sub-menu-item active" style="display: flex; align-items: center; padding: 10px 20px 10px 52px; font-size: 15px; color: #333; font-weight: bold; cursor: pointer;">판매처 계정</li>
+                    </ul>
+                    <li style="display: flex; align-items: center; padding: 12px 20px; cursor: pointer; color: #495057; font-size: 15px;"><i style="font-size: 11px; color: #adb5bd; margin-right: 8px; font-style: normal; width: 12px; text-align: center;">▶</i><span class="menu-icon" style="margin-right: 10px; display: flex; align-items: center; justify-content: center; width: 20px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#868e96" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg></span>송장</li>
+                    </ul>
+            </aside>
+            <main class="main-content" style="flex: 1; padding: 40px; background-color: #ffffff; overflow-y: auto;">
+                <div class="page-header" style="display: flex; align-items: center; margin-bottom: 24px;">
+                    <div class="page-title" style="font-size: 24px; font-weight: bold; margin-right: 12px;">판매처 계정 관리</div>
+                </div>
+                <div class="filter-section" style="display: flex; gap: 15px; margin-bottom: 24px; align-items: center;">
+                    <div class="filter-group" style="display: flex; flex-direction: column; gap: 6px;"><label style="font-size: 14px; font-weight: bold;">판매처</label><select style="padding: 10px 14px; border: 1px solid #ced4da; border-radius: 4px; width: 160px;"><option>선택</option></select></div>
+                    <div class="filter-group" style="display: flex; flex-direction: column; gap: 6px;"><label style="font-size: 14px; font-weight: bold;">브랜드명</label><select style="padding: 10px 14px; border: 1px solid #ced4da; border-radius: 4px; width: 160px;"><option>선택</option></select></div>
+                    <button style="background-color: #0040d1; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; margin-top: 24px; cursor: pointer;">조회</button>
+                </div>
+                <div class="action-bar" style="display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center;">
+                    <div style="position: relative; width: 220px;"><input type="text" placeholder="결과 내 찾기" style="padding: 10px 14px 10px 36px; border: 1px solid #ced4da; border-radius: 20px; width: 100%;"></div>
+                    <div style="display: flex; gap: 10px;">
+                        <button style="border: 1px solid #ced4da; background: white; padding: 8px 14px; border-radius: 4px; font-size: 14px; display: flex; align-items: center; gap: 5px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#107c41" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>화면 엑셀 다운로드</button>
+                        <button style="border: 1px solid #ced4da; background: white; padding: 8px 14px; border-radius: 4px; font-size: 14px; display: flex; align-items: center; gap: 5px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#107c41" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>화면 엑셀 다운로드(병합 유지)</button>
+                    </div>
+                </div>
+                <div style="text-align: right; margin-bottom: 15px;">
+                    <button id="trigger-btn-add" style="border: 1px solid #0040d1; background-color: white; color: #0040d1; padding: 10px 20px; border-radius: 4px; font-size: 15px; font-weight: bold; cursor: pointer;">판매처 계정 개별 등록</button>
+                </div>
+                <div style="border-top: 2px solid #333; min-height: 450px; position: relative;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                        <thead style="background: #f8f9fa;">
+                            <tr><th style="padding: 12px; border-bottom: 1px solid #dee2e6;">No. <input type="checkbox"></th><th style="padding: 12px; border-bottom: 1px solid #dee2e6;">판매처명</th><th style="padding: 12px; border-bottom: 1px solid #dee2e6;">브랜드명</th><th style="padding: 12px; border-bottom: 1px solid #dee2e6;">연동 계정</th></tr>
+                        </thead>
+                        <tbody id="main-table-body">
+                            <tr id="added-row" style="background-color: #f0f4ff;">
+                                <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">1</td>
+                                <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center; font-weight: bold;">스마트스토어(물류사)</td>
+                                <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center; color: #0040D1; font-weight: bold;">품고</td>
+                                <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">ncp_1owhq2_01</td>
+                            </tr>
+                            <tr id="empty-row"><td colspan="4" style="padding: 100px; text-align: center; color: #adb5bd; font-weight: bold; font-size: 18px;">출력할 데이터가 없습니다.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="view-modal" class="step-view-wrap">
+        <div style="display: flex; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
+            <div style="width: 520px; background-color: #ffffff; border-radius: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <div style="padding: 20px 24px; border-bottom: 1px solid #dee2e6;"><h2 style="font-size: 16px; font-weight: bold; color: #333;">판매처 계정 개별 등록</h2></div>
+                <div style="padding: 24px; display: flex; flex-direction: column; gap: 20px;">
+                    <div style="display: flex; flex-direction: column; gap: 8px;"><label style="font-size: 13px; font-weight: bold;">판매처명*</label><input type="text" id="type-market" style="padding: 10px 12px; border: 1px solid #748ffc; background: #f8fbff; border-radius: 4px; font-size: 14px;" readonly></div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;"><label style="font-size: 13px; font-weight: bold;">브랜드명*</label><select id="select-brand" style="padding: 10px 12px; border: 1px solid #748ffc; background: #f8fbff; border-radius: 4px; font-size: 14px;"><option value="">선택</option><option value="품고">품고</option></select></div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;"><label style="font-size: 13px; font-weight: bold;">연동 계정*</label><input type="text" id="type-id" style="padding: 10px 12px; border: 1px solid #748ffc; background: #f8fbff; border-radius: 4px; font-size: 14px;" readonly></div>
+                </div>
+                <div style="padding: 16px 24px; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; background: #f8f9fa;">
+                    <button id="trigger-final-btn" style="padding: 10px 24px; border: none; background-color: #0040D1 !important; color: #FFFFFF !important; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer;">등록</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const hint = document.getElementById('click-hint-badge');
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+    async function playAction(id, wait = 4000, showBadge = true) {
+        const el = document.getElementById(id);
+        const rect = el.getBoundingClientRect();
+        const container = document.querySelector('.guide-container').getBoundingClientRect();
+        el.classList.add('target-focus-ani');
+        if(showBadge) {
+            hint.style.display = 'block';
+            hint.style.left = (rect.left - container.left + rect.width / 2 + 10) + 'px';
+            hint.style.top = (rect.top - container.top - 15) + 'px';
+        }
+        await sleep(wait);
+        el.classList.remove('target-focus-ani');
+        hint.style.display = 'none';
+    }
+
+    async function typeText(id, text) {
+        const el = document.getElementById(id);
+        el.classList.add('typing-active-box');
+        el.value = "";
+        for (let i = 0; i < text.length; i++) { el.value += text[i]; await sleep(70); }
+        await sleep(500);
+        el.classList.remove('typing-active-box');
+    }
+
+    async function runCompleteManual() {
+        document.getElementById('finalOverlay').classList.add('hidden');
+        await playAction('trigger-order', 1500);
+        await playAction('trigger-account', 1500);
+        await playAction('trigger-btn-add', 3500);
+        document.getElementById('view-main').classList.remove('active');
+        document.getElementById('view-modal').classList.add('active');
+        await sleep(1000);
+        await typeText('type-market', '스마트스토어(물류사)');
+        await playAction('select-brand', 1500);
+        document.getElementById('select-brand').value = "품고";
+        await sleep(800);
+        await typeText('type-id', 'API 연동용 판매자 ID 입력');
+        await playAction('trigger-final-btn', 4000);
+        document.getElementById('view-modal').classList.remove('active');
+        document.getElementById('view-main').classList.add('active');
+        document.getElementById('empty-row').style.display = 'none';
+        document.getElementById('added-row').classList.add('visible');
+        
+        // 💡 3단계 자동 강조 (클릭 뱃지 없음)
+        await playAction('added-row', 4000, false);
+        await sleep(1000);
+        location.reload();
+    }
+</script>
+</body>
+</html>
