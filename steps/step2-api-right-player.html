@@ -1,1 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>네이버 스마트스토어센터 - 풀필먼트 연동 통합 가이드(진짜 무삭제판)</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+        /* 가이드 시스템 제어 스타일 (원본과 충돌 방지) */
+        .g-master-container { position: relative; width: 100%; height: 100vh; overflow: hidden; background-color: #ffffff; }
+        .g-step-layer { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+        .g-step-layer.active { display: block; }
+        .start-cover { position: absolute; inset: 0; background: rgba(255, 255, 255, 0.98); z-index: 10000000; display: flex; justify-content: center; align-items: center; transition: 0.5s; }
+        .start-cover.hidden { opacity: 0; pointer-events: none; }
+        .btn-play-action { background: #1a6dff; color: #fff; border: none; padding: 25px 60px; border-radius: 60px; font-size: 24px; font-weight: 700; cursor: pointer; box-shadow: 0 10px 30px rgba(26,109,255,0.4); }
 
+        /* [풀필연동 1, 2, 3 원본 스타일 100% 무삭제 복제] */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Pretendard', sans-serif; }
+        body { display: flex; flex-direction: column; height: 100vh; background-color: #ffffff; color: #333; overflow: hidden; }
+
+        @keyframes bouncePulse {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        .click-badge { 
+            background-color: #1a6dff; 
+            color: #fff; font-size: 11px; padding: 3px 8px; 
+            border-radius: 4px; font-weight: bold; 
+            display: none; margin-left: 6px;
+            animation: bouncePulse 1s infinite ease-in-out;
+        }
+        .active-badge { display: inline-block !important; }
+
+        /* --- 파일 1 원본 스타일 --- */
+        .navbar { height: 56px; background-color: #2b303b; display: flex; align-items: center; padding: 0 24px; color: #a4a9b0; justify-content: space-between; flex-shrink: 0; border-bottom: 1px solid #1a1e25; }
+        .navbar-left { display: flex; align-items: center; gap: 30px; }
+        .navbar-logo { display: flex; align-items: center; gap: 6px; color: #ffffff; font-size: 18px; font-weight: bold; width: 220px;}
+        .logo-n { color: #00c73c; font-weight: 900; font-size: 20px; }
+        .navbar-menu { display: flex; gap: 20px; font-size: 13px; font-weight: 500; color: #a4a9b0; }
+        .navbar-menu span:first-child { color: white; font-weight: bold; }
+        .navbar-right { display: flex; align-items: center; gap: 10px; font-size: 12px; color: #ffffff; font-weight: bold;}
+        .btn-myinfo { border: 1px solid #666; border-radius: 12px; padding: 3px 10px; color: #ccc; cursor: pointer; font-weight: normal; font-size: 11px;}
+        .container { display: flex; flex: 1; overflow: hidden; background-color: #f4f4f4; }
+        .sidebar { width: 250px; background-color: #353b45; color: #d1d4d9; overflow-y: hidden; display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid #2b303b; }
+        .sidebar-item-main { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; font-size: 14px; font-weight: bold; cursor: pointer; border-bottom: 1px solid #414753; }
+        .icon-n-red { background-color: #fa5252; color: white; font-size: 10px; padding: 1px 4px; border-radius: 8px; margin-left: 4px; }
+        .icon-npay { color: white; font-size: 12px; font-weight: 900; margin-left: 4px; }
+        .sidebar-category-title { padding: 20px 20px 10px; font-size: 12px; color: #8f96a1; font-weight: normal; }
+        .sidebar-item { padding: 10px 20px 10px 30px; font-size: 13px; cursor: pointer; display: flex; align-items: center; color: #d1d4d9; }
+        .sidebar-item span { font-size: 10px; margin-left: 6px; color: #8f96a1; } 
+        .text-yellow { color: #f7d47e !important; }
+        .service-connect-wrap { padding: 5px 15px; }
+        .service-connect-btn { background-color: #272c36; border-radius: 6px; padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; color: #00c73c; font-size: 13px; font-weight: bold; cursor: pointer; }
+        .main-content { flex: 1; padding: 0; background-color: #ffffff; overflow-y: auto; }
+        .main-content::-webkit-scrollbar { display: none; }
+        .content-row { display: flex; border-bottom: 1px solid #f1f3f5; padding: 30px 40px; }
+        .content-left { width: 180px; display: flex; align-items: flex-start; gap: 8px; flex-shrink: 0; }
+        .content-title { font-size: 15px; font-weight: bold; color: #222; margin-top: 2px; }
+        .content-right { flex: 1; }
+        .content-desc { font-size: 13px; color: #495057; line-height: 1.6; margin-bottom: 15px; }
+        .link-green { color: #00c73c; text-decoration: underline; cursor: pointer; }
+        .inner-box { background-color: #f8f9fa; border-top: 1px solid #f1f3f5; border-bottom: 1px solid #f1f3f5; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .inner-text { font-size: 13px; color: #333; line-height: 1.6; }
+        .inner-text-red { font-size: 13px; color: #fa5252; line-height: 1.6; }
+        .inner-text-blue { font-size: 13px; color: #1a6dff; line-height: 1.6; }
+        .badge-green { background-color: #00c73c; color: white; font-size: 11px; padding: 3px 6px; border-radius: 3px; font-weight: bold; margin-right: 6px;}
+        .btn-small { border: 1px solid #ced4da; background: white; padding: 5px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; color: #495057;}
+        .btn-fulfillment { margin-top: 15px; padding: 10px 20px; background-color: #ffffff; border: 2px solid #1a6dff; border-radius: 6px; font-size: 13px; font-weight: bold; color: #333; display: inline-flex; align-items: center; cursor: pointer; }
+        .toggle-wrap { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #adb5bd; font-weight: bold; flex-shrink: 0;}
+        .toggle-switch { width: 42px; height: 22px; background-color: #e9ecef; border-radius: 12px; position: relative; }
+        .toggle-switch::after { content: ''; position: absolute; width: 18px; height: 18px; background: #ffffff; border-radius: 50%; top: 2px; left: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .icon-box { display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; flex-shrink: 0;}
+
+        /* --- 파일 2 & 3 원본 모달 스타일 --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-container { width: 600px; background-color: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; flex-direction: column; }
+        .modal-header { background-color: #00c73c; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h2 { font-size: 16px; font-weight: normal; }
+        .btn-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
+        .modal-body { padding: 20px; font-size: 13px; color: #495057; line-height: 1.6; }
+        .info-list { list-style: none; margin-bottom: 20px; padding-left: 10px; }
+        .info-list li::before { content: '·'; margin-right: 5px; font-weight: bold; }
+        .link-text { color: #00c73c; text-decoration: underline; font-weight: bold; cursor: pointer; display: inline-block; margin-top: 5px;}
+        .table-wrap { border-top: 2px solid #e9ecef; border-bottom: 1px solid #e9ecef; max-height: 300px; overflow-y: auto; }
+        .table-row { display: flex; align-items: center; padding: 12px 10px; border-bottom: 1px solid #f1f3f5; text-align: center; }
+        .table-header { font-weight: bold; background-color: #f8f9fa; border-bottom: 1px solid #dee2e6; }
+        .col-check { width: 40px; }
+        .col-name { flex: 1; text-align: left; padding-left: 10px; }
+        .col-status { width: 100px; color: #adb5bd; }
+        .col-prog { width: 120px; color: #0066ff; }
+        .row-active { border: 2px solid #748ffc !important; border-radius: 4px; background-color: #f8fbff; margin: -1px 0; position: relative; z-index: 2; }
+        .all-agree-box { margin-top: 15px; padding: 12px 15px; border: 2px solid #748ffc; border-radius: 6px; background-color: #f8fbff; display: flex; align-items: center; font-size: 14px; font-weight: bold; gap: 10px; }
+        .all-agree-box input[type="checkbox"] { width: 18px; height: 18px; accent-color: #00c73c; }
+        .modal-footer { padding: 15px 20px; display: flex; justify-content: center; gap: 10px; border-top: 1px solid #dee2e6; background-color: #fafafa;}
+        .btn-cancel { padding: 10px 40px; border: 1px solid #ced4da; background-color: white; font-size: 14px; cursor: pointer; }
+        .btn-confirm { padding: 10px 40px; border: none; background-color: #00c73c; color: white; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; align-items: center; }
+        .desc-text { margin-bottom: 20px; color: #495057; }
+        .terms-list { display: flex; flex-direction: column; gap: 12px; }
+        .term-item { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+        .term-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: #00c73c; cursor: pointer;}
+        .term-link { color: #adb5bd; font-size: 12px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="g-master-container">
+    <div class="start-cover" id="startCover">
+        <button class="btn-play-action" onclick="runSimulation()">가이드 영상 시작 ▶</button>
+    </div>
+
+    <div id="step-1" class="g-step-layer active">
+        <div class="navbar">
+            <div class="navbar-left">
+                <div class="navbar-logo"><span class="logo-n">N</span> 스마트스토어센터</div>
+                <div class="navbar-menu"><span>쇼핑파트너센터</span><span>커머스솔루션마켓</span><span>통합광고주센터</span></div>
+            </div>
+            <div class="navbar-right"><span class="btn-myinfo">내정보</span> <span style="cursor: pointer; margin-left: 5px;">스토어 이동 V</span></div>
+        </div>
+        <div class="container">
+            <aside class="sidebar">
+                <div class="sidebar-item-main"><div>상품관리 <span class="icon-n-red">N</span></div><span>∨</span></div>
+                <div class="sidebar-item-main"><div>판매관리 <span class="icon-npay">N pay</span></div><span>∨</span></div>
+                <div class="sidebar-item-main"><div>정산관리 <span class="icon-npay">N pay</span></div><span>∨</span></div>
+                <div class="sidebar-item-main"><div>문의/리뷰관리</div><span>∨</span></div>
+                <div class="sidebar-item-main text-yellow" style="border-bottom: none;"><div>스토어관리</div><span>∧</span></div>
+                <div style="background-color: #3f4551; flex: 1;">
+                    <div class="sidebar-category-title">스토어 전시관리</div>
+                    <div class="sidebar-item text-yellow">스마트스토어 <span>↗</span></div>
+                    <div class="sidebar-item">카테고리&메뉴 관리 <span>↗</span></div>
+                    <div class="sidebar-item">쇼핑 스토리 관리</div>
+                    <div class="sidebar-item">쇼핑라이브 숏클립 등록</div>
+                    <div class="sidebar-category-title">스토어 설정</div>
+                    <div class="sidebar-item">기본정보 관리</div>
+                    <div class="sidebar-item">API 관리</div>
+                    <div class="sidebar-item">SNS 설정</div>
+                    <div class="sidebar-category-title">서비스 연결</div>
+                    <div class="service-connect-wrap" id="badge-1-1">
+                        <div class="service-connect-btn">네이버 서비스 연결 <span class="click-badge">클릭</span></div>
+                    </div>
+                    <div class="sidebar-item">가격비교 서비스 연결</div>
+                </div>
+            </aside>
+            <main class="main-content">
+                <div class="content-row"><div class="content-left"><div class="content-title">광고관리 ></div></div><div class="content-right"><div class="content-desc">특정 지면에 국한되지 않고 고객을 따라가는 개인화 광고로, 스토어의 판매 기회와 신규 고객 유입을 더욱 크게 늘릴 수 있습니다. <span class="link-green">자세히 알아보기 ></span></div><div class="inner-box"><div class="inner-text-red">네이버 쇼핑 연동 완료 후 설정이 가능합니다.</div><div class="toggle-wrap">사용불가 <div class="toggle-switch"></div></div></div></div></div>
+                <div class="content-row"><div class="content-left"><div class="icon-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 4C7.5 4 4 7.2 4 11.5C4 13.5 4.9 15.3 6.3 16.6C6.1 17.5 5.5 18.7 5.5 18.7C5.5 18.7 6.8 18.6 8.3 17.7C9.4 18.3 10.7 18.5 12 18.5C16.5 18.5 20 15.3 20 11.5C20 7.2 16.5 4 12 4Z" stroke="#00c73c" stroke-width="2"/><circle cx="8.5" cy="11.5" r="1.5" fill="#00c73c"/><circle cx="12" cy="11.5" r="1.5" fill="#00c73c"/><circle cx="15.5" cy="11.5" r="1.5" fill="#00c73c"/></svg></div><div class="content-title">네이버 톡톡 ></div></div><div class="content-right"><div class="content-desc">네이버 톡톡이 활성화 되면 스토어 화면에 톡톡 상담버튼이 노출되며, 톡톡상담관리 기능을 통해 스마트스토어 센터에서 고객상담을 하실 수 있습니다. <span class="link-green">자세히 알아보기 ></span></div><div class="inner-box" style="margin-bottom: -1px;"><div class="inner-text">네이버톡톡 / 톡톡상담관리 메뉴를 사용하실 수 있습니다.</div><div class="toggle-wrap">사용안함 <div class="toggle-switch"></div></div></div><div class="inner-box"><div class="inner-text">스토어에 톡톡상담하기 버튼을 노출하실 수 있어요.<br><div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;"><span class="badge-green">스마트스토어</span><span style="color: #fa5252; font-size: 10px;">●</span> <span style="font-size: 12px; color: #666;">버튼 미노출</span><button class="btn-small">버튼 노출</button></div></div></div></div></div>
+                <div class="content-row"><div class="content-left"><div class="icon-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#00c73c"/><path d="M7 17V7L13.5 13.5V7H15.5V17L9 10.5V17H7Z" fill="white"/></svg></div><div class="content-title">웹사이트 검색등록 ></div></div><div class="content-right"><div class="content-desc">스토어 이름을 네이버에서 검색하면 웹사이트 검색결과에 스토어가 노출 됩니다. 검색결과와 순서는 검색로직에 따라 변경 될 수 있습니다. <span class="link-green">자세히 알아보기 ></span></div><div class="inner-box"><div class="inner-text"><div style="margin-bottom: 8px;"><span class="badge-green">스마트스토어</span></div><span class="inner-text-red">스토어에 '전시중' 상품을 1개 이상 등록 후 설정하실 수 있습니다.</span></div><div class="toggle-wrap">설정불가 <div class="toggle-switch"></div></div></div></div></div>
+                <div class="content-row" style="border-bottom: none;"><div class="content-left"><div class="icon-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#00c73c"/><path d="M4.5 10.5L12 4.5L19.5 10.5V21H4.5V10.5Z" stroke="white" stroke-width="2" stroke-linejoin="round"/><path d="M10.5 21V15H13.5V21" stroke="white" stroke-width="2" stroke-linejoin="round"/></svg></div><div class="content-title">네이버 풀필먼트 ></div></div><div class="content-right"><div class="content-desc">네이버 풀필먼트를 통해 상품 보관, 포장, 운송, 반품처리 등 통합 물류 관리 서비스를 받을 수 있습니다.<br>내 스토어에 맞는 풀필먼트 서비스를 찾아보세요. <span class="link-green">자세히 알아보기 ></span></div><div class="inner-box"><div><div class="inner-text-blue">풀필먼트 서비스를 이용하지 않는 판매자라면, 먼저 서비스 신청 및 계약을 진행해주세요. <span style="text-decoration: underline;">풀필먼트 서비스 신청하러 가기 ></span><br>풀필먼트 서비스를 이미 이용중인 판매자라면, 풀필먼트 계약 연동 버튼을 클릭하세요.</div><button class="btn-fulfillment" id="badge-1-2">풀필먼트 계약 연동 <span class="click-badge">클릭</span></button></div><div class="toggle-wrap">설정불가 <div class="toggle-switch"></div></div></div></div></div>
+            </main>
+        </div>
+    </div>
+
+    <div id="step-2" class="g-step-layer">
+        <div class="modal-overlay">
+            <div class="modal-container">
+                <div class="modal-header"><h2>풀필먼트 계약 연동</h2><button class="btn-close">✕</button></div>
+                <div class="modal-body">
+                    <ul class="info-list">
+                        <li>풀필먼트 연동을 위해 이용 중인 물류사를 선택해주세요.</li>
+                        <li>계약 연동 결과 확인까지 영업일 기준 최대 3일까지 소요될 수 있습니다.</li>
+                    </ul>
+                    <div class="table-wrap">
+                        <div class="table-row table-header"><div class="col-check"></div><div class="col-name">물류사</div><div class="col-status">연동상태</div><div class="col-prog">N배송 프로그램</div></div>
+                        <div class="table-row row-active" id="badge-2-1">
+                            <div class="col-check"><input type="checkbox" checked style="accent-color: #00c73c;"></div>
+                            <div class="col-name" style="font-weight: bold;">품고 <span class="click-badge">선택됨!</span></div>
+                            <div class="col-status">-</div><div class="col-prog">가능</div>
+                        </div>
+                        <div class="table-row"><div class="col-check"><input type="checkbox" disabled></div><div class="col-name">위킵</div><div class="col-status">-</div><div class="col-prog">가능</div></div>
+                        <div class="table-row"><div class="col-check"><input type="checkbox" disabled></div><div class="col-name">아워박스</div><div class="col-status">-</div><div class="col-prog">가능</div></div>
+                    </div>
+                </div>
+                <div class="modal-footer" id="badge-2-2"><button class="btn-cancel">취소</button><button class="btn-confirm">확인 <span class="click-badge" style="background:#0040d1; margin-left:10px;">클릭</span></button></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="step-3" class="g-step-layer">
+        <div class="modal-overlay">
+            <div class="modal-container" style="width: 650px;">
+                <div class="modal-header"><h2>풀필먼트 계약 연동을 위한 정보 제공 동의 및 안내사항</h2><button class="btn-close">✕</button></div>
+                <div class="modal-body">
+                    <div class="desc-text">풀필먼트 계약 연동을 위해 아래 정보 제공 및 위탁자의 의무사항 안내에 동의가 필요합니다.<br>계약 연동 신청 시 사용자와 물류사 간 물류 계약이 체결되었는지 확인합니다.</div>
+                    <div class="terms-list">
+                        <label class="term-item"><input type="checkbox" checked> 물류사의 물류 정보 제공(필수)에 동의합니다. <span class="term-link">내용보기 ></span></label>
+                        <label class="term-item"><input type="checkbox" checked> 판매자정보 제 3자 제공(필수)에 동의합니다. <span class="term-link">내용보기 ></span></label>
+                        <label class="term-item"><input type="checkbox" checked> 배송 등 개인정보, 주문 데이터 처리 업무 위탁 시 의무사항 안내(필수)를 확인했습니다. <span class="term-link">내용보기 ></span></label>
+                    </div>
+                    <label class="all-agree-box" id="badge-3-1">
+                        <input type="checkbox" checked> 위 필수사항의 내용을 <strong>모두 확인하였고 동의</strong>합니다.
+                        <span class="click-badge">클릭</span>
+                    </label>
+                </div>
+                <div class="modal-footer" id="badge-3-2"><button class="btn-cancel">취소</button><button class="btn-confirm">확인 <span class="click-badge" style="background:#0040d1; margin-left:10px;">클릭</span></button></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    async function toggleB(id, isShow = true) {
+        const el = document.getElementById(id);
+        if(!el) return;
+        const b = el.querySelector('.click-badge');
+        if (isShow) b.classList.add('active-badge');
+        else b.classList.remove('active-badge');
+    }
+
+    async function runSimulation() {
+        document.getElementById('startCover').classList.add('hidden');
+        await sleep(800); await toggleB('badge-1-1', true);
+        await sleep(2000); await toggleB('badge-1-1', false); await toggleB('badge-1-2', true);
+        await sleep(2500);
+
+        document.getElementById('step-1').classList.remove('active');
+        document.getElementById('step-2').classList.add('active');
+        await sleep(1000); await toggleB('badge-2-1', true);
+        await sleep(1500); await toggleB('badge-2-1', false); await toggleB('badge-2-2', true);
+        await sleep(1800);
+
+        document.getElementById('step-2').classList.remove('active');
+        document.getElementById('step-3').classList.add('active');
+        await sleep(1000); await toggleB('badge-3-1', true);
+        await sleep(2000); await toggleB('badge-3-1', false); await toggleB('badge-3-2', true);
+        await sleep(3000);
+        location.reload();
+    }
+</script>
+
+</body>
+</html>
