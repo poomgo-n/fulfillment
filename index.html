@@ -544,6 +544,10 @@ body.notice-modal-open {
   margin-bottom: 0;
 }
 
+.video-preview.hidden {
+  display: none;
+}
+
 .video-preview-card {
   position: relative;
   width: 100%;
@@ -1128,7 +1132,7 @@ body.notice-modal-open {
 
             <div class="step-content" id="left"></div>
 
-            <div class="video-preview">
+            <div class="video-preview" id="videoPreview">
               <div class="video-preview-card" id="openVideoCard" role="button" tabindex="0" aria-label="과정 영상 재생">
                 <div class="video-preview-content">
                   <div class="video-preview-text">
@@ -1216,7 +1220,8 @@ const STEPS = [
         left: "./steps/step1-login-left.html",
         right: "./steps/step1-login-right-player.html",
         help: "./help/step1-login-help.html",
-        desc: "시스템 사용 계정으로 제출한 이메일 주소로 정상 로그인 유무를 확인해주세요."
+        desc: "시스템 사용 계정으로 제출한 이메일 주소로 정상 로그인 유무를 확인해주세요.",
+        hasVideo: true
       },
       {
         title: "구성원 추가",
@@ -1224,7 +1229,8 @@ const STEPS = [
         left: "./steps/step1-member-left.html",
         right: "./steps/step1-member-right-player.html",
         help: "./help/step1-member-help.html",
-        desc: "품고 나우 시스템 접속이 필요한 내부 구성원이 있을 시 추가하는 과정입니다."
+        desc: "품고 나우 시스템 접속이 필요한 내부 구성원이 있을 시 추가하는 과정입니다.",
+        hasVideo: true
       }
     ]
   },
@@ -1238,6 +1244,7 @@ const STEPS = [
         right: "./steps/step2-new-right-player.html",
         help: "./help/step2-new-help.html",
         desc: "N배송 시작을 위해 가장 선행되어야 하는 작업이에요.",
+        hasVideo: true,
         noticeRequired: true,
         noticeTitle: "판매처 계정 등록 유의사항",
         noticeHtml: `
@@ -1255,6 +1262,7 @@ const STEPS = [
         right: "./steps/step2-api-right-player.html",
         help: "./help/step2-api-help.html",
         desc: "N배송 시작을 위해 풀필먼트 연동을 진행하는 과정이에요.",
+        hasVideo: true,
         noticeRequired: true,
         noticeTitle: "풀필먼트 연동 유의사항",
         noticeHtml: `
@@ -1273,6 +1281,7 @@ const STEPS = [
         right: "./steps/step2-npro-right-player.html",
         help: "./help/step2-npro-help.html",
         desc: "N배송 프로그램 약관 동의 및 풀필먼트 연동 상태를 최종 점검하는 과정이에요.",
+        hasVideo: true,
         noticeRequired: true,
         noticeTitle: "N배송 프로그램 약관 동의 유의사항",
         noticeHtml: `
@@ -1299,9 +1308,9 @@ const STEPS = [
         title: "SKU 등록",
         required: true,
         left: "./steps/step3-sku-left.html",
-        right: "./steps/step3-sku-right-player.html",
         help: "./help/step3-sku-help.html",
-        desc: "운영 SKU 등록 기준 및 유의사항을 확인합니다."
+        desc: "운영 SKU 등록 기준 및 유의사항을 확인합니다.",
+        hasVideo: false
       },
       {
         title: "상품 매핑",
@@ -1309,7 +1318,8 @@ const STEPS = [
         left: "./steps/step3-mapping-left.html",
         right: "./steps/step3-mapping-right-player.html",
         help: "./help/step3-mapping-help.html",
-        desc: "등록된 SKU와 실제 판매 상품 정보를 매핑합니다."
+        desc: "등록된 SKU와 실제 판매 상품 정보를 매핑합니다.",
+        hasVideo: true
       }
     ]
   },
@@ -1322,7 +1332,8 @@ const STEPS = [
         left: "./steps/step4-inbound-left.html",
         right: "./steps/step4-inbound-right-player.html",
         help: "./help/step4-inbound-help.html",
-        desc: "초도 입고 전 준비사항과 진행 기준을 확인합니다."
+        desc: "초도 입고 전 준비사항과 진행 기준을 확인합니다.",
+        hasVideo: true
       },
       {
         title: "초도 입고 패킹리스트 제출하기",
@@ -1330,7 +1341,8 @@ const STEPS = [
         left: "./steps/step4-packing-left.html",
         right: "./steps/step4-packing-right-player.html",
         help: "./help/step4-packing-help.html",
-        desc: "초도 입고를 위한 패킹리스트를 작성하고 제출합니다."
+        desc: "초도 입고를 위한 패킹리스트를 작성하고 제출합니다.",
+        hasVideo: true
       }
     ]
   },
@@ -1343,7 +1355,8 @@ const STEPS = [
         left: "./steps/step5-left.html",
         right: "./steps/step5-right-player.html",
         help: "./help/step5-help.html",
-        desc: "최종적으로 N배송 설정을 완료합니다."
+        desc: "최종적으로 N배송 설정을 완료합니다.",
+        hasVideo: true
       }
     ]
   }
@@ -1370,6 +1383,7 @@ const footerNote = document.getElementById("footerNote");
 const progressFill = document.getElementById("progressFill");
 const progressText = document.getElementById("progressText");
 
+const videoPreview = document.getElementById("videoPreview");
 const openVideoCard = document.getElementById("openVideoCard");
 const videoPreviewTitle = document.getElementById("videoPreviewTitle");
 
@@ -1423,6 +1437,10 @@ function getTotalFlatCount() {
 
 function getCurrentNoticeKey() {
   return `${step}-${item}`;
+}
+
+function hasCurrentVideo(data) {
+  return data.hasVideo !== false && !!data.right;
 }
 
 function goToNextStep() {
@@ -1528,6 +1546,7 @@ function buildVideoSrc(src) {
 }
 
 function openVideoModal(titleText, src) {
+  if (!src) return;
   videoModalTitle.textContent = `${titleText} 과정 영상`;
   videoModalFrame.src = buildVideoSrc(src);
   videoModal.classList.add("open");
@@ -1644,11 +1663,18 @@ async function render() {
   const data = currentStep.items[item];
   const flatIndex = getCurrentFlatIndex() + 1;
   const totalFlat = getTotalFlatCount();
+  const showVideo = hasCurrentVideo(data);
 
   stepLabel.textContent = `STEP ${step + 1} · ${flatIndex}/${totalFlat}`;
   title.innerText = data.title;
   stepDesc.innerText = data.desc || "";
   videoPreviewTitle.innerText = `${data.title} 영상 보기`;
+
+  if (showVideo) {
+    videoPreview.classList.remove("hidden");
+  } else {
+    videoPreview.classList.add("hidden");
+  }
 
   try {
     left.innerHTML = await load(data.left);
@@ -1664,10 +1690,15 @@ async function render() {
     };
   }
 
-  openVideoCard.onclick = () => openVideoModal(data.title, data.right);
+  openVideoCard.onclick = () => {
+    if (!showVideo) return;
+    openVideoModal(data.title, data.right);
+  };
+
   openVideoCard.onkeydown = (event) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
+      if (!showVideo) return;
       openVideoModal(data.title, data.right);
     }
   };
