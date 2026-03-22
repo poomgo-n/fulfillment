@@ -104,9 +104,7 @@
     <button class="btn-play-video" onclick="startSequence()">▶ 재생하기</button>
 </div>
 
-<header class="gnb">
-    <div class="logo"><span>N</span> 스마트스토어센터</div>
-     <div id="step-1" class="g-step-layer active">
+ <div id="step-1" class="g-step-layer active">
         <div class="navbar">
             <div class="navbar-left">
                 <div class="navbar-logo"><span class="logo-n">N</span> 스마트스토어센터</div>
@@ -114,33 +112,30 @@
             </div>
             <div class="navbar-right"><span class="btn-myinfo">내정보</span> <span style="cursor: pointer; margin-left: 5px;">스토어 이동</span></div>
         </div>
-</header>
-
-<div class="layout">
-    <aside class="sidebar">
-        <div class="side-scroll">
-            <div class="side-cat">스토어 전시관리</div>
-            <div class="menu selected">스마트스토어 <span style="font-size:10px; color:#8f96a1;">↗</span></div>
-            <div class="menu">카테고리&메뉴 관리 <span style="font-size:10px; color:#8f96a1;">↗</span></div>
-            <div class="menu">쇼핑 스토리 관리</div>
-            <div class="menu">쇼핑라이브 숏클립 등록</div>
-            <div class="side-cat">스토어 설정</div>
-            <div class="menu">기본정보 관리</div>
-            <div class="menu">API 관리</div>
-            <div class="menu">SNS 설정</div>
-            <div class="side-cat">서비스 연결</div>
-            <div class="side-foot">
-                <div class="btn-side" id="t1">네이버 서비스 연결 <div class="p-badge" id="b1" style="top:-40px; left:10px;">클릭</div></div>
-            </div>
-            <div class="menu">가격비교 서비스 연결</div>
-            <div class="side-cat">혜택/마케팅</div>
-            <div class="menu">고객 혜택 관리</div>
-            <div class="side-cat">N배송 관리 <span style="background:#fa5252; color:#fff; font-size:9px; padding:0 3px; border-radius:10px;">N</span></div>
-            <div class="menu">N배송 상품 관리</div>
-            <div class="side-cat">데이터분석</div>
-            <div class="menu">통계</div>
-        </div>
-    </aside>
+        <div class="container">
+            <aside class="sidebar">
+                <div class="sidebar-item-main"><div>상품관리 <span class="icon-n-red">N</span></div><span>∨</span></div>
+                <div class="sidebar-item-main"><div>판매관리 <span class="icon-npay">N pay</span></div><span>∨</span></div>
+                <div class="sidebar-item-main"><div>정산관리 <span class="icon-npay">N pay</span></div><span>∨</span></div>
+                <div class="sidebar-item-main"><div>문의/리뷰관리</div><span>∨</span></div>
+                <div class="sidebar-item-main text-yellow" style="border-bottom: none;"><div>스토어관리</div><span>∧</span></div>
+                <div style="background-color: #3f4551; flex: 1;">
+                    <div class="sidebar-category-title">스토어 전시관리</div>
+                    <div class="sidebar-item text-yellow">스마트스토어 <span>↗</span></div>
+                    <div class="sidebar-item">카테고리&메뉴 관리 <span>↗</span></div>
+                    <div class="sidebar-item">쇼핑 스토리 관리</div>
+                    <div class="sidebar-item">쇼핑라이브 숏클립 등록</div>
+                    <div class="sidebar-category-title">스토어 설정</div>
+                    <div class="sidebar-item">기본정보 관리</div>
+                    <div class="sidebar-item">API 관리</div>
+                    <div class="sidebar-item">SNS 설정</div>
+                    <div class="sidebar-category-title">서비스 연결</div>
+                    <div class="service-connect-wrap" id="badge-1-1">
+                        <div class="service-connect-btn">네이버 서비스 연결 <span class="click-badge">클릭</span></div>
+                    </div>
+                    <div class="sidebar-item">가격비교 서비스 연결</div>
+                </div>
+            </aside>
 
     <main class="main">
         <div class="sec">
