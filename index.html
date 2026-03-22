@@ -1098,14 +1098,23 @@ const STEPS = [
   {
     title: "STEP2. 풀필먼트 연동",
     items: [
-      {
-        title: "판매처 계정 등록",
-        required: true,
-        left: "./steps/step2-new-left.html",
-        right: "./steps/step2-new-right-player.html",
-        help: "./help/step2-new-help.html",
-        desc: "N배송 시작을 위해 가장 선행되어야 하는 작업이에요."
-      },
+{
+  title: "판매처 계정 등록",
+  required: true,
+  left: "./steps/step2-new-left.html",
+  right: "./steps/step2-new-right-player.html",
+  help: "./help/step2-new-help.html",
+  desc: "N배송 시작을 위해 가장 선행되어야 하는 작업이에요.",
+  noticeRequired: true,
+  noticeTitle: "판매처 계정 등록 유의사항",
+  noticeHtml: `
+    <ul style="margin:0; padding-left:18px;">
+      <li style="margin-bottom:8px;">API 연동용 판매자 ID를 붙여넣는 과정에서 공백이나 다른 문자가 포함되지 않도록 유의해주세요.</li>
+      <li style="margin-bottom:8px;">잘못된 계정 정보 입력 시 주문 수집 및 출고 연동이 정상적으로 진행되지 않을 수 있습니다.</li>
+      <li>판매처 계정 등록 완료 후 반드시 저장 여부를 확인해주세요.</li>
+    </ul>
+  `
+}
       {
         title: "풀필먼트 연동",
         required: true,
