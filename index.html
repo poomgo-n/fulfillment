@@ -452,112 +452,12 @@ body.video-modal-open {
   flex-shrink: 0;
 }
 
-/* ===== VIDEO PREVIEW ===== */
-.video-preview {
-  width: 100%;
-  flex-shrink: 0;
-  margin-bottom: 14px;
-}
-
-.video-preview-card {
-  position: relative;
-  width: 100%;
-  height: 180px;
-  border-radius: 22px;
-  overflow: hidden;
-  border: 1px solid #dbe7fb;
-  background:
-    linear-gradient(135deg, rgba(0,64,209,0.90) 0%, rgba(0,64,209,0.72) 100%);
-  box-shadow: 0 16px 30px rgba(0, 64, 209, 0.14);
-  cursor: pointer;
-  display: flex;
-  align-items: flex-end;
-  padding: 20px;
-}
-
-.video-preview-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0) 35%),
-    radial-gradient(circle at 80% 30%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 30%),
-    linear-gradient(180deg, rgba(15,23,42,0.05) 0%, rgba(15,23,42,0.22) 100%);
-}
-
-.video-preview-content {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  width: 100%;
-}
-
-.video-preview-text {
-  color: #fff;
-  min-width: 0;
-}
-
-.video-preview-kicker {
-  font-size: 12px;
-  font-weight: 800;
-  opacity: 0.92;
-  margin-bottom: 6px;
-  letter-spacing: 0.02em;
-}
-
-.video-preview-title {
-  font-size: 22px;
-  font-weight: 900;
-  line-height: 1.3;
-  word-break: keep-all;
-}
-
-.video-preview-desc {
-  margin-top: 6px;
-  font-size: 14px;
-  line-height: 1.5;
-  opacity: 0.93;
-}
-
-.video-preview-play {
-  position: relative;
-  z-index: 2;
-  width: 68px;
-  height: 68px;
-  border-radius: 999px;
-  border: none;
-  background: rgba(255,255,255,0.18);
-  backdrop-filter: blur(8px);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  box-shadow: 0 12px 24px rgba(0,0,0,0.16);
-  transition: 0.18s ease;
-}
-
-.video-preview-play:hover {
-  transform: scale(1.04);
-  background: rgba(255,255,255,0.24);
-}
-
-.video-preview-play svg {
-  width: 28px;
-  height: 28px;
-  margin-left: 3px;
-  fill: #fff;
-}
-
 /* ===== STEP CONTENT ===== */
 .step-content {
   width: 100%;
   flex: 1;
   min-height: 0;
-  overflow: hidden; /* 스크롤 제거 */
+  overflow: hidden;
   padding-right: 0;
 }
 
@@ -617,6 +517,91 @@ body.video-modal-open {
 .step-content .step-left-content a {
   color: var(--brand);
   font-weight: 700;
+}
+
+/* ===== VIDEO PREVIEW ===== */
+.video-preview {
+  width: 100%;
+  flex-shrink: 0;
+  margin-top: 14px;
+  margin-bottom: 0;
+}
+
+.video-preview-card {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid #dbe7fb;
+  background: linear-gradient(135deg, rgba(0,64,209,0.90) 0%, rgba(0,64,209,0.72) 100%);
+  box-shadow: 0 16px 30px rgba(0, 64, 209, 0.14);
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  padding: 20px;
+}
+
+.video-preview-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0) 35%),
+    radial-gradient(circle at 80% 30%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 30%),
+    linear-gradient(180deg, rgba(15,23,42,0.05) 0%, rgba(15,23,42,0.22) 100%);
+}
+
+.video-preview-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.video-preview-text {
+  color: #fff;
+  min-width: 0;
+}
+
+.video-preview-title {
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.3;
+  word-break: keep-all;
+}
+
+.video-preview-play {
+  position: relative;
+  z-index: 2;
+  width: 68px;
+  height: 68px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(8px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.16);
+  transition: 0.18s ease;
+}
+
+.video-preview-play:hover {
+  transform: scale(1.04);
+  background: rgba(255,255,255,0.24);
+}
+
+.video-preview-play svg {
+  width: 28px;
+  height: 28px;
+  margin-left: 3px;
+  fill: #fff;
 }
 
 /* ===== FOOT ===== */
@@ -820,7 +805,7 @@ body.video-modal-open {
   }
 
   .video-preview-card {
-    height: 168px;
+    height: 150px;
   }
 
   .video-preview-title {
@@ -864,16 +849,12 @@ body.video-modal-open {
   }
 
   .video-preview-card {
-    height: 150px;
+    height: 136px;
     padding: 16px;
   }
 
   .video-preview-title {
     font-size: 18px;
-  }
-
-  .video-preview-desc {
-    font-size: 13px;
   }
 
   .video-preview-play {
@@ -944,10 +925,12 @@ body.video-modal-open {
           <div class="step-content-shell">
 
             <div class="body-topline">
-              <h3 class="step-section-title" 영상 가이드 보기/h3>
+              <h3 class="step-section-title">진행 방법</h3>
             </div>
 
             <div class="body-divider"></div>
+
+            <div class="step-content" id="left"></div>
 
             <div class="video-preview">
               <div class="video-preview-card" id="openVideoCard" role="button" tabindex="0" aria-label="과정 영상 재생">
@@ -964,8 +947,6 @@ body.video-modal-open {
                 </div>
               </div>
             </div>
-
-            <div class="step-content" id="left"></div>
 
             <div class="content-footer">
               <div class="footer-note" id="footerNote">
@@ -1022,7 +1003,7 @@ const STEPS = [
         left: "./steps/step1-login-left.html",
         right: "./steps/step1-login-right-player.html",
         help: "./help/step1-help.html",
-        desc: "품고 나우 접속 및 기본 환경 설정을 진행합니다."
+        desc: "시스템 사용 계정으로 제출한 이메일 주소로 정상 로그인 유무를 확인해주세요."
       },
       {
         title: "구성원 추가",
@@ -1030,7 +1011,7 @@ const STEPS = [
         left: "./steps/step1-member-left.html",
         right: "./steps/step1-member-right-player.html",
         help: "./help/step1-member-help.html",
-        desc: "운영에 필요한 구성원을 추가하고 권한을 확인합니다."
+        desc: "품고 나우 시스템 접속이 필요한 내부 구성원이 있을 시 추가하는 과정입니다."
       }
     ]
   },
@@ -1043,7 +1024,7 @@ const STEPS = [
         left: "./steps/step2-new-left.html",
         right: "./steps/step2-new-right-player.html",
         help: "./help/step2-new-help.html",
-        desc: "판매처 계정을 등록하여 연동 준비를 진행합니다."
+        desc: "N배송 시작을 위해 가장 선행되어야 하는 작업이에요."
       },
       {
         title: "풀필먼트 연동",
@@ -1051,7 +1032,7 @@ const STEPS = [
         left: "./steps/step2-api-left.html",
         right: "./steps/step2-api-right-player.html",
         help: "./help/step2-api-help.html",
-        desc: "네이버 풀필먼트 계약 연동을 연결합니다."
+        desc: "N배송 시작을 위해 풀필먼트 연동을 진행하는 과정이에요."
       },
       {
         title: "N배송 프로그램 약관 동의",
@@ -1059,7 +1040,7 @@ const STEPS = [
         left: "./steps/step2-npro-left.html",
         right: "./steps/step2-npro-right-player.html",
         help: "./help/step2-npro-help.html",
-        desc: "N배송 프로그램 이용을 위해 약관 동의를 완료합니다."
+        desc: "N배송 프로그램 약관 동의 및 풀필먼트 연동 상태를 최종 점검하는 과정이에요."
       }
     ]
   },
