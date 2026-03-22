@@ -46,7 +46,8 @@ html, body {
 }
 
 body.video-modal-open,
-body.notice-modal-open {
+body.notice-modal-open,
+body.guide-intro-open {
   overflow: hidden;
 }
 
@@ -956,6 +957,110 @@ body.notice-modal-open {
   filter: brightness(0.98);
 }
 
+/* ===== GUIDE INTRO MODAL ===== */
+.guide-intro-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 2200;
+}
+
+.guide-intro-modal.open {
+  display: block;
+}
+
+.guide-intro-dim {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.62);
+}
+
+.guide-intro-dialog {
+  position: relative;
+  z-index: 2;
+  width: min(700px, calc(100vw - 32px));
+  margin: 56px auto;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+}
+
+.guide-intro-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 22px;
+  border-bottom: 1px solid #edf2fa;
+}
+
+.guide-intro-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: #111827;
+}
+
+.guide-intro-close {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 999px;
+  background: #f3f6fb;
+  color: var(--brand);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.guide-intro-body {
+  padding: 22px;
+  max-height: min(68vh, 640px);
+  overflow: auto;
+}
+
+.guide-intro-desc {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #667085;
+  margin-bottom: 16px;
+}
+
+.guide-intro-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.guide-intro-item {
+  border: 1px solid #e7edf7;
+  border-radius: 18px;
+  padding: 16px 18px;
+  background: #fbfcff;
+}
+
+.guide-intro-item-title {
+  font-size: 15px;
+  font-weight: 900;
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.guide-intro-item-text {
+  font-size: 14px;
+  line-height: 1.75;
+  color: #4b5563;
+}
+
+.guide-intro-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 18px 22px 22px;
+  border-top: 1px solid #edf2fa;
+  background: #fff;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1200px) {
   .sidebar {
@@ -1067,7 +1172,8 @@ body.notice-modal-open {
     border-radius: 16px;
   }
 
-  .notice-modal-dialog {
+  .notice-modal-dialog,
+  .guide-intro-dialog {
     width: calc(100vw - 20px);
     margin: 24px auto;
     border-radius: 18px;
@@ -1205,6 +1311,55 @@ body.notice-modal-open {
 
     <div class="notice-modal-footer">
       <button type="button" class="btn btn-notice-confirm" id="noticeConfirmBtn">확인했어요</button>
+    </div>
+  </div>
+</div>
+
+<div class="guide-intro-modal" id="guideIntroModal">
+  <div class="guide-intro-dim" id="guideIntroDim"></div>
+
+  <div class="guide-intro-dialog">
+    <div class="guide-intro-header">
+      <div class="guide-intro-title">가이드 이용 안내</div>
+      <button type="button" class="guide-intro-close" id="guideIntroClose">×</button>
+    </div>
+
+    <div class="guide-intro-body">
+      <div class="guide-intro-desc">
+        본 가이드는 단계별로 순서에 맞춰 진행됩니다. 진행 전에 아래 이용 방식을 먼저 확인해주세요.
+      </div>
+
+      <div class="guide-intro-grid">
+        <div class="guide-intro-item">
+          <div class="guide-intro-item-title">다음 단계 이동</div>
+          <div class="guide-intro-item-text">하단의 <strong>다음 단계</strong> 버튼을 누르면 다음 항목으로 이동합니다.</div>
+        </div>
+
+        <div class="guide-intro-item">
+          <div class="guide-intro-item-title">품고 확인 후 오픈</div>
+          <div class="guide-intro-item-text">일부 단계는 품고 확인이 완료된 후 다음 단계가 오픈됩니다.</div>
+        </div>
+
+        <div class="guide-intro-item">
+          <div class="guide-intro-item-title">도움말 보기</div>
+          <div class="guide-intro-item-text">우측 상단의 <strong>도움말</strong> 버튼을 누르면 유의사항과 상세 설명을 확인할 수 있습니다.</div>
+        </div>
+
+        <div class="guide-intro-item">
+          <div class="guide-intro-item-title">과정 영상 보기</div>
+          <div class="guide-intro-item-text">화면 내 <strong>과정 영상 보기</strong> 영역을 클릭하면 단계별 영상을 볼 수 있습니다.</div>
+        </div>
+
+        <div class="guide-intro-item">
+          <div class="guide-intro-item-title">사이드바 진행 상태</div>
+          <div class="guide-intro-item-text">왼쪽 사이드바는 완료된 단계가 자동으로 닫히고, 현재 진행 중인 단계만 펼쳐집니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="guide-intro-footer">
+      <button type="button" class="btn btn-ghost" id="guideIntroLaterBtn">닫기</button>
+      <button type="button" class="btn btn-next" id="guideIntroStartBtn">가이드 시작하기</button>
     </div>
   </div>
 </div>
@@ -1400,6 +1555,12 @@ const noticeModalTitle = document.getElementById("noticeModalTitle");
 const noticeModalBody = document.getElementById("noticeModalBody");
 const noticeConfirmBtn = document.getElementById("noticeConfirmBtn");
 
+const guideIntroModal = document.getElementById("guideIntroModal");
+const guideIntroDim = document.getElementById("guideIntroDim");
+const guideIntroClose = document.getElementById("guideIntroClose");
+const guideIntroLaterBtn = document.getElementById("guideIntroLaterBtn");
+const guideIntroStartBtn = document.getElementById("guideIntroStartBtn");
+
 function getRequiredItems() {
   return STEPS.flatMap((s, si) =>
     s.items.map((it, ii) => ({ ...it, key: `${si}-${ii}` })).filter(it => it.required)
@@ -1441,6 +1602,16 @@ function getCurrentNoticeKey() {
 
 function hasCurrentVideo(data) {
   return data.hasVideo !== false && !!data.right;
+}
+
+function openGuideIntro() {
+  guideIntroModal.classList.add("open");
+  document.body.classList.add("guide-intro-open");
+}
+
+function closeGuideIntro() {
+  guideIntroModal.classList.remove("open");
+  document.body.classList.remove("guide-intro-open");
 }
 
 function goToNextStep() {
@@ -1676,13 +1847,13 @@ async function render() {
     videoPreview.classList.add("hidden");
   }
 
- try {
-  left.innerHTML = await load(data.left);
-  fitInjectedSections();
-  bindStepInlineActions();
-} catch (e) {
-  left.innerHTML = `<div style="color:#ef4444;font-size:14px;">${e.message}</div>`;
-}
+  try {
+    left.innerHTML = await load(data.left);
+    fitInjectedSections();
+    bindStepInlineActions();
+  } catch (e) {
+    left.innerHTML = `<div style="color:#ef4444;font-size:14px;">${e.message}</div>`;
+  }
 
   const inlineNoticeBtn = document.getElementById("openNoticeBtnInline");
   if (inlineNoticeBtn && data.noticeRequired) {
@@ -1758,6 +1929,11 @@ videoModalDim.addEventListener("click", closeVideoModal);
 noticeModalClose.addEventListener("click", closeNoticeModal);
 noticeModalDim.addEventListener("click", closeNoticeModal);
 
+guideIntroClose.addEventListener("click", closeGuideIntro);
+guideIntroLaterBtn.addEventListener("click", closeGuideIntro);
+guideIntroStartBtn.addEventListener("click", closeGuideIntro);
+guideIntroDim.addEventListener("click", closeGuideIntro);
+
 document.addEventListener("click", (event) => {
   const clickedInsideHelp = helpBox.contains(event.target);
   const clickedHelpButton = helpBtn.contains(event.target);
@@ -1772,6 +1948,7 @@ document.addEventListener("keydown", (event) => {
     helpBox.classList.remove("open");
     closeVideoModal();
     closeNoticeModal();
+    closeGuideIntro();
   }
 });
 
@@ -1796,6 +1973,9 @@ function bindStepInlineActions() {
 }
 
 render();
+setTimeout(() => {
+  openGuideIntro();
+}, 200);
 </script>
 
 </body>
