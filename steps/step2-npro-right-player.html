@@ -1,1 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>네이버 스마트스토어센터 - 100% 무삭제 초정밀 가이드</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+        /* [재생 버튼 커버 레이어 추가] */
+        #video_start_overlay {
+            position: fixed; inset: 0; background: rgba(255,255,255,0.9); 
+            z-index: 2000000; display: flex; justify-content: center; align-items: center;
+        }
+        .btn-play-video {
+            background: #1a6dff; color: #fff; border: none; padding: 25px 70px; 
+            border-radius: 60px; font-size: 22px; font-weight: 900; cursor: pointer; 
+            box-shadow: 0 10px 30px rgba(26,109,255,0.4); transition: 0.2s;
+        }
+        .btn-play-video:hover { transform: scale(1.05); }
 
+        /* [전체 스크롤바 완전 박멸] */
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            font-family: 'Pretendard', sans-serif; 
+            -ms-overflow-style: none; scrollbar-width: none;
+        }
+        *::-webkit-scrollbar { display: none; }
+
+        body { background: #f4f6f8; color: #333; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+
+        /* 💡 사용자 캡처본 핵심: 특정 '회색 박스'만 파란색 테두리 강조 */
+        .pixel-focus-box { 
+            border: 3px solid #1a6dff !important; 
+            position: relative; 
+            z-index: 100001; 
+        }
+
+        /* 가이드 클릭 효과 */
+        .click-hl { outline: 3px solid #1a6dff !important; outline-offset: 1px; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+        .p-badge { position: absolute; background: #1a6dff; color: #fff; font-size: 11px; font-weight: 900; padding: 5px 12px; border-radius: 4px; animation: bounce 1s infinite; white-space: nowrap; z-index: 100002; display: none; }
+        .show { display: block !important; }
+
+        /* GNB */
+        .gnb { height: 56px; background: #2b303b; display: flex; align-items: center; padding: 0 24px; justify-content: space-between; border-bottom: 1px solid #1a1e25; flex-shrink: 0; }
+        .logo { color: #fff; font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .logo span { color: #00c73c; font-weight: 900; font-size: 22px; }
+
+        .layout { display: flex; flex: 1; overflow: hidden; }
+
+        /* 사이드바 전 메뉴 노가다 복구 */
+        .sidebar { width: 230px; background: #353b45; color: #d1d4d9; flex-shrink: 0; display: flex; flex-direction: column; }
+        .side-scroll { flex: 1; overflow-y: auto; }
+        .side-cat { padding: 18px 20px 6px; font-size: 11px; color: #8f96a1; font-weight: bold; }
+        .menu { padding: 8px 30px; font-size: 12.5px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+        .menu.selected { color: #f7d47e; }
+        .side-foot { border-top: 1px solid #414753; padding: 15px 10px; margin-top: 10px; }
+        .btn-side { background: #272c36; color: #00c73c; font-weight: 700; padding: 13px; border-radius: 4px; font-size: 12.5px; text-align: center; cursor: pointer; position: relative; }
+
+        /* 메인 콘텐츠 */
+        .main { flex: 1; overflow-y: auto; background: #fff; }
+        .sec { padding: 35px 45px; border-bottom: 1px solid #f1f3f5; }
+        .sec-head { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .icon-box { width: 22px; height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .unit-t { font-size: 15px; font-weight: bold; color: #000; }
+        .unit-d { font-size: 13px; color: #666; line-height: 1.6; margin-bottom: 15px; }
+        
+        /* 테두리가 생길 회색 박스 영역 */
+        .box-gray { 
+            background: #f8f9fa; 
+            border: 3px solid transparent; 
+            padding: 25px 30px; 
+            position: relative; 
+            transition: 0.2s;
+        }
+        .msg { font-size: 13px; line-height: 1.8; color: #333; }
+        .msg-blue { color: #1a6dff; }
+        .btn-box { display: flex; gap: 6px; margin-top: 15px; }
+        .btn-w { border: 1px solid #ced4da; background: #fff; padding: 8px 18px; font-size: 12.5px; font-weight: 700; cursor: pointer; position: relative; }
+        
+        .toggle-zone { position: absolute; top: 25px; right: 30px; display: flex; align-items: center; gap: 10px; }
+        .toggle-t { font-size: 12px; color: #999; font-weight: bold; }
+        .toggle-u { width: 44px; height: 22px; background: #e9ecef; border-radius: 12px; position: relative; transition: 0.3s; }
+        .toggle-u::after { content: ''; position: absolute; width: 18px; height: 18px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: 0.2s; }
+        .toggle-u.on { background: #00c73c; }
+        .toggle-u.on::after { left: 24px; }
+
+        /* [모달 무삭제 디자인] */
+        .m-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000000; display: none; justify-content: center; align-items: center; }
+        .m-bg.open { display: flex; }
+        .m-win { background: #fff; width: 750px; border-radius: 2px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.4); }
+        .m-h { background: #00c73c; color: #fff; padding: 18px 24px; font-size: 16px; font-weight: 500; }
+        .m-b { padding: 30px; font-size: 14px; line-height: 1.8; }
+        .m-t { width: 100%; border-top: 2px solid #333; border-collapse: collapse; margin-top: 20px; }
+        .m-t th { background: #f8f9fa; padding: 14px; border-bottom: 1px solid #dee2e6; text-align: left; }
+        .m-t td { padding: 16px 14px; border-bottom: 1px solid #f1f3f5; }
+        .row-hl { background: #f8fbff; outline: 2px solid #1a6dff; outline-offset: -2px; }
+        .m-f { padding: 18px; background: #fafafa; border-top: 1px solid #dee2e6; display: flex; justify-content: center; }
+        .btn-c { background: #00c73c; color: #fff; border: none; padding: 12px 60px; font-weight: bold; cursor: pointer; position: relative; }
+    </style>
+</head>
+<body>
+
+<div id="video_start_overlay">
+    <button class="btn-play-video" onclick="startSequence()">▶ 재생하기</button>
+</div>
+
+<header class="gnb">
+    <div class="logo"><span>N</span> 스마트스토어센터</div>
+</header>
+
+<div class="layout">
+    <aside class="sidebar">
+        <div class="side-scroll">
+            <div class="side-cat">스토어 전시관리</div>
+            <div class="menu selected">스마트스토어 <span style="font-size:10px; color:#8f96a1;">↗</span></div>
+            <div class="menu">카테고리&메뉴 관리 <span style="font-size:10px; color:#8f96a1;">↗</span></div>
+            <div class="menu">쇼핑 스토리 관리</div>
+            <div class="menu">쇼핑라이브 숏클립 등록</div>
+            <div class="side-cat">스토어 설정</div>
+            <div class="menu">기본정보 관리</div>
+            <div class="menu">API 관리</div>
+            <div class="menu">SNS 설정</div>
+            <div class="side-cat">서비스 연결</div>
+            <div class="side-foot">
+                <div class="btn-side" id="t1">네이버 서비스 연결 <div class="p-badge" id="b1" style="top:-40px; left:10px;">클릭</div></div>
+            </div>
+            <div class="menu">가격비교 서비스 연결</div>
+            <div class="side-cat">혜택/마케팅</div>
+            <div class="menu">고객 혜택 관리</div>
+            <div class="side-cat">N배송 관리 <span style="background:#fa5252; color:#fff; font-size:9px; padding:0 3px; border-radius:10px;">N</span></div>
+            <div class="menu">N배송 상품 관리</div>
+            <div class="side-cat">데이터분석</div>
+            <div class="menu">통계</div>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="sec">
+            <div class="unit-d">스토어에 톡톡상담하기 버튼을 노출하실 수 있어요.</div>
+            <div style="display:flex; align-items:center; gap:10px; font-size:12px;">
+                <span style="background:#00c73c; color:#fff; padding:2px 4px; border-radius:2px;">스마트스토어</span> <span style="color:#ff4d4f;">● 버튼 미노출</span>
+                <button class="btn-w" style="padding:2px 8px; font-size:11px; font-weight: normal;">버튼 노출</button>
+            </div>
+        </div>
+
+        <div class="sec">
+            <div class="sec-head">
+                <div class="icon-box" style="background:#00c73c;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4.5 10.5L12 4.5L19.5 10.5V21H4.5V10.5Z" stroke="white" stroke-width="2.5"/><path d="M10.5 21V15H13.5V21" stroke="white" stroke-width="2.5"/>
+                    </svg>
+                </div>
+                <div class="unit-t">네이버 풀필먼트 ></div>
+            </div>
+            <div class="unit-d">네이버 풀필먼트를 통해 통합 물류 관리 서비스를 받을 수 있습니다.</div>
+            <div class="box-gray" id="target_box_ff">
+                <div class="msg msg-blue" id="ff_msg">이미 이용중인 판매자라면, 풀필먼트 계약 연동 버튼을 클릭하세요.</div>
+                <div class="btn-box" id="ff_btn_area">
+                    <button class="btn-w" id="t2">풀필먼트 계약 연동 <div class="p-badge" id="b2" style="top:-45px; right:0;">클릭</div></button>
+                </div>
+                <div class="toggle-zone"><span class="toggle-t" id="ff_s">설정불가</span><div class="toggle-u" id="ff_u"></div></div>
+            </div>
+        </div>
+
+        <div class="sec" style="border:none;">
+            <div class="sec-head" id="nb_head">
+                <div class="icon-box" style="border:1px solid #ddd; color:#00c73c; font-size:10px; font-weight:900;">N</div>
+                <div class="unit-t">N배송관 서비스 이용 ></div>
+            </div>
+            <div class="unit-d">네이버의 솔루션을 활용해 빠른 배송·도착 보장 경험을 제공해보세요.</div>
+            <div class="box-gray" id="target_box_nb">
+                <div class="msg" id="nb_msg">풀필먼트 계약 연동이 완료되면 N배송관 서비스를 이용할 수 있습니다.</div>
+                <div class="btn-box" id="nb_btn_area" style="display:none;">
+                    <button class="btn-w" id="t3" style="color:#1a6dff; border-color:#1a6dff;">프로그램 약관 동의 <div class="p-badge" id="b3" style="top:-45px; right:0;">클릭</div></button>
+                </div>
+                <div class="toggle-zone"><span class="toggle-t" id="nb_s">이용불가</span><div class="toggle-u" id="nb_u"></div></div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div class="m-bg" id="m1">
+    <div class="m-win">
+        <div class="m-h">풀필먼트 계약 연동</div>
+        <div class="m-b">
+            · 이용 중인 물류사를 선택해주세요.<br>
+            · 계약 연동 결과 확인까지 영업일 기준 최대 3일까지 소요될 수 있습니다.
+            <table class="m-t">
+                <thead><tr><th></th><th>물류사</th><th>연동상태</th><th>N배송 프로그램</th></tr></thead>
+                <tbody>
+                    <tr><td><input type="checkbox" disabled></td><td>위킵</td><td>-</td><td>가능</td></tr>
+                    <tr class="row-hl">
+                        <td><input type="checkbox" checked style="accent-color:#00c73c;"></td>
+                        <td><strong>품고</strong></td><td style="color:#00c73c; font-weight:bold;">연동중</td><td style="color:#1a6dff; font-weight:bold;">가능</td>
+                    </tr>
+                    <tr><td><input type="checkbox" disabled></td><td>아워박스</td><td>-</td><td>가능</td></tr>
+                    <tr><td><input type="checkbox" disabled></td><td>파스토(FASSTO)</td><td>-</td><td>가능</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="m-f"><button class="btn-c" id="t_ok1">확인 <div class="p-badge" id="b_ok1" style="top:-48px; right:10px;">클릭</div></button></div>
+    </div>
+</div>
+
+<div class="m-bg" id="m2">
+    <div class="m-win" style="width:640px;">
+        <div class="m-h">N배송 프로그램 약관 동의 및 안내사항</div>
+        <div class="m-b">
+            <div style="padding:25px; border:1px solid #eee; background:#fafafa; margin-bottom:15px;">
+                <p style="font-weight:bold; margin-bottom:12px;">약관동의 | 필수</p>
+                <div style="display:flex; align-items:center; gap:10px; color:#00c73c; font-weight:bold; margin-bottom:8px;">
+                    <div style="width:18px; height:18px; background:#00c73c; border-radius:50%; color:#fff; display:flex; align-items:center; justify-content:center; font-size:10px;">✓</div>
+                    N배송 프로그램 이용약관 동의 (필수)
+                </div>
+                <div style="display:flex; align-items:center; gap:10px; color:#00c73c; font-weight:bold;">
+                    <div style="width:18px; height:18px; background:#00c73c; border-radius:50%; color:#fff; display:flex; align-items:center; justify-content:center; font-size:10px;">✓</div>
+                    개인정보 제3자 제공 동의 (필수)
+                </div>
+            </div>
+            <p style="font-size:12px; color:#666;">네이버배송 운영정책을 확인해주세요. <span style="color:#1a6dff; cursor:pointer;">자세히보기 ></span></p>
+        </div>
+        <div class="m-f"><button class="btn-c" id="t_ok2">확인 <div class="p-badge" id="b_ok2" style="top:-48px; right:10px;">클릭</div></button></div>
+    </div>
+</div>
+
+<script>
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    async function startSequence() {
+        // 커버 제거
+        document.getElementById('video_start_overlay').style.display = 'none';
+        await sleep(500);
+
+        // 시뮬레이션 로직
+        document.getElementById('t1').classList.add('click-hl'); document.getElementById('b1').classList.add('show');
+        await sleep(1200); document.getElementById('t1').classList.remove('click-hl'); document.getElementById('b1').classList.remove('show');
+        
+        document.getElementById('t2').classList.add('click-hl'); document.getElementById('b2').classList.add('show');
+        await sleep(1200); document.getElementById('t2').classList.remove('click-hl'); document.getElementById('b2').classList.remove('show');
+        
+        document.getElementById('m1').classList.add('open'); await sleep(800);
+        document.getElementById('t_ok1').classList.add('click-hl'); document.getElementById('b_ok1').classList.add('show');
+        await sleep(1200); document.getElementById('m1').classList.remove('open');
+
+        document.getElementById('ff_msg').innerHTML = "연결된 물류사: <strong>품고</strong>";
+        document.getElementById('ff_btn_area').innerHTML = "<button class='btn-w' style='font-weight:700;'>풀필먼트 계약 연동</button>";
+        document.getElementById('ff_u').classList.add('on');
+        document.getElementById('ff_s').innerText = "설정함"; document.getElementById('ff_s').style.color = "#00c73c";
+        document.getElementById('nb_head').innerHTML = '<div class="icon-box" style="border:1px solid #00c73c; color:#00c73c; font-size:10px; font-weight:900;">N</div><div class="unit-t">N배송 프로그램 이용 ></div>';
+        document.getElementById('nb_msg').style.display = 'none'; document.getElementById('nb_btn_area').style.display = 'block';
+        document.getElementById('nb_s').innerText = "이용가능";
+
+        await sleep(1200);
+        document.getElementById('t3').classList.add('click-hl'); document.getElementById('b3').classList.add('show');
+        await sleep(1200); document.getElementById('t3').classList.remove('click-hl'); document.getElementById('b3').classList.remove('show');
+        
+        document.getElementById('m2').classList.add('open'); await sleep(800);
+        document.getElementById('t_ok2').classList.add('click-hl'); document.getElementById('b_ok2').classList.add('show');
+        await sleep(1200); document.getElementById('m2').classList.remove('open');
+
+        document.getElementById('nb_msg').style.display = 'block';
+        document.getElementById('nb_msg').innerHTML = "N배송 프로그램이 적용되었습니다.";
+        document.getElementById('nb_btn_area').innerHTML = "<button class='btn-w' style='font-weight:700;'>프로그램 설정 가이드</button> <button class='btn-w' style='margin-left:6px; border-color:#ced4da; color:#333; font-weight:700;'>상품조회/수정</button>";
+        document.getElementById('nb_u').classList.add('on');
+        document.getElementById('nb_s').innerText = "이용중"; document.getElementById('nb_s').style.color = "#00c73c";
+
+        await sleep(500);
+        document.getElementById('target_box_ff').classList.add('pixel-focus-box');
+        document.getElementById('target_box_nb').classList.add('pixel-focus-box');
+    }
+</script>
+</body>
+</html>
