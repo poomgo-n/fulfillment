@@ -134,6 +134,11 @@ body.notice-modal-open {
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.step-card.collapsed .step-card-header {
+  margin-bottom: 0;
 }
 
 .step-card-main {
@@ -200,19 +205,6 @@ body.notice-modal-open {
   opacity: 0;
   margin-top: 0;
   pointer-events: none;
-}
-
-.step-card-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-
-.step-card.collapsed .step-card-header {
-  margin-bottom: 0;
 }
 
 .sub-item {
@@ -1236,75 +1228,75 @@ const STEPS = [
       }
     ]
   },
-{
-  title: "STEP2. 풀필먼트 연동",
-  items: [
-    {
-      title: "판매처 계정 등록",
-      required: true,
-      left: "./steps/step2-new-left.html",
-      right: "./steps/step2-new-right-player.html",
-      help: "./help/step2-new-help.html",
-      desc: "N배송 시작을 위해 가장 선행되어야 하는 작업이에요.",
-      noticeRequired: true,
-      noticeTitle: "판매처 계정 등록 유의사항",
-      noticeHtml: `
-        <ul style="margin:0; padding-left:18px;">
-          <li style="margin-bottom:8px;">API 연동용 판매자 ID를 붙여넣는 과정에서 공백이나 다른 문자가 포함되지 않도록 유의해주세요.</li>
-          <li style="margin-bottom:8px;">잘못된 계정 정보 입력 시 주문 수집 및 출고 연동이 정상적으로 진행되지 않을 수 있습니다.</li>
-          <li>판매처 계정 등록 완료 후 반드시 저장 여부를 확인해주세요.</li>
-        </ul>
-      `
-    },
-    {
-      title: "풀필먼트 연동",
-      required: true,
-      left: "./steps/step2-api-left.html",
-      right: "./steps/step2-api-right-player.html",
-      help: "./help/step2-api-help.html",
-      desc: "N배송 시작을 위해 풀필먼트 연동을 진행하는 과정이에요.",
-      noticeRequired: true,
-      noticeTitle: "풀필먼트 연동 유의사항",
-      noticeHtml: `
-        <ul style="margin:0; padding-left:18px;">
-          <li style="margin-bottom:8px;">
-            물류사 확인중 → 연동중 상태 변경은 신청 후 <strong>다음날 00:40</strong>에 반영됩니다.<br>
-            예시) 3/20 연동 신청 시 → 3/21 00:40 연동중으로 자동 변경
-          </li>
-        </ul>
-      `
-    },
-    {
-      title: "N배송 프로그램 약관 동의",
-      required: true,
-      left: "./steps/step2-npro-left.html",
-      right: "./steps/step2-npro-right-player.html",
-      help: "./help/step2-npro-help.html",
-      desc: "N배송 프로그램 약관 동의 및 풀필먼트 연동 상태를 최종 점검하는 과정이에요.",
-      noticeRequired: true,
-      noticeTitle: "N배송 프로그램 약관 동의 유의사항",
-      noticeHtml: `
-        <ul style="margin:0; padding-left:18px;">
-          <li style="margin-bottom:8px;">
-            풀필먼트 연동 후 임의로 N배송을 설정할 경우 품절로 노출됩니다.
-          </li>
-          <li style="margin-bottom:8px;">
-            N배송 설정은 품고에 상품(SKU)가 입고된 후 절차에 따라 안내드리므로<br>
-            <strong>임의로 N배송을 설정하지 않도록 유의해주세요.</strong>
-          </li>
-          <li>
-            이용하지 않는 물류사가 연동중으로 변경되어 있을 경우 꼭 철회 버튼을 클릭하여 철회 처리해주세요.
-          </li>
-        </ul>
-      `
-    }
-  ]
-},
+  {
+    title: "STEP2. 풀필먼트 연동",
+    items: [
+      {
+        title: "판매처 계정 등록",
+        required: true,
+        left: "./steps/step2-new-left.html",
+        right: "./steps/step2-new-right-player.html",
+        help: "./help/step2-new-help.html",
+        desc: "N배송 시작을 위해 가장 선행되어야 하는 작업이에요.",
+        noticeRequired: true,
+        noticeTitle: "판매처 계정 등록 유의사항",
+        noticeHtml: `
+          <ul style="margin:0; padding-left:18px;">
+            <li style="margin-bottom:8px;">API 연동용 판매자 ID를 붙여넣는 과정에서 공백이나 다른 문자가 포함되지 않도록 유의해주세요.</li>
+            <li style="margin-bottom:8px;">잘못된 계정 정보 입력 시 주문 수집 및 출고 연동이 정상적으로 진행되지 않을 수 있습니다.</li>
+            <li>판매처 계정 등록 완료 후 반드시 저장 여부를 확인해주세요.</li>
+          </ul>
+        `
+      },
+      {
+        title: "풀필먼트 연동",
+        required: true,
+        left: "./steps/step2-api-left.html",
+        right: "./steps/step2-api-right-player.html",
+        help: "./help/step2-api-help.html",
+        desc: "N배송 시작을 위해 풀필먼트 연동을 진행하는 과정이에요.",
+        noticeRequired: true,
+        noticeTitle: "풀필먼트 연동 유의사항",
+        noticeHtml: `
+          <ul style="margin:0; padding-left:18px;">
+            <li style="margin-bottom:8px;">
+              물류사 확인중 → 연동중 상태 변경은 신청 후 <strong>다음날 00:40</strong>에 반영됩니다.<br>
+              예시) 3/20 연동 신청 시 → 3/21 00:40 연동중으로 자동 변경
+            </li>
+          </ul>
+        `
+      },
+      {
+        title: "N배송 프로그램 약관 동의",
+        required: true,
+        left: "./steps/step2-npro-left.html",
+        right: "./steps/step2-npro-right-player.html",
+        help: "./help/step2-npro-help.html",
+        desc: "N배송 프로그램 약관 동의 및 풀필먼트 연동 상태를 최종 점검하는 과정이에요.",
+        noticeRequired: true,
+        noticeTitle: "N배송 프로그램 약관 동의 유의사항",
+        noticeHtml: `
+          <ul style="margin:0; padding-left:18px;">
+            <li style="margin-bottom:8px;">
+              풀필먼트 연동 후 임의로 N배송을 설정할 경우 품절로 노출됩니다.
+            </li>
+            <li style="margin-bottom:8px;">
+              N배송 설정은 품고에 상품(SKU)가 입고된 후 절차에 따라 안내드리므로<br>
+              <strong>임의로 N배송을 설정하지 않도록 유의해주세요.</strong>
+            </li>
+            <li>
+              이용하지 않는 물류사가 연동중으로 변경되어 있을 경우 꼭 철회 버튼을 클릭하여 철회 처리해주세요.
+            </li>
+          </ul>
+        `
+      }
+    ]
+  },
   {
     title: "STEP3. SKU 등록",
     items: [
       {
-        title: "SKU 등록시 유의사항",
+        title: "SKU 등록",
         required: true,
         left: "./steps/step3-sku-left.html",
         right: "./steps/step3-sku-right-player.html",
@@ -1432,6 +1424,7 @@ function getTotalFlatCount() {
 function getCurrentNoticeKey() {
   return `${step}-${item}`;
 }
+
 function goToNextStep() {
   const current = STEPS[step].items[item];
 
@@ -1455,6 +1448,7 @@ function goToNextStep() {
   render();
   alert("수고하셨습니다! 가이드 확인이 완료되었습니다.");
 }
+
 function renderSidebar() {
   sidebar.innerHTML = "";
 
@@ -1496,7 +1490,7 @@ function renderSidebar() {
     });
 
     header.onclick = () => {
-      if (status === "done") return; // 완료된 STEP은 자동 접힘 유지
+      if (status === "done") return;
       if (si !== step) {
         step = si;
         item = 0;
@@ -1603,7 +1597,11 @@ function fitInjectedSections() {
 
   if (!sectionCount) return;
 
-  if (current.title === "판매처 계정 등록") {
+  if (
+    current.title === "판매처 계정 등록" ||
+    current.title === "풀필먼트 연동" ||
+    current.title === "N배송 프로그램 약관 동의"
+  ) {
     sections.forEach(section => {
       section.style.padding = "14px 16px";
     });
@@ -1714,27 +1712,6 @@ nextBtn.onclick = () => {
   }
 
   goToNextStep();
-};
-
-  if (current.required) {
-    done[`${step}-${item}`] = true;
-  }
-
-  if (item < STEPS[step].items.length - 1) {
-    item++;
-    render();
-    return;
-  }
-
-  if (step < STEPS.length - 1) {
-    step++;
-    item = 0;
-    render();
-    return;
-  }
-
-  render();
-  alert("수고하셨습니다! 가이드 확인이 완료되었습니다.");
 };
 
 noticeConfirmBtn.addEventListener("click", () => {
