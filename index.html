@@ -189,6 +189,30 @@ body.notice-modal-open {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  overflow: hidden;
+  max-height: 500px;
+  opacity: 1;
+  transition: max-height 0.24s ease, opacity 0.2s ease, margin-top 0.2s ease;
+}
+
+.step-card.collapsed .step-items {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+  pointer-events: none;
+}
+
+.step-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.step-card.collapsed .step-card-header {
+  margin-bottom: 0;
 }
 
 .sub-item {
@@ -1408,14 +1432,39 @@ function getTotalFlatCount() {
 function getCurrentNoticeKey() {
   return `${step}-${item}`;
 }
+function goToNextStep() {
+  const current = STEPS[step].items[item];
 
+  if (current.required) {
+    done[`${step}-${item}`] = true;
+  }
+
+  if (item < STEPS[step].items.length - 1) {
+    item++;
+    render();
+    return;
+  }
+
+  if (step < STEPS.length - 1) {
+    step++;
+    item = 0;
+    render();
+    return;
+  }
+
+  render();
+  alert("수고하셨습니다! 가이드 확인이 완료되었습니다.");
+}
 function renderSidebar() {
   sidebar.innerHTML = "";
 
   STEPS.forEach((s, si) => {
     const status = getStepStatus(si);
+    const isCurrentStep = si === step;
+    const shouldCollapse = status === "done" || !isCurrentStep;
+
     const card = document.createElement("div");
-    card.className = `step-card ${status === "ing" ? "current" : status === "done" ? "done" : ""}`;
+    card.className = `step-card ${status === "ing" ? "current" : status === "done" ? "done" : ""} ${shouldCollapse ? "collapsed" : ""}`;
 
     card.innerHTML = `
       <div class="step-card-header">
@@ -1430,19 +1479,30 @@ function renderSidebar() {
       <div class="step-items"></div>
     `;
 
+    const header = card.querySelector(".step-card-header");
     const itemsWrap = card.querySelector(".step-items");
 
     s.items.forEach((it, ii) => {
       const sub = document.createElement("div");
       sub.className = "sub-item" + (si === step && ii === item ? " active" : "");
       sub.innerHTML = `${it.title}${!it.required ? '<span class="optional">선택</span>' : ""}`;
-      sub.onclick = () => {
+      sub.onclick = (event) => {
+        event.stopPropagation();
         step = si;
         item = ii;
         render();
       };
       itemsWrap.appendChild(sub);
     });
+
+    header.onclick = () => {
+      if (status === "done") return; // 완료된 STEP은 자동 접힘 유지
+      if (si !== step) {
+        step = si;
+        item = 0;
+        render();
+      }
+    };
 
     sidebar.appendChild(card);
   });
@@ -1653,6 +1713,9 @@ nextBtn.onclick = () => {
     return;
   }
 
+  goToNextStep();
+};
+
   if (current.required) {
     done[`${step}-${item}`] = true;
   }
@@ -1677,7 +1740,7 @@ nextBtn.onclick = () => {
 noticeConfirmBtn.addEventListener("click", () => {
   noticeConfirmed[getCurrentNoticeKey()] = true;
   closeNoticeModal();
-  renderFooterState();
+  goToNextStep();
 });
 
 videoModalClose.addEventListener("click", closeVideoModal);
