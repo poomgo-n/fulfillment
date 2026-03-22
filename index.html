@@ -252,7 +252,7 @@ body.video-modal-open {
 
 /* ===== HEADER ===== */
 .content-header {
-  padding: 26px 30px 22px;
+  padding: 24px 30px 20px;
   border-bottom: 1px solid #edf2fa;
   background: #fff;
   flex-shrink: 0;
@@ -263,7 +263,7 @@ body.video-modal-open {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
 .content-topline {
@@ -342,12 +342,13 @@ body.video-modal-open {
 }
 
 .content-desc {
-  margin-top: 10px;
+  margin-top: 8px;
   font-size: 15px;
-  line-height: 1.8;
+  line-height: 1.7;
   color: var(--muted);
   text-align: left;
   max-width: 760px;
+  min-height: 26px;
 }
 
 .content-header-actions {
@@ -411,7 +412,7 @@ body.video-modal-open {
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  padding: 28px 30px 32px;
+  padding: 22px 30px 22px;
   background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
 }
 
@@ -422,6 +423,7 @@ body.video-modal-open {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  overflow: hidden;
 }
 
 .body-topline {
@@ -430,13 +432,13 @@ body.video-modal-open {
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   flex-shrink: 0;
 }
 
 .step-section-title {
   text-align: left;
-  font-size: 22px;
+  font-size: 21px;
   font-weight: 900;
   color: var(--text);
   letter-spacing: -0.02em;
@@ -446,69 +448,125 @@ body.video-modal-open {
   width: 100%;
   height: 1px;
   background: linear-gradient(90deg, transparent 0%, #dbe7fb 18%, #dbe7fb 82%, transparent 100%);
-  margin-bottom: 22px;
+  margin-bottom: 16px;
   flex-shrink: 0;
 }
 
-.video-cta {
-  display: inline-flex;
+/* ===== VIDEO PREVIEW ===== */
+.video-preview {
+  width: 100%;
+  flex-shrink: 0;
+  margin-bottom: 14px;
+}
+
+.video-preview-card {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid #dbe7fb;
+  background:
+    linear-gradient(135deg, rgba(0,64,209,0.90) 0%, rgba(0,64,209,0.72) 100%);
+  box-shadow: 0 16px 30px rgba(0, 64, 209, 0.14);
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  padding: 20px;
+}
+
+.video-preview-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0) 35%),
+    radial-gradient(circle at 80% 30%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 30%),
+    linear-gradient(180deg, rgba(15,23,42,0.05) 0%, rgba(15,23,42,0.22) 100%);
+}
+
+.video-preview-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
 }
 
-.video-cta-label {
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--brand);
-  line-height: 1;
-}
-
-.video-cta-video {
-  width: 34px;
-  height: 34px;
-  border: none;
-  border-radius: 999px;
-  background: var(--brand);
+.video-preview-text {
   color: #fff;
+  min-width: 0;
+}
+
+.video-preview-kicker {
+  font-size: 12px;
+  font-weight: 800;
+  opacity: 0.92;
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+
+.video-preview-title {
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.3;
+  word-break: keep-all;
+}
+
+.video-preview-desc {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.93;
+}
+
+.video-preview-play {
+  position: relative;
+  z-index: 2;
+  width: 68px;
+  height: 68px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(8px);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 8px 18px rgba(0, 64, 209, 0.18);
+  flex-shrink: 0;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.16);
   transition: 0.18s ease;
 }
 
-.video-cta-video:hover {
-  transform: translateY(-1px);
-  filter: brightness(0.98);
+.video-preview-play:hover {
+  transform: scale(1.04);
+  background: rgba(255,255,255,0.24);
 }
 
-.video-cta-video svg {
-  width: 17px;
-  height: 17px;
-  display: block;
+.video-preview-play svg {
+  width: 28px;
+  height: 28px;
+  margin-left: 3px;
+  fill: #fff;
 }
 
+/* ===== STEP CONTENT ===== */
 .step-content {
   width: 100%;
   flex: 1;
   min-height: 0;
-  overflow: auto;
-  padding-right: 4px;
+  overflow: hidden; /* 스크롤 제거 */
+  padding-right: 0;
 }
 
-.step-content::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
-.step-content {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* 주입된 html 공통 */
 .step-content .step-left-content {
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .step-content .step-left-content > section {
@@ -517,10 +575,12 @@ body.video-modal-open {
   margin-left: auto !important;
   margin-right: auto !important;
   border-radius: 18px !important;
+  padding: 18px 20px !important;
+  overflow: hidden;
 }
 
 .step-content .step-left-content > section + section {
-  margin-top: 16px !important;
+  margin-top: 0 !important;
 }
 
 .step-content .step-left-content h3,
@@ -528,6 +588,7 @@ body.video-modal-open {
 .step-content .step-left-content h5 {
   text-align: left !important;
   color: var(--text) !important;
+  margin-bottom: 10px !important;
 }
 
 .step-content .step-left-content p,
@@ -540,11 +601,17 @@ body.video-modal-open {
 .step-content .step-left-content p,
 .step-content .step-left-content li {
   color: #475467 !important;
+  font-size: 15px !important;
+  line-height: 1.72 !important;
 }
 
 .step-content .step-left-content ol,
 .step-content .step-left-content ul {
   padding-left: 22px !important;
+}
+
+.step-content .step-left-content li + li {
+  margin-top: 6px !important;
 }
 
 .step-content .step-left-content a {
@@ -556,8 +623,8 @@ body.video-modal-open {
 .content-footer {
   max-width: 920px;
   width: 100%;
-  margin: 20px auto 0;
-  padding-top: 18px;
+  margin: 16px auto 0;
+  padding-top: 14px;
   border-top: 1px solid #edf2fa;
   display: flex;
   align-items: flex-start;
@@ -569,9 +636,10 @@ body.video-modal-open {
 
 .footer-note {
   font-size: 13px;
-  line-height: 1.7;
+  line-height: 1.6;
   color: var(--muted);
   max-width: 580px;
+  min-height: 20px;
 }
 
 .footer-actions {
@@ -750,6 +818,14 @@ body.video-modal-open {
   .footer-actions .btn {
     flex: 1;
   }
+
+  .video-preview-card {
+    height: 168px;
+  }
+
+  .video-preview-title {
+    font-size: 20px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -760,7 +836,7 @@ body.video-modal-open {
   .sidebar {
     width: 100%;
     height: auto;
-    max-height: 38vh;
+    max-height: 34vh;
     border-right: none;
     border-bottom: 1px solid var(--line);
     padding-bottom: 18px;
@@ -772,7 +848,7 @@ body.video-modal-open {
 
   .content-header,
   .content-body {
-    padding: 20px;
+    padding: 18px;
   }
 
   .content-title {
@@ -780,7 +856,29 @@ body.video-modal-open {
   }
 
   .step-section-title {
-    font-size: 20px;
+    font-size: 19px;
+  }
+
+  .content-desc {
+    font-size: 14px;
+  }
+
+  .video-preview-card {
+    height: 150px;
+    padding: 16px;
+  }
+
+  .video-preview-title {
+    font-size: 18px;
+  }
+
+  .video-preview-desc {
+    font-size: 13px;
+  }
+
+  .video-preview-play {
+    width: 58px;
+    height: 58px;
   }
 
   .help {
@@ -792,15 +890,6 @@ body.video-modal-open {
     height: calc(100vh - 20px);
     margin: 10px auto;
     border-radius: 16px;
-  }
-
-  .video-cta-label {
-    font-size: 14px;
-  }
-
-  .video-cta-video {
-    width: 32px;
-    height: 32px;
   }
 }
 </style>
@@ -856,18 +945,27 @@ body.video-modal-open {
 
             <div class="body-topline">
               <h3 class="step-section-title">진행 방법</h3>
-
-              <div class="video-cta">
-                <div class="video-cta-label">진행 과정 보러가기</div>
-                <button type="button" class="video-cta-video" id="openVideoBtn" aria-label="진행 과정 영상 보기">
-                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M15 10.5V7.8C15 6.81 14.19 6 13.2 6H5.8C4.81 6 4 6.81 4 7.8V16.2C4 17.19 4.81 18 5.8 18H13.2C14.19 18 15 17.19 15 16.2V13.5L20 17V7L15 10.5Z" fill="currentColor"/>
-                  </svg>
-                </button>
-              </div>
             </div>
 
             <div class="body-divider"></div>
+
+            <div class="video-preview">
+              <div class="video-preview-card" id="openVideoCard" role="button" tabindex="0" aria-label="과정 영상 재생">
+                <div class="video-preview-content">
+                  <div class="video-preview-text">
+                    <div class="video-preview-kicker">VIDEO GUIDE</div>
+                    <div class="video-preview-title" id="videoPreviewTitle">과정 영상 보기</div>
+                    <div class="video-preview-desc">썸네일을 클릭하면 큰 화면으로 자동 재생됩니다.</div>
+                  </div>
+
+                  <button type="button" class="video-preview-play" aria-label="영상 재생">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M8 5.5v13l10-6.5-10-6.5z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
 
             <div class="step-content" id="left"></div>
 
@@ -908,7 +1006,8 @@ body.video-modal-open {
         title="과정 영상"
         loading="eager"
         referrerpolicy="no-referrer"
-        allow="autoplay"
+        allow="autoplay; fullscreen"
+        allowfullscreen
       ></iframe>
     </div>
   </div>
@@ -1043,7 +1142,8 @@ const footerNote = document.getElementById("footerNote");
 const progressFill = document.getElementById("progressFill");
 const progressText = document.getElementById("progressText");
 
-const openVideoBtn = document.getElementById("openVideoBtn");
+const openVideoCard = document.getElementById("openVideoCard");
+const videoPreviewTitle = document.getElementById("videoPreviewTitle");
 
 const videoModal = document.getElementById("videoModal");
 const videoModalDim = document.getElementById("videoModalDim");
@@ -1137,9 +1237,14 @@ function bindFAQ() {
   });
 }
 
+function buildVideoSrc(src) {
+  const separator = src.includes("?") ? "&" : "?";
+  return `${src}${separator}autoplay=1&mute=0&v=${Date.now()}`;
+}
+
 function openVideoModal(titleText, src) {
   videoModalTitle.textContent = `${titleText} 과정 영상`;
-  videoModalFrame.src = `${src}?v=${Date.now()}`;
+  videoModalFrame.src = buildVideoSrc(src);
   videoModal.classList.add("open");
   document.body.classList.add("video-modal-open");
 }
@@ -1182,6 +1287,27 @@ function renderFooterState() {
   }
 }
 
+function fitInjectedSections() {
+  const sections = left.querySelectorAll(".step-left-content > section");
+  const sectionCount = sections.length;
+
+  if (!sectionCount) return;
+
+  if (sectionCount >= 3) {
+    sections.forEach(section => {
+      section.style.padding = "14px 16px";
+    });
+  } else if (sectionCount === 2) {
+    sections.forEach(section => {
+      section.style.padding = "16px 18px";
+    });
+  } else {
+    sections.forEach(section => {
+      section.style.padding = "18px 20px";
+    });
+  }
+}
+
 async function render() {
   closeVideoModal();
   renderSidebar();
@@ -1196,14 +1322,22 @@ async function render() {
   stepLabel.textContent = `STEP ${step + 1} · ${flatIndex}/${totalFlat}`;
   title.innerText = data.title;
   stepDesc.innerText = data.desc || "";
+  videoPreviewTitle.innerText = `${data.title} 영상 보기`;
 
   try {
     left.innerHTML = await load(data.left);
+    fitInjectedSections();
   } catch (e) {
     left.innerHTML = `<div style="color:#ef4444;font-size:14px;">${e.message}</div>`;
   }
 
-  openVideoBtn.onclick = () => openVideoModal(data.title, data.right);
+  openVideoCard.onclick = () => openVideoModal(data.title, data.right);
+  openVideoCard.onkeydown = (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openVideoModal(data.title, data.right);
+    }
+  };
 
   try {
     helpBox.innerHTML = await load(data.help);
