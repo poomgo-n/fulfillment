@@ -1,0 +1,108 @@
+<div class="page-header">
+  <h1>SKU</h1>
+  <p>SKU 화면 구조와 운영 시 유의사항을 확인할 수 있습니다.</p>
+</div>
+
+<section class="screen-card">
+  <div class="screen-topbar">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <div class="screen-body">
+    <div class="screen-title">SKU</div>
+
+    <div class="filter-grid">
+      <div class="field">
+        <label>브랜드</label>
+        <div class="fake-select">선택 <span>⌄</span></div>
+      </div>
+      <div class="field">
+        <label>카테고리</label>
+        <div class="fake-select">선택 <span>⌄</span></div>
+      </div>
+      <div class="field">
+        <label>가용여부</label>
+        <div class="fake-select">가용재고만 <span>⌄</span></div>
+      </div>
+      <div class="field">
+        <label>관리중 여부</label>
+        <div class="fake-select">선택 <span>⌄</span></div>
+      </div>
+      <div class="field">
+        <label>검색</label>
+        <div class="fake-select">SKU명 <span>⌄</span></div>
+      </div>
+      <div class="field">
+        <label>&nbsp;</label>
+        <div class="fake-input">검색어</div>
+      </div>
+      <button class="search-button" type="button">검색</button>
+    </div>
+
+    <div class="tab-row">
+      <div class="tab-chip active">전체</div>
+      <div class="tab-chip">제품</div>
+      <div class="tab-chip">원자재</div>
+      <div class="tab-chip">부자재</div>
+      <div class="tab-chip" style="background:none; padding-left:0;">총 0개</div>
+    </div>
+
+    <div class="table-toolbar">
+      <div class="toolbar-left">
+        <button class="btn-soft" type="button">바코드 인쇄</button>
+        <button class="btn-soft" type="button">카테고리 일괄 변경</button>
+        <button class="btn-danger" type="button">불용 처리</button>
+      </div>
+      <div class="toolbar-right">
+        <button class="btn-green" type="button">엑셀 다운로드</button>
+        <button class="btn-soft" type="button">일괄 추가</button>
+        <button class="btn-soft" type="button">일괄 수정</button>
+        <button class="btn-primary" type="button">SKU 추가</button>
+      </div>
+    </div>
+
+    <div class="table-shell">
+      <div class="table-head">
+        <div>□</div>
+        <div>구분</div>
+        <div>브랜드</div>
+        <div>카테고리</div>
+        <div>SKU명</div>
+        <div>SKU 관리 번호</div>
+        <div>바코드</div>
+        <div>옵션1</div>
+        <div>옵션2</div>
+      </div>
+      <div class="empty-area">조회하기를 눌러주세요.</div>
+    </div>
+  </div>
+</section>
+
+<section class="content-panel">
+  <div class="section-head">
+    <h2>SKU 안내</h2>
+    <span>Guide Blocks</span>
+  </div>
+
+  <div class="guide-grid">
+    <div class="guide-card" data-modal="notice">
+      <div class="guide-card-icon">!</div>
+      <h3>유의사항</h3>
+      <p>N배송 SKU 등록 시 반드시 확인해야 하는 기준과 사용 제한 사항을 안내합니다.</p>
+    </div>
+
+    <div class="guide-card" data-modal="rename">
+      <div class="guide-card-icon">✎</div>
+      <h3>SKU명 수정</h3>
+      <p>초도입고 전/후에 따라 SKU명 수정 반영 범위가 어떻게 달라지는지 확인합니다.</p>
+    </div>
+
+    <div class="guide-card" data-modal="obsolete">
+      <div class="guide-card-icon">⌫</div>
+      <h3>불용 처리 방법</h3>
+      <p>운영 종료 SKU를 불용 처리해야 하는 이유와 보관료 관련 유의사항을 안내합니다.</p>
+    </div>
+  </div>
+</section>
