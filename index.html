@@ -1,1982 +1,672 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>N배송 가이드</title>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
-
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: Pretendard, sans-serif;
-}
-
-:root{
-  --brand:#0040d1;
-  --brand-strong:#0035ad;
-  --brand-soft:#edf3ff;
-  --brand-soft-2:#f7faff;
-  --brand-border:#cfe0ff;
-  --bg:#f4f7fc;
-  --surface:#ffffff;
-  --line:#e7edf7;
-  --text:#1f2937;
-  --muted:#667085;
-  --muted-2:#98a2b3;
-  --success:#0f9f6e;
-  --success-soft:#ecfdf3;
-  --wait:#7c8798;
-  --wait-soft:#f2f4f7;
-  --shadow:0 18px 42px rgba(15, 23, 42, 0.08);
-  --radius-xl:28px;
-  --radius-lg:20px;
-  --radius-md:16px;
-}
-
-html, body {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg, #f8fbff 0%, #f3f6fc 100%);
-  color: var(--text);
-  overflow: hidden;
-}
-
-body.video-modal-open,
-body.notice-modal-open,
-body.guide-intro-open {
-  overflow: hidden;
-}
-
-.app {
-  display: flex;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* ===== SIDEBAR ===== */
-.sidebar {
-  width: 340px;
-  flex-shrink: 0;
-  background: #fff;
-  border-right: 1px solid var(--line);
-  padding: 22px 16px 24px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.sidebar::-webkit-scrollbar {
-  width: 8px;
-}
-.sidebar::-webkit-scrollbar-thumb {
-  background: #d8e3f8;
-  border-radius: 999px;
-}
-.sidebar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.sidebar-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 10px 18px;
-  margin-bottom: 8px;
-}
-
-.sidebar-brand img {
-  height: 28px;
-  width: auto;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-
-.sidebar-title {
-  font-size: 18px;
-  font-weight: 900;
-  color: var(--text);
-  letter-spacing: -0.02em;
-}
-
-.sidebar-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding-bottom: 40px;
-}
-
-.step-card {
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: 14px;
-  background: #fff;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
-  transition: 0.2s ease;
-}
-
-.step-card.current {
-  border-color: var(--brand-border);
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-  box-shadow: 0 12px 28px rgba(0, 64, 209, 0.10);
-}
-
-.step-card.done {
-  border-color: #dce9ff;
-  background: #fcfdff;
-}
-
-.step-card-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-
-.step-card.collapsed .step-card-header {
-  margin-bottom: 0;
-}
-
-.step-card-main {
-  min-width: 0;
-}
-
-.step-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 5px 10px;
-  border-radius: 999px;
-  background: var(--brand-soft);
-  color: var(--brand);
-  font-size: 11px;
-  font-weight: 900;
-  margin-bottom: 8px;
-}
-
-.step-card-title {
-  font-size: 15px;
-  font-weight: 900;
-  line-height: 1.45;
-  color: var(--text);
-  word-break: keep-all;
-}
-
-.badge {
-  font-size: 11px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  white-space: nowrap;
-  flex-shrink: 0;
-  font-weight: 900;
-}
-
-.badge.done {
-  background: var(--success-soft);
-  color: var(--success);
-}
-
-.badge.ing {
-  background: var(--brand);
-  color: #fff;
-}
-
-.badge.wait {
-  background: var(--wait-soft);
-  color: var(--wait);
-}
-
-.step-items {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  overflow: hidden;
-  max-height: 500px;
-  opacity: 1;
-  transition: max-height 0.24s ease, opacity 0.2s ease, margin-top 0.2s ease;
-}
-
-.step-card.collapsed .step-items {
-  max-height: 0;
-  opacity: 0;
-  margin-top: 0;
-  pointer-events: none;
-}
-
-.sub-item {
-  padding: 11px 12px;
-  border-radius: 14px;
-  cursor: pointer;
-  font-size: 14px;
-  line-height: 1.45;
-  color: #475467;
-  transition: 0.18s ease;
-  border: 1px solid transparent;
-}
-
-.sub-item:hover {
-  background: #f7faff;
-  border-color: #e6eefc;
-}
-
-.sub-item.active {
-  background: linear-gradient(135deg, #eef4ff 0%, #f8fbff 100%);
-  color: var(--brand);
-  font-weight: 800;
-  border-color: rgba(0, 64, 209, 0.12);
-  box-shadow: inset 0 0 0 1px rgba(0, 64, 209, 0.05);
-}
-
-.optional {
-  font-size: 11px;
-  color: var(--muted-2);
-  margin-left: 6px;
-  font-weight: 700;
-}
-
-/* ===== MAIN ===== */
-.main {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: transparent;
-}
-
-.main-shell {
-  flex: 1;
-  min-height: 0;
-  padding: 24px;
-  overflow: hidden;
-}
-
-.content-card {
-  width: 100%;
-  height: 100%;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-}
-
-/* ===== HEADER ===== */
-.content-header {
-  padding: 24px 30px 20px;
-  border-bottom: 1px solid #edf2fa;
-  background: #fff;
-  flex-shrink: 0;
-}
-
-.content-header-inner {
-  max-width: 920px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.content-topline {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.content-step-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 36px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: var(--brand-soft);
-  color: var(--brand);
-  font-size: 13px;
-  font-weight: 900;
-  border: 1px solid var(--brand-border);
-}
-
-.content-progress-wrap {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 280px;
-}
-
-.content-progress-bar {
-  flex: 1;
-  height: 10px;
-  background: #edf2fa;
-  border-radius: 999px;
-  overflow: hidden;
-  position: relative;
-}
-
-.content-progress-fill {
-  width: 0%;
-  height: 100%;
-  background: linear-gradient(90deg, var(--brand) 0%, #2f67e7 100%);
-  border-radius: 999px;
-  transition: width 0.25s ease;
-}
-
-.content-progress-text {
-  font-size: 14px;
-  font-weight: 900;
-  color: var(--brand);
-  white-space: nowrap;
-}
-
-.content-heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 18px;
-  flex-wrap: wrap;
-}
-
-.content-heading-main {
-  flex: 1;
-  min-width: 0;
-}
-
-.content-title {
-  font-size: 30px;
-  font-weight: 900;
-  color: var(--text);
-  line-height: 1.28;
-  text-align: left;
-  letter-spacing: -0.03em;
-}
-
-.content-desc {
-  margin-top: 8px;
-  font-size: 15px;
-  line-height: 1.7;
-  color: var(--muted);
-  text-align: left;
-  max-width: 760px;
-  min-height: 26px;
-}
-
-.content-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-}
-
-.btn {
-  min-height: 46px;
-  padding: 0 18px;
-  border-radius: 14px;
-  font-weight: 800;
-  cursor: pointer;
-  border: none;
-  font-size: 14px;
-  transition: 0.18s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-ghost {
-  border: 1px solid var(--line);
-  background: #fff;
-  color: #475467;
-}
-
-.btn-ghost:hover {
-  background: #f8fbff;
-}
-
-.btn-help {
-  border: 1px solid var(--brand-border);
-  color: var(--brand);
-  background: #fff;
-}
-
-.btn-help:hover {
-  background: #f8fbff;
-}
-
-.btn-next {
-  background: var(--brand);
-  color: #fff;
-  box-shadow: 0 10px 22px rgba(0, 64, 209, 0.18);
-}
-
-.btn-next:hover {
-  filter: brightness(0.98);
-}
-
-.btn-complete {
-  background: linear-gradient(135deg, #0c4be0 0%, #2d67eb 100%);
-  color: #fff;
-}
-
-/* ===== BODY ===== */
-.content-body {
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  padding: 22px 30px 22px;
-  background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
-}
-
-.step-content-shell {
-  max-width: 920px;
-  height: 100%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.body-topline {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-  flex-shrink: 0;
-}
-
-.step-section-title {
-  text-align: left;
-  font-size: 21px;
-  font-weight: 900;
-  color: var(--text);
-  letter-spacing: -0.02em;
-}
-
-.body-divider {
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, #dbe7fb 18%, #dbe7fb 82%, transparent 100%);
-  margin-bottom: 16px;
-  flex-shrink: 0;
-}
-
-/* ===== STEP CONTENT ===== */
-.step-content {
-  width: 100%;
-  flex: 0 0 auto;
-  min-height: auto;
-  overflow: visible;
-  padding-right: 0;
-}
-
-.step-content .step-left-content {
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.step-content .step-left-content > section {
-  width: 100%;
-  max-width: 920px;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  border-radius: 18px !important;
-  padding: 18px 20px !important;
-  overflow: hidden;
-}
-
-.step-content .step-left-content > section + section {
-  margin-top: 0 !important;
-}
-
-.step-content .step-left-content h3,
-.step-content .step-left-content h4,
-.step-content .step-left-content h5 {
-  text-align: left !important;
-  color: var(--text) !important;
-  margin-bottom: 10px !important;
-}
-
-.step-content .step-left-content p,
-.step-content .step-left-content li,
-.step-content .step-left-content ol,
-.step-content .step-left-content ul {
-  text-align: left !important;
-}
-
-.step-content .step-left-content p,
-.step-content .step-left-content li {
-  color: #475467 !important;
-  font-size: 15px !important;
-  line-height: 1.72 !important;
-}
-
-.step-content .step-left-content ol,
-.step-content .step-left-content ul {
-  padding-left: 22px !important;
-}
-
-.step-content .step-left-content li + li {
-  margin-top: 6px !important;
-}
-
-.step-content .step-left-content a {
-  color: var(--brand);
-  font-weight: 700;
-}
-
-/* ===== VIDEO PREVIEW ===== */
-.video-preview {
-  width: 100%;
-  flex-shrink: 0;
-  margin-top: 14px;
-  margin-bottom: 0;
-}
-
-.video-preview.hidden {
-  display: none;
-}
-
-.video-preview-card {
-  position: relative;
-  width: 100%;
-  height: 180px;
-  border-radius: 22px;
-  overflow: hidden;
-  border: 1px solid #dbe7fb;
-  background: linear-gradient(135deg, rgba(0,64,209,0.90) 0%, rgba(0,64,209,0.72) 100%);
-  box-shadow: 0 16px 30px rgba(0, 64, 209, 0.14);
-  cursor: pointer;
-  display: flex;
-  align-items: flex-end;
-  padding: 20px;
-}
-
-.video-preview-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0) 35%),
-    radial-gradient(circle at 80% 30%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 30%),
-    linear-gradient(180deg, rgba(15,23,42,0.05) 0%, rgba(15,23,42,0.22) 100%);
-}
-
-.video-preview-content {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  width: 100%;
-}
-
-.video-preview-text {
-  color: #fff;
-  min-width: 0;
-}
-
-.video-preview-title {
-  font-size: 22px;
-  font-weight: 900;
-  line-height: 1.3;
-  word-break: keep-all;
-}
-
-.video-preview-play {
-  position: relative;
-  z-index: 2;
-  width: 68px;
-  height: 68px;
-  border-radius: 999px;
-  border: none;
-  background: rgba(255,255,255,0.18);
-  backdrop-filter: blur(8px);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  box-shadow: 0 12px 24px rgba(0,0,0,0.16);
-  transition: 0.18s ease;
-}
-
-.video-preview-play:hover {
-  transform: scale(1.04);
-  background: rgba(255,255,255,0.24);
-}
-
-.video-preview-play svg {
-  width: 28px;
-  height: 28px;
-  margin-left: 3px;
-  fill: #fff;
-}
-
-/* ===== FOOT ===== */
-.content-footer {
-  max-width: 920px;
-  width: 100%;
-  margin: 16px auto 0;
-  padding-top: 14px;
-  border-top: 1px solid #edf2fa;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  flex-shrink: 0;
-}
-
-.footer-note {
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--muted);
-  max-width: 580px;
-  min-height: 20px;
-}
-
-.footer-actions {
-  display: flex;
-  gap: 10px;
-  flex-shrink: 0;
-}
-
-/* ===== HELP ===== */
-.help {
-  position: fixed;
-  right: 0;
-  top: 0;
-  width: 420px;
-  max-width: 100%;
-  height: 100%;
-  background: #ffffff;
-  box-shadow: -16px 0 38px rgba(15, 23, 42, 0.12);
-  transform: translateX(100%);
-  transition: 0.28s ease;
-  padding: 20px;
-  overflow: auto;
-  z-index: 100;
-  border-left: 1px solid #edf2fa;
-}
-
-.help.open {
-  transform: translateX(0);
-}
-
-.help-header {
-  margin-bottom: 16px;
-}
-
-.help-kicker {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: #eef4ff;
-  color: #0040d1;
-  font-size: 12px;
-  font-weight: 800;
-  margin-bottom: 10px;
-}
-
-.help-title {
-  font-size: 22px;
-  font-weight: 900;
-  line-height: 1.3;
-  color: #111827;
-  margin: 0 0 8px;
-}
-
-.help-desc {
-  font-size: 14px;
-  line-height: 1.7;
-  color: #667085;
-  margin: 0 0 18px;
-}
-
-.faq-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.faq-item {
-  border: 1px solid #e6ecf5;
-  border-radius: 16px;
-  overflow: hidden;
-  background: #ffffff;
-  transition: 0.2s ease;
-}
-
-.faq-q {
-  width: 100%;
-  padding: 16px;
-  font-size: 15px;
-  font-weight: 800;
-  line-height: 1.5;
-  cursor: pointer;
-  background: #ffffff;
-  color: #111827;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.faq-q:hover {
-  background: #f8fbff;
-}
-
-.faq-q::after {
-  content: "＋";
-  flex-shrink: 0;
-  font-size: 18px;
-  line-height: 1;
-  color: #0040d1;
-  transition: 0.2s ease;
-}
-
-.faq-item.open .faq-q {
-  background: #f8fbff;
-}
-
-.faq-item.open .faq-q::after {
-  content: "－";
-}
-
-.faq-a {
-  display: none;
-  padding: 0 16px 16px;
-  font-size: 14px;
-  line-height: 1.8;
-  color: #4b5563;
-  background: #ffffff;
-}
-
-.faq-item.open .faq-a {
-  display: block;
-}
-
-.faq-a p {
-  margin: 0;
-}
-
-.faq-a ul,
-.faq-a ol {
-  margin: 0;
-  padding-left: 18px;
-}
-
-.faq-a li + li {
-  margin-top: 6px;
-}
-
-.faq-a strong {
-  color: #111827;
-}
-
-/* ===== VIDEO MODAL ===== */
-.video-modal {
-  position: fixed;
-  inset: 0;
-  display: none;
-  z-index: 2000;
-}
-
-.video-modal.open {
-  display: block;
-}
-
-.video-modal-dim {
-  position: absolute;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.62);
-}
-
-.video-modal-dialog {
-  position: relative;
-  z-index: 2;
-  width: min(1400px, calc(100vw - 60px));
-  height: min(900px, calc(100vh - 60px));
-  margin: 30px auto;
-  background: #fff;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
-  display: flex;
-  flex-direction: column;
-}
-
-.video-modal-header {
-  height: 64px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px 0 24px;
-  border-bottom: 1px solid #edf2fa;
-  background: #fff;
-}
-
-.video-modal-title {
-  font-size: 18px;
-  font-weight: 900;
-  color: #111827;
-}
-
-.video-modal-close {
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: 999px;
-  background: #f3f6fb;
-  color: var(--brand);
-  font-size: 24px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.video-modal-body {
-  flex: 1;
-  min-height: 0;
-  background: #f8fafc;
-}
-
-.video-modal-body iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
-  background: #f8fafc;
-}
-
-/* ===== NOTICE MODAL ===== */
-.notice-modal {
-  position: fixed;
-  inset: 0;
-  display: none;
-  z-index: 2100;
-}
-
-.notice-modal.open {
-  display: block;
-}
-
-.notice-modal-dim {
-  position: absolute;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.62);
-}
-
-.notice-modal-dialog {
-  position: relative;
-  z-index: 2;
-  width: min(560px, calc(100vw - 32px));
-  margin: 80px auto;
-  background: #ffffff;
-  border-radius: 24px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
-  overflow: hidden;
-}
-
-.notice-modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 20px 22px;
-  border-bottom: 1px solid #edf2fa;
-}
-
-.notice-modal-title {
-  font-size: 20px;
-  font-weight: 900;
-  color: #111827;
-}
-
-.notice-modal-close {
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: 999px;
-  background: #f3f6fb;
-  color: #b91c1c;
-  font-size: 24px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.notice-modal-body {
-  padding: 22px;
-  max-height: min(60vh, 520px);
-  overflow: auto;
-}
-
-.notice-modal-body p,
-.notice-modal-body li {
-  font-size: 14px;
-  line-height: 1.8;
-  color: #4b5563;
-}
-
-.notice-modal-body ul,
-.notice-modal-body ol {
-  margin: 0;
-  padding-left: 18px;
-}
-
-.notice-modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 18px 22px 22px;
-  border-top: 1px solid #edf2fa;
-  background: #fff;
-}
-
-.btn-notice-confirm {
-  background: #b91c1c;
-  color: #fff;
-}
-
-.btn-notice-confirm:hover {
-  filter: brightness(0.98);
-}
-
-/* ===== GUIDE INTRO MODAL ===== */
-.guide-intro-modal {
-  position: fixed;
-  inset: 0;
-  display: none;
-  z-index: 2200;
-}
-
-.guide-intro-modal.open {
-  display: block;
-}
-
-.guide-intro-dim {
-  position: absolute;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.62);
-}
-
-.guide-intro-dialog {
-  position: relative;
-  z-index: 2;
-  width: min(700px, calc(100vw - 32px));
-  margin: 56px auto;
-  background: #ffffff;
-  border-radius: 24px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
-  overflow: hidden;
-}
-
-.guide-intro-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 20px 22px;
-  border-bottom: 1px solid #edf2fa;
-}
-
-.guide-intro-title {
-  font-size: 22px;
-  font-weight: 900;
-  color: #111827;
-}
-
-.guide-intro-close {
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: 999px;
-  background: #f3f6fb;
-  color: var(--brand);
-  font-size: 24px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.guide-intro-body {
-  padding: 22px;
-  max-height: min(68vh, 640px);
-  overflow: auto;
-}
-
-.guide-intro-desc {
-  font-size: 14px;
-  line-height: 1.8;
-  color: #667085;
-  margin-bottom: 16px;
-}
-
-.guide-intro-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-
-.guide-intro-item {
-  border: 1px solid #e7edf7;
-  border-radius: 18px;
-  padding: 16px 18px;
-  background: #fbfcff;
-}
-
-.guide-intro-item-title {
-  font-size: 15px;
-  font-weight: 900;
-  color: #111827;
-  margin-bottom: 6px;
-}
-
-.guide-intro-item-text {
-  font-size: 14px;
-  line-height: 1.75;
-  color: #4b5563;
-}
-
-.guide-intro-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 18px 22px 22px;
-  border-top: 1px solid #edf2fa;
-  background: #fff;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1200px) {
-  .sidebar {
-    width: 300px;
-  }
-}
-
-@media (max-width: 1024px) {
-  .content-header-inner,
-  .step-content-shell,
-  .content-footer,
-  .step-content .step-left-content > section {
-    max-width: 100%;
-  }
-
-  .content-heading {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .content-header-actions {
-    width: 100%;
-    flex-wrap: wrap;
-  }
-
-  .content-header-actions .btn {
-    flex: 1;
-  }
-
-  .content-progress-wrap {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .footer-actions {
-    width: 100%;
-  }
-
-  .footer-actions .btn {
-    flex: 1;
-  }
-
-  .video-preview-card {
-    height: 168px;
-  }
-
-  .video-preview-title {
-    font-size: 20px;
-  }
-}
-
-@media (max-width: 768px) {
-  .app {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    height: auto;
-    max-height: 34vh;
-    border-right: none;
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 18px;
-  }
-
-  .main-shell {
-    padding: 12px;
-  }
-
-  .content-header,
-  .content-body {
-    padding: 18px;
-  }
-
-  .content-title {
-    font-size: 24px;
-  }
-
-  .step-section-title {
-    font-size: 19px;
-  }
-
-  .content-desc {
-    font-size: 14px;
-  }
-
-  .video-preview-card {
-    height: 150px;
-    padding: 16px;
-  }
-
-  .video-preview-title {
-    font-size: 18px;
-  }
-
-  .video-preview-play {
-    width: 58px;
-    height: 58px;
-  }
-
-  .help {
-    width: 100%;
-  }
-
-  .video-modal-dialog {
-    width: calc(100vw - 20px);
-    height: calc(100vh - 20px);
-    margin: 10px auto;
-    border-radius: 16px;
-  }
-
-  .notice-modal-dialog,
-  .guide-intro-dialog {
-    width: calc(100vw - 20px);
-    margin: 24px auto;
-    border-radius: 18px;
-  }
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>품고 나우 가이드</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f5f7fb;
+      --sidebar-bg: #ffffff;
+      --main-bg: #f7f8fc;
+      --card-bg: #ffffff;
+      --text-main: #1f2937;
+      --text-sub: #6b7280;
+      --line: #e5e7eb;
+      --hover: #f3f4f6;
+      --primary: #2563eb;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+    }
+
+    body {
+      font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 290px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--line);
+      padding: 28px 18px;
+      box-shadow: 4px 0 20px rgba(15, 23, 42, 0.03);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 8px 8px 22px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 18px;
+    }
+
+    .brand img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #fff;
+      flex-shrink: 0;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-text .title {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-text .sub {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-top: 3px;
+    }
+
+    .menu-label {
+      font-size: 13px;
+      color: #9ca3af;
+      font-weight: 700;
+      margin: 18px 10px 10px;
+      letter-spacing: 0.02em;
+    }
+
+    .menu-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .menu-item {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid transparent;
+    }
+
+    .menu-button {
+      width: 100%;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 14px;
+      cursor: pointer;
+      transition: 0.2s ease;
+      border-radius: 12px;
+    }
+
+    .menu-button:hover {
+      background: var(--hover);
+    }
+
+    .menu-button-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .menu-icon {
+      width: 20px;
+      height: 20px;
+      color: #94a3b8;
+      flex-shrink: 0;
+    }
+
+    .menu-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #334155;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .menu-arrow {
+      width: 18px;
+      height: 18px;
+      color: #94a3b8;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .menu-item.open .menu-arrow {
+      transform: rotate(90deg);
+    }
+
+    .submenu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+      background: #fafbff;
+      margin-top: 2px;
+      border-radius: 0 0 12px 12px;
+    }
+
+    .submenu a {
+      display: block;
+      padding: 11px 16px 11px 46px;
+      font-size: 14px;
+      color: #64748b;
+      text-decoration: none;
+      transition: 0.2s ease;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .submenu a:hover {
+      background: #eef4ff;
+      color: var(--primary);
+    }
+
+    /* Main */
+    .main {
+      flex: 1;
+      background: var(--main-bg);
+      padding: 40px;
+    }
+
+    .main-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      margin-bottom: 28px;
+    }
+
+    .page-header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .page-header p {
+      font-size: 15px;
+      color: var(--text-sub);
+    }
+
+    .section-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid #eef2f7;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      gap: 12px;
+    }
+
+    .section-head h2 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #111827;
+    }
+
+    .section-head span {
+      font-size: 13px;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .quick-card {
+      position: relative;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid #e6edf7;
+      border-radius: 20px;
+      padding: 22px 20px;
+      min-height: 130px;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      overflow: hidden;
+    }
+
+    .quick-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 28px rgba(37, 99, 235, 0.12);
+      border-color: #cfe0ff;
+    }
+
+    .quick-card::after {
+      content: "";
+      position: absolute;
+      right: -18px;
+      bottom: -18px;
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, rgba(37, 99, 235, 0) 70%);
+      pointer-events: none;
+    }
+
+    .quick-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: #eff6ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      color: var(--primary);
+    }
+
+    .quick-card h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+      color: #111827;
+    }
+
+    .quick-card p {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #6b7280;
+    }
+
+    @media (max-width: 1024px) {
+      .quick-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .main {
+        padding: 24px 18px;
+      }
+
+      .section-card {
+        padding: 22px 18px;
+      }
+
+      .quick-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./GUIDE/assets/logo.png" alt="품고 나우 로고" />
+        <div class="brand-text">
+          <div class="title">품고 나우 가이드</div>
+          <div class="sub">System Manual</div>
+        </div>
+      </div>
 
-<div class="app">
+      <div class="menu-label">메뉴</div>
 
-  <aside class="sidebar">
-    <div class="sidebar-brand">
-      <img src="./Primary Logo.png" alt="Primary Logo" onerror="this.style.display='none'">
-      <div class="sidebar-title">N배송 가이드</div>
-    </div>
-
-    <div id="sidebar" class="sidebar-steps"></div>
-  </aside>
-
-  <section class="main">
-    <div class="main-shell">
-      <div class="content-card">
-
-        <div class="content-header">
-          <div class="content-header-inner">
-
-            <div class="content-topline">
-              <div class="content-step-label" id="stepLabel">현재 단계</div>
-
-              <div class="content-progress-wrap">
-                <div class="content-progress-bar" aria-hidden="true">
-                  <div class="content-progress-fill" id="progressFill"></div>
-                </div>
-                <div class="content-progress-text" id="progressText">진행률 0%</div>
-              </div>
+      <nav class="menu-group">
+        <div class="menu-item">
+          <button class="menu-button" type="button">
+            <div class="menu-button-left">
+              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M6 7a2 2 0 0 1 2-2h8l2 3v9a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7Z"/>
+                <path d="M8 5v4h10"/>
+              </svg>
+              <span class="menu-title">SKU</span>
             </div>
-
-            <div class="content-heading">
-              <div class="content-heading-main">
-                <div class="content-title" id="title"></div>
-                <div class="content-desc" id="stepDesc"></div>
-              </div>
-
-              <div class="content-header-actions">
-                <button class="btn btn-help" id="helpBtn" type="button">도움말</button>
-              </div>
-            </div>
-
+            <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </button>
+          <div class="submenu">
+            <a href="#">메뉴 준비중</a>
           </div>
         </div>
 
-        <div class="content-body">
-          <div class="step-content-shell">
-
-            <div class="body-topline">
-              <h3 class="step-section-title">진행 방법</h3>
+        <div class="menu-item">
+          <button class="menu-button" type="button">
+            <div class="menu-button-left">
+              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M3 10.5 12 4l9 6.5"/>
+                <path d="M5 9.5V20h14V9.5"/>
+              </svg>
+              <span class="menu-title">재고</span>
             </div>
-
-            <div class="body-divider"></div>
-
-            <div class="step-content" id="left"></div>
-
-            <div class="video-preview" id="videoPreview">
-              <div class="video-preview-card" id="openVideoCard" role="button" tabindex="0" aria-label="과정 영상 재생">
-                <div class="video-preview-content">
-                  <div class="video-preview-text">
-                    <div class="video-preview-title" id="videoPreviewTitle">과정 영상 보기</div>
-                  </div>
-
-                  <button type="button" class="video-preview-play" aria-label="영상 재생">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5.5v13l10-6.5-10-6.5z"></path>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="content-footer">
-              <div class="footer-note" id="footerNote">
-                현재 단계 확인 후 다음 단계로 이동해주세요.
-              </div>
-
-              <div class="footer-actions">
-                <button class="btn btn-ghost" id="prevBtn" type="button">이전</button>
-                <button class="btn btn-next" id="nextBtn" type="button">다음 단계</button>
-              </div>
-            </div>
-
+            <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </button>
+          <div class="submenu">
+            <a href="#">메뉴 준비중</a>
           </div>
         </div>
 
+        <div class="menu-item">
+          <button class="menu-button" type="button">
+            <div class="menu-button-left">
+              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M3 7h11v8H3z"/>
+                <path d="M14 10h3l4 3v2h-7z"/>
+                <circle cx="7.5" cy="18.5" r="1.5"/>
+                <circle cx="17.5" cy="18.5" r="1.5"/>
+              </svg>
+              <span class="menu-title">입·출고</span>
+            </div>
+            <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </button>
+          <div class="submenu">
+            <a href="#">메뉴 준비중</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <button class="menu-button" type="button">
+            <div class="menu-button-left">
+              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M7 7h10v10H7z"/>
+                <path d="M4 4h6v6H4z"/>
+                <path d="M14 14h6v6h-6z"/>
+              </svg>
+              <span class="menu-title">(신)OMS</span>
+            </div>
+            <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </button>
+          <div class="submenu">
+            <a href="#">메뉴 준비중</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <button class="menu-button" type="button">
+            <div class="menu-button-left">
+              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M6 6h15l-1.5 8h-11z"/>
+                <path d="M6 6 4.5 3H2"/>
+                <circle cx="9" cy="19" r="1.5"/>
+                <circle cx="18" cy="19" r="1.5"/>
+              </svg>
+              <span class="menu-title">주문</span>
+            </div>
+            <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </button>
+          <div class="submenu">
+            <a href="#">메뉴 준비중</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <button class="menu-button" type="button">
+            <div class="menu-button-left">
+              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="3" y="6" width="18" height="12" rx="2"/>
+                <path d="M7 10h10"/>
+              </svg>
+              <span class="menu-title">송장</span>
+            </div>
+            <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </button>
+          <div class="submenu">
+            <a href="#">메뉴 준비중</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <button class="menu-button" type="button">
+            <div class="menu-button-left">
+              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6"/>
+              </svg>
+              <span class="menu-title">CS</span>
+            </div>
+            <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </button>
+          <div class="submenu">
+            <a href="#">메뉴 준비중</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <button class="menu-button" type="button">
+            <div class="menu-button-left">
+              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M4 19V9"/>
+                <path d="M10 19V5"/>
+                <path d="M16 19v-7"/>
+                <path d="M22 19V3"/>
+              </svg>
+              <span class="menu-title">트렌드</span>
+            </div>
+            <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </button>
+          <div class="submenu">
+            <a href="#">메뉴 준비중</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <button class="menu-button" type="button">
+            <div class="menu-button-left">
+              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M4 20h4l10-10-4-4L4 16v4Z"/>
+                <path d="m13 7 4 4"/>
+              </svg>
+              <span class="menu-title">등록</span>
+            </div>
+            <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </button>
+          <div class="submenu">
+            <a href="#">메뉴 준비중</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <button class="menu-button" type="button">
+            <div class="menu-button-left">
+              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4a1.65 1.65 0 0 0-1 .6 1.65 1.65 0 0 0-.33 1V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1-.33 1.65 1.65 0 0 0-1 .33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-.6-1 1.65 1.65 0 0 0-1-.33H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-.6 1.65 1.65 0 0 0 .33-1V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6c.36.14.69.35 1 .6l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06c-.25.31-.46.64-.6 1 .14.32.22.66.23 1.01.01.35-.07.69-.23 1.01Z"/>
+              </svg>
+              <span class="menu-title">기타</span>
+            </div>
+            <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </button>
+          <div class="submenu">
+            <a href="#">메뉴 준비중</a>
+          </div>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <div class="main-inner">
+        <div class="page-header">
+          <h1>품고 나우 가이드</h1>
+          <p>자주 사용하는 기능을 빠르게 확인할 수 있는 안내 화면입니다.</p>
+        </div>
+
+        <section class="section-card">
+          <div class="section-head">
+            <h2>자주 찾는 메뉴</h2>
+            <span>Quick Access</span>
+          </div>
+
+          <div class="quick-grid">
+            <a href="#" class="quick-card">
+              <div class="quick-card-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                  <path d="M4 7h16"/>
+                  <path d="M7 4v6"/>
+                  <path d="M17 4v6"/>
+                  <rect x="3" y="5" width="18" height="16" rx="2"/>
+                  <path d="m9 14 2 2 4-4"/>
+                </svg>
+              </div>
+              <h3>반품</h3>
+              <p>반품 처리 절차와 기준을 빠르게 확인할 수 있습니다.</p>
+            </a>
+
+            <a href="#" class="quick-card">
+              <div class="quick-card-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                  <path d="M7 7h11v11"/>
+                  <path d="M17 7h-6"/>
+                  <path d="m7 17 11-11"/>
+                  <path d="M5 11v8h8"/>
+                </svg>
+              </div>
+              <h3>교환</h3>
+              <p>교환 요청 시 필요한 처리 흐름을 한눈에 볼 수 있습니다.</p>
+            </a>
+
+            <a href="#" class="quick-card">
+              <div class="quick-card-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                  <path d="M4 12a8 8 0 0 1 13.66-5.66L20 8"/>
+                  <path d="M20 4v4h-4"/>
+                  <path d="M20 12a8 8 0 0 1-13.66 5.66L4 16"/>
+                  <path d="M4 20v-4h4"/>
+                </svg>
+              </div>
+              <h3>재발송</h3>
+              <p>재발송 접수와 출고 연계 프로세스를 확인할 수 있습니다.</p>
+            </a>
+
+            <a href="#" class="quick-card">
+              <div class="quick-card-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                  <path d="M12 3v18"/>
+                  <path d="M5 9h14"/>
+                  <path d="M7 3h10l2 6H5l2-6Z"/>
+                  <path d="M7 21h10"/>
+                </svg>
+              </div>
+              <h3>사은품</h3>
+              <p>사은품 설정, 출고 조건, 대체 운영 기준을 확인할 수 있습니다.</p>
+            </a>
+
+            <a href="#" class="quick-card">
+              <div class="quick-card-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                  <path d="M4 7h16"/>
+                  <path d="M6 7v11a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7"/>
+                  <path d="M9 11v5"/>
+                  <path d="M15 11v5"/>
+                  <path d="M10 7V5a2 2 0 1 1 4 0v2"/>
+                </svg>
+              </div>
+              <h3>재고 반출</h3>
+              <p>재고 반출 신청과 작업 진행 기준을 확인할 수 있습니다.</p>
+            </a>
+
+            <a href="#" class="quick-card">
+              <div class="quick-card-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                  <circle cx="11" cy="11" r="7"/>
+                  <path d="m20 20-3.5-3.5"/>
+                  <path d="M11 8v3l2 2"/>
+                </svg>
+              </div>
+              <h3>재고 조회</h3>
+              <p>재고 확인 방법과 조회 시 유의사항을 안내합니다.</p>
+            </a>
+          </div>
+        </section>
       </div>
-    </div>
-  </section>
-</div>
-
-<div class="help" id="helpBox"></div>
-
-<div class="video-modal" id="videoModal">
-  <div class="video-modal-dim" id="videoModalDim"></div>
-
-  <div class="video-modal-dialog">
-    <div class="video-modal-header">
-      <div class="video-modal-title" id="videoModalTitle">과정 영상</div>
-      <button type="button" class="video-modal-close" id="videoModalClose">×</button>
-    </div>
-
-    <div class="video-modal-body">
-      <iframe
-        id="videoModalFrame"
-        src=""
-        title="과정 영상"
-        loading="eager"
-        referrerpolicy="no-referrer"
-        allow="autoplay; fullscreen"
-        allowfullscreen
-      ></iframe>
-    </div>
+    </main>
   </div>
-</div>
 
-<div class="notice-modal" id="noticeModal">
-  <div class="notice-modal-dim" id="noticeModalDim"></div>
+  <script>
+    const menuItems = document.querySelectorAll(".menu-item");
 
-  <div class="notice-modal-dialog">
-    <div class="notice-modal-header">
-      <div class="notice-modal-title" id="noticeModalTitle">유의사항</div>
-      <button type="button" class="notice-modal-close" id="noticeModalClose">×</button>
-    </div>
+    menuItems.forEach((item) => {
+      const button = item.querySelector(".menu-button");
+      const submenu = item.querySelector(".submenu");
 
-    <div class="notice-modal-body" id="noticeModalBody"></div>
+      button.addEventListener("click", () => {
+        const isOpen = item.classList.contains("open");
 
-    <div class="notice-modal-footer">
-      <button type="button" class="btn btn-notice-confirm" id="noticeConfirmBtn">확인했어요</button>
-    </div>
-  </div>
-</div>
+        menuItems.forEach((otherItem) => {
+          otherItem.classList.remove("open");
+          otherItem.querySelector(".submenu").style.maxHeight = null;
+        });
 
-<div class="guide-intro-modal" id="guideIntroModal">
-  <div class="guide-intro-dim" id="guideIntroDim"></div>
-
-  <div class="guide-intro-dialog">
-    <div class="guide-intro-header">
-      <div class="guide-intro-title">가이드 이용 안내</div>
-      <button type="button" class="guide-intro-close" id="guideIntroClose">×</button>
-    </div>
-
-    <div class="guide-intro-body">
-      <div class="guide-intro-desc">
-        본 가이드는 단계별로 순서에 맞춰 진행됩니다. 진행 전에 아래 이용 방식을 먼저 확인해주세요.
-      </div>
-
-      <div class="guide-intro-grid">
-        <div class="guide-intro-item">
-          <div class="guide-intro-item-title">다음 단계 이동</div>
-          <div class="guide-intro-item-text">하단의 <strong>다음 단계</strong> 버튼을 누르면 다음 항목으로 이동합니다.</div>
-        </div>
-
-        <div class="guide-intro-item">
-          <div class="guide-intro-item-title">품고 확인 후 오픈</div>
-          <div class="guide-intro-item-text">일부 단계는 품고 확인이 완료된 후 다음 단계가 오픈됩니다.</div>
-        </div>
-
-        <div class="guide-intro-item">
-          <div class="guide-intro-item-title">도움말 보기</div>
-          <div class="guide-intro-item-text">우측 상단의 <strong>도움말</strong> 버튼을 누르면 유의사항과 상세 설명을 확인할 수 있습니다.</div>
-        </div>
-
-        <div class="guide-intro-item">
-          <div class="guide-intro-item-title">과정 영상 보기</div>
-          <div class="guide-intro-item-text">화면 내 <strong>과정 영상 보기</strong> 영역을 클릭하면 단계별 영상을 볼 수 있습니다.</div>
-        </div>
-
-        <div class="guide-intro-item">
-          <div class="guide-intro-item-title">사이드바 진행 상태</div>
-          <div class="guide-intro-item-text">왼쪽 사이드바는 완료된 단계가 자동으로 닫히고, 현재 진행 중인 단계만 펼쳐집니다.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="guide-intro-footer">
-      <button type="button" class="btn btn-ghost" id="guideIntroLaterBtn">닫기</button>
-      <button type="button" class="btn btn-next" id="guideIntroStartBtn">가이드 시작하기</button>
-    </div>
-  </div>
-</div>
-
-<script>
-const STEPS = [
-  {
-    title: "STEP1. 품고 나우 설정",
-    items: [
-      {
-        title: "품고 나우 로그인",
-        required: true,
-        left: "./steps/step1-login-left.html",
-        right: "./steps/step1-login-right-player.html",
-        help: "./help/step1-login-help.html",
-        desc: "시스템 사용 계정으로 제출한 이메일 주소로 정상 로그인 유무를 확인해주세요.",
-        hasVideo: true
-      },
-      {
-        title: "구성원 추가",
-        required: false,
-        left: "./steps/step1-member-left.html",
-        right: "./steps/step1-member-right-player.html",
-        help: "./help/step1-member-help.html",
-        desc: "품고 나우 시스템 접속이 필요한 내부 구성원이 있을 시 추가하는 과정입니다.",
-        hasVideo: true
-      }
-    ]
-  },
-  {
-    title: "STEP2. 풀필먼트 연동",
-    items: [
-      {
-        title: "판매처 계정 등록",
-        required: true,
-        left: "./steps/step2-new-left.html",
-        right: "./steps/step2-new-right-player.html",
-        help: "./help/step2-new-help.html",
-        desc: "N배송 시작을 위해 가장 선행되어야 하는 작업이에요.",
-        hasVideo: true,
-        noticeRequired: true,
-        noticeTitle: "판매처 계정 등록 유의사항",
-        noticeHtml: `
-          <ul style="margin:0; padding-left:18px;">
-            <li style="margin-bottom:8px;">API 연동용 판매자 ID를 붙여넣는 과정에서 공백이나 다른 문자가 포함되지 않도록 유의해주세요.</li>
-            <li style="margin-bottom:8px;">잘못된 계정 정보 입력 시 주문 수집 및 출고 연동이 정상적으로 진행되지 않을 수 있습니다.</li>
-            <li>판매처 계정 등록 완료 후 반드시 저장 여부를 확인해주세요.</li>
-          </ul>
-        `
-      },
-      {
-        title: "풀필먼트 연동",
-        required: true,
-        left: "./steps/step2-api-left.html",
-        right: "./steps/step2-api-right-player.html",
-        help: "./help/step2-api-help.html",
-        desc: "N배송 시작을 위해 풀필먼트 연동을 진행하는 과정이에요.",
-        hasVideo: true,
-        noticeRequired: true,
-        noticeTitle: "풀필먼트 연동 유의사항",
-        noticeHtml: `
-          <ul style="margin:0; padding-left:18px;">
-            <li style="margin-bottom:8px;">
-              물류사 확인중 → 연동중 상태 변경은 신청 후 <strong>다음날 00:40</strong>에 반영됩니다.<br>
-              예시) 3/20 연동 신청 시 → 3/21 00:40 연동중으로 자동 변경
-            </li>
-          </ul>
-        `
-      },
-      {
-        title: "N배송 프로그램 약관 동의",
-        required: true,
-        left: "./steps/step2-npro-left.html",
-        right: "./steps/step2-npro-right-player.html",
-        help: "./help/step2-npro-help.html",
-        desc: "N배송 프로그램 약관 동의 및 풀필먼트 연동 상태를 최종 점검하는 과정이에요.",
-        hasVideo: true,
-        noticeRequired: true,
-        noticeTitle: "N배송 프로그램 약관 동의 유의사항",
-        noticeHtml: `
-          <ul style="margin:0; padding-left:18px;">
-            <li style="margin-bottom:8px;">
-              풀필먼트 연동 후 임의로 N배송을 설정할 경우 품절로 노출됩니다.
-            </li>
-            <li style="margin-bottom:8px;">
-              N배송 설정은 품고에 상품(SKU)가 입고된 후 절차에 따라 안내드리므로<br>
-              <strong>임의로 N배송을 설정하지 않도록 유의해주세요.</strong>
-            </li>
-            <li>
-              이용하지 않는 물류사가 연동중으로 변경되어 있을 경우 꼭 철회 버튼을 클릭하여 철회 처리해주세요.
-            </li>
-          </ul>
-        `
-      }
-    ]
-  },
-  {
-    title: "STEP3. SKU 등록",
-    items: [
-      {
-        title: "SKU 등록 유의사항",
-        required: true,
-        left: "./steps/step3-sku-left.html",
-        help: "./help/step3-sku-help.html",
-        desc: "상품(SKU) 등록 시 유의사항을 안내드립니다.",
-        hasVideo: false
-      },
-      {
-        title: "SKU 등록 & 상품 매핑",
-        required: true,
-        left: "./steps/step3-mapping-left.html",
-        right: "./steps/step3-mapping-right-player.html",
-        help: "./help/step3-mapping-help.html",
-        desc: " SKU 등록 및 실제 판매 상품 정보를 매핑합니다.",
-        hasVideo: true
-      }
-    ]
-  },
-  {
-    title: "STEP4. 초도 입고",
-    items: [
-      {
-        title: "입고 가이드",
-        required: true,
-        left: "./steps/step4-inbound-left.html",
-        right: "./steps/step4-inbound-right-player.html",
-        help: "./help/step4-inbound-help.html",
-        desc: "초도 입고 전 준비사항과 진행 기준을 확인합니다.",
-        hasVideo: true
-      },
-      {
-        title: "초도 입고 패킹리스트 제출하기",
-        required: true,
-        left: "./steps/step4-packing-left.html",
-        right: "./steps/step4-packing-right-player.html",
-        help: "./help/step4-packing-help.html",
-        desc: "초도 입고를 위한 패킹리스트를 작성하고 제출합니다.",
-        hasVideo: true
-      }
-    ]
-  },
-  {
-    title: "STEP5. N배송 설정하기",
-    items: [
-      {
-        title: "N배송 설정하기",
-        required: true,
-        left: "./steps/step5-left.html",
-        right: "./steps/step5-right-player.html",
-        help: "./help/step5-help.html",
-        desc: "최종적으로 N배송 설정을 완료합니다.",
-        hasVideo: true
-      }
-    ]
-  }
-];
-
-let step = 0;
-let item = 0;
-const done = {};
-const noticeConfirmed = {};
-
-const sidebar = document.getElementById("sidebar");
-const left = document.getElementById("left");
-const title = document.getElementById("title");
-const stepDesc = document.getElementById("stepDesc");
-const stepLabel = document.getElementById("stepLabel");
-
-const helpBox = document.getElementById("helpBox");
-const helpBtn = document.getElementById("helpBtn");
-
-const prevBtn = document.getElementById("prevBtn");
-const nextBtn = document.getElementById("nextBtn");
-const footerNote = document.getElementById("footerNote");
-
-const progressFill = document.getElementById("progressFill");
-const progressText = document.getElementById("progressText");
-
-const videoPreview = document.getElementById("videoPreview");
-const openVideoCard = document.getElementById("openVideoCard");
-const videoPreviewTitle = document.getElementById("videoPreviewTitle");
-
-const videoModal = document.getElementById("videoModal");
-const videoModalDim = document.getElementById("videoModalDim");
-const videoModalClose = document.getElementById("videoModalClose");
-const videoModalTitle = document.getElementById("videoModalTitle");
-const videoModalFrame = document.getElementById("videoModalFrame");
-
-const noticeModal = document.getElementById("noticeModal");
-const noticeModalDim = document.getElementById("noticeModalDim");
-const noticeModalClose = document.getElementById("noticeModalClose");
-const noticeModalTitle = document.getElementById("noticeModalTitle");
-const noticeModalBody = document.getElementById("noticeModalBody");
-const noticeConfirmBtn = document.getElementById("noticeConfirmBtn");
-
-const guideIntroModal = document.getElementById("guideIntroModal");
-const guideIntroDim = document.getElementById("guideIntroDim");
-const guideIntroClose = document.getElementById("guideIntroClose");
-const guideIntroLaterBtn = document.getElementById("guideIntroLaterBtn");
-const guideIntroStartBtn = document.getElementById("guideIntroStartBtn");
-
-function getRequiredItems() {
-  return STEPS.flatMap((s, si) =>
-    s.items.map((it, ii) => ({ ...it, key: `${si}-${ii}` })).filter(it => it.required)
-  );
-}
-
-function getStepStatus(si) {
-  const requiredItems = STEPS[si].items
-    .map((it, ii) => ({ ...it, idx: ii }))
-    .filter(it => it.required);
-
-  if (requiredItems.length === 0) return "wait";
-
-  const doneCount = requiredItems.filter(it => done[`${si}-${it.idx}`]).length;
-
-  if (doneCount === requiredItems.length) return "done";
-  if (si === step) return "ing";
-  return "wait";
-}
-
-function getCurrentFlatIndex() {
-  let index = 0;
-  for (let si = 0; si < STEPS.length; si++) {
-    for (let ii = 0; ii < STEPS[si].items.length; ii++) {
-      if (si === step && ii === item) return index;
-      index++;
-    }
-  }
-  return 0;
-}
-
-function getTotalFlatCount() {
-  return STEPS.reduce((acc, s) => acc + s.items.length, 0);
-}
-
-function getCurrentNoticeKey() {
-  return `${step}-${item}`;
-}
-
-function hasCurrentVideo(data) {
-  return data.hasVideo !== false && !!data.right;
-}
-
-function openGuideIntro() {
-  guideIntroModal.classList.add("open");
-  document.body.classList.add("guide-intro-open");
-}
-
-function closeGuideIntro() {
-  guideIntroModal.classList.remove("open");
-  document.body.classList.remove("guide-intro-open");
-}
-
-function goToNextStep() {
-  const current = STEPS[step].items[item];
-
-  if (current.required) {
-    done[`${step}-${item}`] = true;
-  }
-
-  if (item < STEPS[step].items.length - 1) {
-    item++;
-    render();
-    return;
-  }
-
-  if (step < STEPS.length - 1) {
-    step++;
-    item = 0;
-    render();
-    return;
-  }
-
-  render();
-  alert("수고하셨습니다! 가이드 확인이 완료되었습니다.");
-}
-
-function renderSidebar() {
-  sidebar.innerHTML = "";
-
-  STEPS.forEach((s, si) => {
-    const status = getStepStatus(si);
-    const isCurrentStep = si === step;
-    const shouldCollapse = status === "done" || !isCurrentStep;
-
-    const card = document.createElement("div");
-    card.className = `step-card ${status === "ing" ? "current" : status === "done" ? "done" : ""} ${shouldCollapse ? "collapsed" : ""}`;
-
-    card.innerHTML = `
-      <div class="step-card-header">
-        <div class="step-card-main">
-          <div class="step-chip">STEP ${si + 1}</div>
-          <div class="step-card-title">${s.title.replace(/^STEP\\d+\\.\\s*/i, "")}</div>
-        </div>
-        <span class="badge ${status}">
-          ${status === "done" ? "완료" : status === "ing" ? "진행중" : "대기중"}
-        </span>
-      </div>
-      <div class="step-items"></div>
-    `;
-
-    const header = card.querySelector(".step-card-header");
-    const itemsWrap = card.querySelector(".step-items");
-
-    s.items.forEach((it, ii) => {
-      const sub = document.createElement("div");
-      sub.className = "sub-item" + (si === step && ii === item ? " active" : "");
-      sub.innerHTML = `${it.title}${!it.required ? '<span class="optional">선택</span>' : ""}`;
-      sub.onclick = (event) => {
-        event.stopPropagation();
-        step = si;
-        item = ii;
-        render();
-      };
-      itemsWrap.appendChild(sub);
-    });
-
-    header.onclick = () => {
-      if (status === "done") return;
-      if (si !== step) {
-        step = si;
-        item = 0;
-        render();
-      }
-    };
-
-    sidebar.appendChild(card);
-  });
-}
-
-async function load(path) {
-  const res = await fetch(path + "?v=" + Date.now(), { cache: "no-store" });
-  if (!res.ok) throw new Error(`파일을 불러오지 못했습니다: ${path}`);
-  return await res.text();
-}
-
-function bindFAQ() {
-  document.querySelectorAll(".faq-q").forEach(q => {
-    q.onclick = () => {
-      const currentItem = q.parentElement;
-
-      document.querySelectorAll(".faq-item").forEach(item => {
-        if (item !== currentItem) item.classList.remove("open");
+        if (!isOpen) {
+          item.classList.add("open");
+          submenu.style.maxHeight = submenu.scrollHeight + "px";
+        }
       });
-
-      currentItem.classList.toggle("open");
-    };
-  });
-}
-
-function buildVideoSrc(src) {
-  const separator = src.includes("?") ? "&" : "?";
-  return `${src}${separator}autoplay=1&mute=0&v=${Date.now()}`;
-}
-
-function openVideoModal(titleText, src) {
-  if (!src) return;
-  videoModalTitle.textContent = `${titleText} 과정 영상`;
-  videoModalFrame.src = buildVideoSrc(src);
-  videoModal.classList.add("open");
-  document.body.classList.add("video-modal-open");
-}
-
-function closeVideoModal() {
-  videoModal.classList.remove("open");
-  videoModalFrame.src = "";
-  document.body.classList.remove("video-modal-open");
-}
-
-function openNoticeModal(titleText, html) {
-  noticeModalTitle.textContent = titleText || "유의사항";
-  noticeModalBody.innerHTML = html || "<p>유의사항 내용이 없습니다.</p>";
-  noticeModal.classList.add("open");
-  document.body.classList.add("notice-modal-open");
-}
-
-function closeNoticeModal() {
-  noticeModal.classList.remove("open");
-  document.body.classList.remove("notice-modal-open");
-}
-
-function renderProgress() {
-  const required = getRequiredItems();
-  const total = required.length;
-  const completed = required.filter(it => done[it.key]).length;
-  const percent = total === 0 ? 0 : Math.floor((completed / total) * 100);
-
-  progressFill.style.width = `${percent}%`;
-  progressText.innerText = `진행률 ${percent}%`;
-}
-
-function renderFooterState() {
-  const isFirst = step === 0 && item === 0;
-  const isLastStep = step === STEPS.length - 1;
-  const isLastItem = item === STEPS[step].items.length - 1;
-
-  prevBtn.disabled = isFirst;
-  prevBtn.style.opacity = isFirst ? "0.5" : "1";
-  prevBtn.style.cursor = isFirst ? "default" : "pointer";
-
-  if (isLastStep && isLastItem) {
-    nextBtn.textContent = "가이드 완료";
-    nextBtn.classList.add("btn-complete");
-    nextBtn.classList.remove("btn-next");
-    footerNote.textContent = "마지막 단계입니다. 내용을 확인한 뒤 가이드를 완료해주세요.";
-  } else {
-    nextBtn.textContent = "다음 단계";
-    nextBtn.classList.add("btn-next");
-    nextBtn.classList.remove("btn-complete");
-
-    const current = STEPS[step].items[item];
-    if (current.noticeRequired && !noticeConfirmed[getCurrentNoticeKey()]) {
-      footerNote.textContent = "유의사항 확인 후 다음 단계로 이동할 수 있어요.";
-    } else {
-      footerNote.textContent = "현재 단계 확인 후 다음 단계로 이동해주세요.";
-    }
-  }
-}
-
-function fitInjectedSections() {
-  const sections = left.querySelectorAll(".step-left-content > section");
-  const sectionCount = sections.length;
-  const current = STEPS[step].items[item];
-
-  if (!sectionCount) return;
-
-  if (
-    current.title === "판매처 계정 등록" ||
-    current.title === "풀필먼트 연동" ||
-    current.title === "N배송 프로그램 약관 동의"
-  ) {
-    sections.forEach(section => {
-      section.style.padding = "14px 16px";
     });
-
-    left.querySelectorAll("p, li").forEach(el => {
-      el.style.fontSize = "14px";
-      el.style.lineHeight = "1.6";
-    });
-
-    left.querySelectorAll("h4").forEach(el => {
-      el.style.fontSize = "17px";
-      el.style.marginBottom = "8px";
-    });
-
-    return;
-  }
-
-  if (sectionCount >= 3) {
-    sections.forEach(section => {
-      section.style.padding = "14px 16px";
-    });
-  } else if (sectionCount === 2) {
-    sections.forEach(section => {
-      section.style.padding = "16px 18px";
-    });
-  } else {
-    sections.forEach(section => {
-      section.style.padding = "18px 20px";
-    });
-  }
-}
-
-async function render() {
-  closeVideoModal();
-  closeNoticeModal();
-  renderSidebar();
-  renderProgress();
-
-  const currentStep = STEPS[step];
-  const data = currentStep.items[item];
-  const flatIndex = getCurrentFlatIndex() + 1;
-  const totalFlat = getTotalFlatCount();
-  const showVideo = hasCurrentVideo(data);
-
-  stepLabel.textContent = `STEP ${step + 1} · ${flatIndex}/${totalFlat}`;
-  title.innerText = data.title;
-  stepDesc.innerText = data.desc || "";
-  videoPreviewTitle.innerText = `${data.title} 영상 보기`;
-
-  if (showVideo) {
-    videoPreview.classList.remove("hidden");
-  } else {
-    videoPreview.classList.add("hidden");
-  }
-
-  try {
-    left.innerHTML = await load(data.left);
-    fitInjectedSections();
-    bindStepInlineActions();
-  } catch (e) {
-    left.innerHTML = `<div style="color:#ef4444;font-size:14px;">${e.message}</div>`;
-  }
-
-  const inlineNoticeBtn = document.getElementById("openNoticeBtnInline");
-  if (inlineNoticeBtn && data.noticeRequired) {
-    inlineNoticeBtn.onclick = () => {
-      openNoticeModal(data.noticeTitle, data.noticeHtml);
-    };
-  }
-
-  openVideoCard.onclick = () => {
-    if (!showVideo) return;
-    openVideoModal(data.title, data.right);
-  };
-
-  openVideoCard.onkeydown = (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      if (!showVideo) return;
-      openVideoModal(data.title, data.right);
-    }
-  };
-
-  try {
-    helpBox.innerHTML = await load(data.help);
-    bindFAQ();
-  } catch (e) {
-    helpBox.innerHTML = `<div style="color:#ef4444;font-size:14px;">${e.message}</div>`;
-  }
-
-  renderFooterState();
-}
-
-helpBtn.onclick = (event) => {
-  event.stopPropagation();
-  helpBox.classList.toggle("open");
-};
-
-prevBtn.onclick = () => {
-  if (step === 0 && item === 0) return;
-
-  if (item > 0) {
-    item--;
-    render();
-    return;
-  }
-
-  if (step > 0) {
-    step--;
-    item = STEPS[step].items.length - 1;
-    render();
-  }
-};
-
-nextBtn.onclick = () => {
-  const current = STEPS[step].items[item];
-
-  if (current.noticeRequired && !noticeConfirmed[getCurrentNoticeKey()]) {
-    openNoticeModal(current.noticeTitle, current.noticeHtml);
-    return;
-  }
-
-  goToNextStep();
-};
-
-noticeConfirmBtn.addEventListener("click", () => {
-  noticeConfirmed[getCurrentNoticeKey()] = true;
-  closeNoticeModal();
-  goToNextStep();
-});
-
-videoModalClose.addEventListener("click", closeVideoModal);
-videoModalDim.addEventListener("click", closeVideoModal);
-
-noticeModalClose.addEventListener("click", closeNoticeModal);
-noticeModalDim.addEventListener("click", closeNoticeModal);
-
-guideIntroClose.addEventListener("click", closeGuideIntro);
-guideIntroLaterBtn.addEventListener("click", closeGuideIntro);
-guideIntroStartBtn.addEventListener("click", closeGuideIntro);
-guideIntroDim.addEventListener("click", closeGuideIntro);
-
-document.addEventListener("click", (event) => {
-  const clickedInsideHelp = helpBox.contains(event.target);
-  const clickedHelpButton = helpBtn.contains(event.target);
-
-  if (!clickedInsideHelp && !clickedHelpButton) {
-    helpBox.classList.remove("open");
-  }
-});
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    helpBox.classList.remove("open");
-    closeVideoModal();
-    closeNoticeModal();
-    closeGuideIntro();
-  }
-});
-
-function bindStepInlineActions() {
-  const scope = left;
-
-  scope.querySelectorAll(".sku-btn").forEach(btn => {
-    btn.onclick = () => {
-      const modalId = btn.dataset.modal;
-      const modal = scope.querySelector(`#${modalId}`) || document.getElementById(modalId);
-      if (modal) modal.classList.add("show");
-    };
-  });
-
-  scope.querySelectorAll("[data-close]").forEach(btn => {
-    btn.onclick = () => {
-      const modalId = btn.dataset.close;
-      const modal = scope.querySelector(`#${modalId}`) || document.getElementById(modalId);
-      if (modal) modal.classList.remove("show");
-    };
-  });
-}
-
-render();
-setTimeout(() => {
-  openGuideIntro();
-}, 200);
-</script>
-
+  </script>
 </body>
 </html>
